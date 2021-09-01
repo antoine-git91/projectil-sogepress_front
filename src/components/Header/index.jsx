@@ -5,7 +5,7 @@ import ToolsBar from "./ToolsBar";
 import Nav from "./Nav";
 
 const NavContainer = styled.nav`
-  width: 250px;
+  width: 200px;
   height: 100vh;
   background-color: antiquewhite;
   position: fixed;
