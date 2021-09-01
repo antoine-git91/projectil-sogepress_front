@@ -1,4 +1,6 @@
 import React from "react";
+import InputText from "../../components/Form/InputText";
+import InputGroupRadio from "../../components/Form/InputGroupRadio";
 import styled from "styled-components";
 
 const Home = () => {
@@ -13,6 +15,8 @@ const Home = () => {
     return(
         <Main>
             <h1>Dashboard</h1>
+            <InputText labeltext="coucou" typeinput="text"/>
+            <InputGroupRadio />
         </Main>
     )
 }
