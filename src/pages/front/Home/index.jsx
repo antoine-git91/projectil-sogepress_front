@@ -1,23 +1,18 @@
 import React from "react";
 import InputText from "../../components/Form/InputText";
 import InputGroupRadio from "../../components/Form/InputGroupRadio";
-import styled from "styled-components";
+import MainContainer from "../../../components/Container";
+import {Link} from "react-router-dom";
 
 const Home = () => {
 
-    const Main = styled.div`
-      position: absolute;
-      width: calc(100vw - 250px);
-      left: 250px;
-      top: 58px;
-    `
-
     return(
-        <Main>
+        <MainContainer>
             <h1>Dashboard</h1>
             <InputText labeltext="coucou" typeinput="text"/>
             <InputGroupRadio />
-        </Main>
+            <Link to="/creation_client" >Créer un client</Link>
+        </MainContainer>
     )
 }
-export default Home
+export default Home;
