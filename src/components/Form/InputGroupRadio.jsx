@@ -10,6 +10,7 @@ const InputGroupRadio = ({label, id, name, }) => {
     const onChangeValue = (event) => {
       console.log(event.target.value);
     }
+<<<<<<< HEAD
 
   return (
     <Flexbox onChange={onChangeValue}>
@@ -19,6 +20,23 @@ const InputGroupRadio = ({label, id, name, }) => {
     </Flexbox>
   );
 
+=======
+  
+    render() {
+
+      const data = this.props.data;
+      const name = this.props.name;
+      const selected = this.props.selected;
+
+      return (
+        <div onChange={this.onChangeValue}>
+
+          {data.map((radio, i)=><InputRadio labeltext={radio.label} idRadio={radio.id} valueRadio={radio.value} nameRadio={name} checked={i + 1 ===selected} />)}
+          
+        </div>
+      );
+    }
+>>>>>>> develop
   }
 
 export default InputGroupRadio;
