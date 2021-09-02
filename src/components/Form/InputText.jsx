@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 
 
-const InputText = ({labeltext}) => {
+const InputText = ({label, event, value}) => {
     return (
-        <label>{labeltext}
-            <input type="text"/>
+        <label>{label}
+            <input type="text" onChange={event} value={value} />
         </label>
     )
 }
