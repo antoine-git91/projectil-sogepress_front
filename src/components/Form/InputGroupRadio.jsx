@@ -16,11 +16,16 @@ class InputGroupRadio extends Component {
     }
   
     render() {
+
+      const data = this.props.data;
+      const name = this.props.name;
+      const selected = this.props.selected;
+
       return (
         <div onChange={this.onChangeValue}>
-          <InputRadio labeltext="Choix n°1" idRadio="id1" nameRadio="groupe1" valueRadio="value1" />
-          <InputRadio labeltext="Choix n°2" idRadio="id2" nameRadio="groupe1" valueRadio="value2" />
-          <InputRadio labeltext="Choix n°3" idRadio="id3" nameRadio="groupe1" valueRadio="value3" />
+
+          {data.map((radio, i)=><InputRadio labeltext={radio.label} idRadio={radio.id} valueRadio={radio.value} nameRadio={name} checked={i + 1 ===selected} />)}
+          
         </div>
       );
     }
