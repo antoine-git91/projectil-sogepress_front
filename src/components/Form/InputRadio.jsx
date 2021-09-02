@@ -1,11 +1,11 @@
 import React from "react";
 
-const InputRadio = ({labeltext, idRadio, nameRadio, valueRadio}) => {
+const InputRadio = ({label, id, name}) => {
 
     return (
         <div>
-            <input type="radio" id={idRadio} name={nameRadio} value={valueRadio} />
-            <label for={idRadio}>{labeltext}</label>
+            <input type="radio" id={id} name={name} />
+            <label htmlFor={id}>{label}</label>
         </div>
     )
 }
