@@ -8,6 +8,7 @@ const ToolNav = styled.nav`
   left: 200px;
   padding: 20px;
   background-color: aqua;
+  z-index: 9999;
 `
 
 const ToolsBar = () => {

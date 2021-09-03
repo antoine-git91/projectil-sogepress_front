@@ -2,15 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 
+const NavStyle = styled.nav`
+      display: flex;
+      flex-direction: column;
+    `
 
-const Nav = () => {
-
-    const Nav = styled.nav`
-  display: flex;
-  flex-direction: column;
-`
-
-    const NavItem = styled(Link)`
+const NavItem = styled(Link)`
   padding: 10px;
   text-align: center;
   text-decoration: none;
@@ -18,8 +15,10 @@ const Nav = () => {
   font-weight: bold;
 `
 
+const Nav = () => {
+
     return(
-        <Nav>
+        <NavStyle>
             <NavItem to="/">Accueil</NavItem>
             <NavItem to="/clients">Clients</NavItem>
             <NavItem to="/commandes">Commandes</NavItem>
@@ -27,7 +26,7 @@ const Nav = () => {
             <NavItem to="/actions">Actions</NavItem>
             <NavItem to="/ventes">Ventes</NavItem>
             <NavItem to="/profil">Profil</NavItem>
-        </Nav>
+        </NavStyle>
     )
 }
 export default Nav;
