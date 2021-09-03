@@ -6,7 +6,7 @@ const InputRadio = ({labeltext, idRadio, nameRadio, valueRadio, checked}) => {
     return (
         <Flexbox>
             <label htmlFor={idRadio}>{labeltext}</label>
-            <input type="radio" id={idRadio} name={nameRadio} value={valueRadio} checked={checked} />
+            <input type="radio" id={idRadio} name={nameRadio} value={valueRadio} defaultChecked={checked} />
         </Flexbox>
     )
 }

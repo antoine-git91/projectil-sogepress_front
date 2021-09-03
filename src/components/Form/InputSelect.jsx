@@ -1,4 +1,10 @@
 import React from 'react';
+import Flexbox from "../../templates/Flexbox";
+import styled from "styled-components";
+
+const SelectStyle = styled.select`
+      display: block;
+    `
 
 class InputSelect extends React.Component {
     constructor(props) {
@@ -15,19 +21,17 @@ class InputSelect extends React.Component {
     render() {
 
         const data = this.props.data;
+        const label = this.props.label;
 
       return (
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Votre type de support de communication :
-            <select value={this.state.value} onChange={this.handleChange}>
+            <label>{label}
+            <SelectStyle value={this.state.value} onChange={this.handleChange}>
 
-            <option>--Type de support</option>
-            {data.map((select)=><option value={select.id}>{select.value}</option>)}
+                <option>--Type de support</option>
+                {data.map((select, key)=><option key={key} value={select.id}>{select.value}</option>)}
             
-            </select>
-          </label>
-        </form>
+            </SelectStyle>
+            </label>
       );
     }
 }
