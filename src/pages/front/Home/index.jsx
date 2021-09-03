@@ -4,6 +4,8 @@ import InputText from "../../../components/Form/InputText";
 import {Link} from "react-router-dom";
 import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
 import InputSelect from "../../../components/Form/InputSelect";
+import BtnAjout from "../../../components/Form/btn_ajout";
+import InputTextArea from "../../../components/Form/InputTextArea";
 
 
 const Home = () => {
@@ -16,7 +18,9 @@ const Home = () => {
             <h1>Dashboard</h1>
             <InputGroupRadio selected={'value3'} name="groupe1" data={data}/>
             <InputText labeltext="Coucou" />
-            <InputSelect label={"Votre type de support de communication :"} data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
+            <InputSelect data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
+            <BtnAjout text="Ajouter un commentaire"/>
+            <InputTextArea label="Commentaire" commentaireId="com1" commentaireName="comname" commentaireRows="10" commentaireCols="60" />
             <Link to="/creation_client" >Créer un client</Link>
         </MainContainer>
     )
