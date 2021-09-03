@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from "./pages/front/Home";
 import Clients from "./pages/front/Clients";
 import CreateClient from "./pages/backoffice/Clients/CreateClient";
+import CreateCommande from "./pages/backoffice/commandes/CreateCommande";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,9 @@ ReactDOM.render(
              </Route>
              <Route path="/creation_client">
                  <CreateClient />
+             </Route>
+             <Route path="/creation_commande">
+                 <CreateCommande />
              </Route>
          </Switch>
       </Router>
