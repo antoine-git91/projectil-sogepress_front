@@ -14,9 +14,9 @@ const Home = () => {
     return(
         <MainContainer>
             <h1>Dashboard</h1>
-            <InputGroupRadio selected={3} name="groupe1" data={data}/>
+            <InputGroupRadio selected={'value3'} name="groupe1" data={data}/>
             <InputText labeltext="Coucou" />
-            <InputSelect data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
+            <InputSelect label={"Votre type de support de communication :"} data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
             <Link to="/creation_client" >Créer un client</Link>
         </MainContainer>
     )

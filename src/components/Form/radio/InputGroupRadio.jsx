@@ -1,18 +1,14 @@
 import React from "react";
-import InputRadio from "./InputRadio";
+import InputRadio from "../radio/InputRadio";
 import Flexbox from "../../../templates/Flexbox";
-import {useState} from "react";
 
 
-const InputGroupRadio = ({data, name, selected }) => {
-
-    const [itemSelect, setItemSelect] = useState(selected);
+const InputGroupRadio = ({ data, name, selected, onchange }) => {
 
       return (
-        <Flexbox onChange={e => setItemSelect(e.target.value)} >
+        <Flexbox onChange={onchange} >
 
-          {data.map(( radio, i ) => <InputRadio key={i} labeltext={radio.label} idRadio={radio.id} valueRadio={radio.value} nameRadio={name} checked={radio.value === itemSelect} />)}
-          
+          {data.map(( radio, i ) => <InputRadio key={i} labeltext={radio.label} idRadio={radio.id} valueRadio={radio.value} nameRadio={name} checked={radio.value === selected} />)}
         </Flexbox>
       )
   }
