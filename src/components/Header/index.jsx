@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import styled from 'styled-components';
 import ToolsBar from "./ToolsBar";
 import Nav from "./Nav";
@@ -11,6 +10,7 @@ const NavContainer = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 9999;
 `
 
 const Title = styled.h1`
