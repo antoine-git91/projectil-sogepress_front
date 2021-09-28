@@ -5,8 +5,9 @@ import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
 import MainContainer from "../../../templates/Container";
 import ContactBlock from "./ContactBlock";
 import InputSelect from "../../../components/Form/InputSelect";
-import plus from "../../../components/plus.png";
 import BtnAjout from "../../../components/btn_ajout";
+import {ButtonPrimary} from "../../../utils/styles/button-primary";
+import styled from "styled-components";
 
 const CreateClient = () => {
 
@@ -48,6 +49,12 @@ const CreateClient = () => {
     }
     // ENDTODO
 
+    const GroupList = styled.ul`
+      margin-left: 0;
+      padding-left: 0;
+    `
+
+
     return(
         <MainContainer>
             <h1>Créer un client</h1>
@@ -84,12 +91,12 @@ const CreateClient = () => {
             <InputGroupRadio onchange={getValueBill} selected={billTypeSelect} name="billType" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
             <Flexbox justify="space-between" align="center">
                 <h2>Contact</h2>
-                <BtnAjout text="Ajouter un commentaire" add={addContact}/>
             </Flexbox>
-            <ul>
+            <GroupList>
                 {arrayContact.map(
                     (contact, index) => <ContactBlock
                                                     key={index}
+                                                    number={index}
                                                     firstname={contact.firstname}
                                                     lastname={contact.lastname}
                                                     job={contact.job}
@@ -98,9 +105,9 @@ const CreateClient = () => {
                                                     onChange={(newContact) => insertDataFromChild(newContact, index)}
                                                 />
                 )}
-            </ul>
-
-            <input type="submit" value="Créer le client" />
+            </GroupList>
+                <BtnAjout text="Ajouter un contact" add={addContact}/>
+                <ButtonPrimary type="submit">Créer le client</ButtonPrimary>
             </form>
         </MainContainer>
     )

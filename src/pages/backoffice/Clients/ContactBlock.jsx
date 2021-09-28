@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import Flexbox from "../../../templates/Flexbox";
 import InputText from "../../../components/Form/InputText";
+import styled from "styled-components";
 
-const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange }) => {
+const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, number }) => {
 
     const [firstnameState, setFirstnameState] = useState(firstname);
     const [lastnameState, setLastnameState] = useState(lastname);
@@ -20,9 +21,22 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange }) => {
         })
     }, [firstnameState, lastnameState, jobState, phoneState, mailState, onChange]);
 
+    const ListStyle = styled.li`
+      list-style: none;
+      margin-left: 0;
+      padding-left: 0;
+    `
+
+    const TitleContact = styled.span`
+      font-weight: bold;
+      margin-bottom: 5px;
+      margin-top: 10px;
+      display: block;
+    `
+
     return (
-        <li>
-            <span>Contact</span>
+        <ListStyle>
+            <TitleContact>Contact n° {number+1}</TitleContact>
             <Flexbox>
                 <InputText event={(e) => {
                     setLastnameState(e.target.value)
@@ -42,7 +56,7 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange }) => {
                     setMailState(e.target.value)
                 }} label="Mail" name="client_contact_mail" />
             </Flexbox>
-        </li>
+        </ListStyle>
     )
 }
 export  default ContactBlock
