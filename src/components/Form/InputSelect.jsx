@@ -3,6 +3,9 @@ import styled from "styled-components";
 
 const SelectStyle = styled.select`
       display: block;
+      padding: 10px 20px;
+      margin-top: 10px;
+      margin-right: 10px;
     `
 
 class InputSelect extends React.Component {

@@ -6,7 +6,7 @@ import Nav from "./Nav";
 const NavContainer = styled.nav`
   width: 200px;
   height: 100vh;
-  background-color: antiquewhite;
+  background-color: #FF6700;
   position: fixed;
   top: 0;
   left: 0;

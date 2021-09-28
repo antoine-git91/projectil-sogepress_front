@@ -7,7 +7,8 @@ const ToolNav = styled.nav`
   width: calc(100vw - 200px);
   left: 200px;
   padding: 20px;
-  background-color: aqua;
+  background-color: #ffffff;
+  border-bottom: 1px solid #FF935B;
   z-index: 9999;
 `
 
