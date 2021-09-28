@@ -52,9 +52,15 @@ const CreateCommande = () => {
 
             <TitreForm titre="Choix du client" />
 
-            
+            <InputSelect option="-- Votre client" data={[{"id" : "id1", "value" : "Client1"}, {"id" : "id2", "value" : "Client2"}, {"id" : "id3", "value" : "Client3"} ]} />
 
-            
+            </Flexbox>
+
+            <Flexbox direction="column">
+
+            <TitreForm titre="Choix du contact" />
+
+            <InputSelect option="-- Votre contact" data={[{"id" : "id1", "value" : "Contact1"}, {"id" : "id2", "value" : "Contact2"}, {"id" : "id3", "value" : "Contact3"} ]} />
 
             </Flexbox>
 
