@@ -29,7 +29,7 @@ class InputSelect extends React.Component {
             <label>{label}
             <SelectStyle value={this.state.value} onChange={this.handleChange}>
 
-                <option>--Type de support</option>
+                <option>{this.props.option}</option>
                 {data.map((select, key)=><option key={key} value={select.id}>{select.value}</option>)}
             
             </SelectStyle>
