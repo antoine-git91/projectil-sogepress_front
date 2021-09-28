@@ -14,7 +14,6 @@ const BtnAjoutStyle = styled.button`
   &:after {
     content: url(${plus});
     margin-left: 10px;
-  }
 `
 
 const BtnAjout = ({text, add}) => {
