@@ -1,5 +1,4 @@
 import React from 'react';
-import Flexbox from "../../templates/Flexbox";
 import styled from "styled-components";
 
 const SelectStyle = styled.select`
