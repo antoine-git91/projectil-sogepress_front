@@ -10,11 +10,11 @@ const InputStyle = styled.input`
     `
 
 
-const InputText = ({label, event, value, name}) => {
+const InputText = ({label, onChange, value, name, type}) => {
 
     return (
         <label>{label}
-            <InputStyle type="text" onChange={event} value={value} name={name}/>
+            <InputStyle type={{type} ? type :"text"} onChange={onChange} value={value} name={name} />
         </label>
     )
 }
