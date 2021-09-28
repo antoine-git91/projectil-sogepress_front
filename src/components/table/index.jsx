@@ -1,23 +1,38 @@
-import React from "react";
+import React, {useEffect} from "react";
 import TableField from "./TableField";
+import styled from "styled-components";
+import {usePaginationFetch} from "../Hook";
 
-const Table = () => {
+const TableStyle = styled.table`
+      width: 100%;
+    `
 
-    const data = [{"nom": "nom 1", "prenom": "prenom 1", "adresse": "adresse 1"}, {"nom": "nom 1", "prenom": "prenom 1", "adresse": "adresse 1"}]
+const HeadTable = styled.thead`
+      line-height: 2;
+    `
+
+const Table = ({headTable}) => {
+
+    const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
+
+    useEffect(() => load(), [load])
 
     return(
-        <table>
-            <thead>
-                <tr>
-                    <td>Nom</td>
-                    <td>Prénom</td>
-                    <td>Adresse</td>
-                </tr>
-            </thead>
-            <tbody>
-            {data.map(coordonnee => <TableField entry={coordonnee} />)}
-            </tbody>
-        </table>
+        <div>
+            {loading && 'Chargement...'}
+            <TableStyle>
+                <HeadTable>
+                    <tr>
+                        {headTable.map((item, key) => <th key={key}>{item}</th>)}
+                    </tr>
+                </HeadTable>
+                <tbody>
+                {clients.map((dataClient, key) => <TableField key={key} index={key + 1} dataClient={dataClient} />)}
+                </tbody>
+            </TableStyle>
+            {/*{JSON.stringify(client)}*/}
+
+        </div>
     )
 }
 export default Table

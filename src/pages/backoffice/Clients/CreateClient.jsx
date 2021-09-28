@@ -1,12 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import InputText from "../../../components/Form/InputText";
 import Flexbox from "../../../templates/Flexbox";
-import {useState} from "react";
 import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
 import MainContainer from "../../../templates/Container";
 import ContactBlock from "./ContactBlock";
 import InputSelect from "../../../components/Form/InputSelect";
-import {useEffect} from "react/cjs/react.production.min";
+import plus from "../../../components/plus.png";
+import BtnAjout from "../../../components/btn_ajout";
 
 const CreateClient = () => {
 
@@ -84,7 +84,7 @@ const CreateClient = () => {
             <InputGroupRadio onchange={getValueBill} selected={billTypeSelect} name="billType" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
             <Flexbox justify="space-between" align="center">
                 <h2>Contact</h2>
-                <button onClick={addContact}>Ajouter un contact</button>
+                <BtnAjout text="Ajouter un commentaire" add={addContact}/>
             </Flexbox>
             <ul>
                 {arrayContact.map(
