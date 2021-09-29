@@ -19,22 +19,18 @@ const CreateClient = () => {
 
     const [arrayContact, setArrayContact] = useState([]);
 
-
-
     const addContact = () => {
         setArrayContact(
             arrayContact.concat({"firstname": "", "lastname": "", "job": "", "phone": "", "mail": ""})
         )
-    }
+    };
 
     const removeContact = (e, index) => {
+        //console.log(index)
         const itemToRemove = arrayContact.indexOf(index);
         setArrayContact(arrayContact.splice(itemToRemove, 1));
-    }
-
-    useEffect(() => {
-
-    }, [arrayContact])
+        //console.log(arrayContact)
+    };
 
     const insertDataFromChild = (newContact, index) => {
         arrayContact[index].firstname = newContact.firstname;
@@ -43,7 +39,7 @@ const CreateClient = () => {
         arrayContact[index].phone = newContact.phone;
         arrayContact[index].mail = newContact.mail;
         setArrayContact(arrayContact);
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -51,21 +47,19 @@ const CreateClient = () => {
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
-    }
+    };
 
     //TODO a refecto
     const [deliverySelect, setDeliverySelect] = useState('false');
     const getValueDelivery = (e) => {
         setDeliverySelect(e.target.value)
-    }
+    };
 
     const [billTypeSelect, setBillTypeSelect] = useState('mail');
     const getValueBill = (e) => {
         setBillTypeSelect(e.target.value)
-    }
+    };
     // ENDTODO
-
-
 
 
     return(
@@ -101,9 +95,7 @@ const CreateClient = () => {
                 </div>)  }
             <h2>Choix de la facturation</h2>
             <InputGroupRadio onchange={getValueBill} selected={billTypeSelect} name="billType" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
-            <Flexbox justify="space-between" align="center">
-                <h2>Contact</h2>
-            </Flexbox>
+            <h2>Contact</h2>
             <GroupList>
                 {arrayContact.map(
                     (contact, index) => <ContactBlock
@@ -119,8 +111,8 @@ const CreateClient = () => {
                                                 />
                 )}
             </GroupList>
-                <BtnAjout text="Ajouter un contact" add={addContact}/>
-                <ButtonPrimary type="submit">Créer le client</ButtonPrimary>
+            <BtnAjout text="Ajouter un contact" add={addContact}/>
+            <ButtonPrimary type="submit">Créer le client</ButtonPrimary>
             </form>
         </MainContainer>
     )

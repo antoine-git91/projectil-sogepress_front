@@ -8,6 +8,7 @@ import CreateCommande from "../../pages/backoffice/commandes/CreateCommande";
 import Header from "../Header";
 //import Login from "../../pages/front/Login";
 import Commandes from "../../pages/front/Commandes";
+import './app.css'
 
 const App = () => {
 
