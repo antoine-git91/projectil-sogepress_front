@@ -6,6 +6,7 @@ const SelectStyle = styled.select`
       padding: 10px 20px;
       margin-top: 10px;
       margin-right: 10px;
+      margin-bottom: 20px;
     `
 
 class InputSelect extends React.Component {
@@ -29,7 +30,7 @@ class InputSelect extends React.Component {
             <label>{label}
             <SelectStyle value={this.state.value} onChange={this.handleChange}>
 
-                <option>--Type de support</option>
+                <option>{this.props.option}</option>
                 {data.map((select, key)=><option key={key} value={select.id}>{select.value}</option>)}
             
             </SelectStyle>

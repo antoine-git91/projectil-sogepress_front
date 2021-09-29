@@ -11,9 +11,9 @@ const HeadTable = styled.thead`
       line-height: 2;
     `
 
-const Table = ({headTable}) => {
+const Table = ({headTable, dataUrl}) => {
 
-    const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
+    const {items: clients, loading, load} = usePaginationFetch({dataUrl});
 
     useEffect(() => load(), [load])
 

@@ -6,12 +6,13 @@ import Profile from "../../pages/front/Clients/Profile";
 import CreateClient from "../../pages/backoffice/Clients/CreateClient";
 import CreateCommande from "../../pages/backoffice/commandes/CreateCommande";
 import Header from "../Header";
-import Login from "../../pages/front/Login";
+//import Login from "../../pages/front/Login";
+import Commandes from "../../pages/front/Commandes";
 
 const App = () => {
 
     const [token, setToken] = useState('');
-    //const [errorMessage, setErrorMessage] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     const [value, setValue] = useState({
         username: "",
@@ -39,7 +40,7 @@ const App = () => {
             .then(data => setToken(data.token))
     }
 
-   /* if(!token){
+    /*if(!token){
         return (
             <Login submit={handleSubmit} inputChange={handleChange} valueUser={value.username} valuePass={value.password} />
         )
@@ -54,6 +55,9 @@ const App = () => {
                 </Route>
                 <Route path="/clients">
                     <Clients />
+                </Route>
+                <Route path="/commandes">
+                    <Commandes />
                 </Route>
                 <Route path="/profile/:id">
                     <Profile />
