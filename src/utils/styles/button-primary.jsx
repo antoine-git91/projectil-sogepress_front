@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 
@@ -20,6 +19,7 @@ export const ButtonPrimary = styled.button`
 `
 
 export const ButtonPrimaryLink = styled(Link) `
+  display: block;
   background-color: #000;
   color: #fff;
   border: none;
@@ -28,8 +28,8 @@ export const ButtonPrimaryLink = styled(Link) `
   font-weight: bold;
   cursor: pointer;
   transition: .3s;
-  margin-bottom: 40px;
-  margin-top: 40px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   margin-left: 10px;
   text-decoration: none;
 

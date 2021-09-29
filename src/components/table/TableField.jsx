@@ -3,7 +3,12 @@ import styled from "styled-components";
 import {Link} from "react-router-dom"
 
 const ItemList = styled.tr`
-      cursor: pointer;
+  cursor: pointer;
+  background-color: #f0f8ff;
+
+  &:nth-child(even) {
+    background-color: #f1e3d0;
+  }
 `
 
 const TableField = ({dataClient, index}) => {

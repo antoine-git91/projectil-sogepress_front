@@ -3,13 +3,27 @@ import Flexbox from "../../../templates/Flexbox";
 import InputText from "../../../components/Form/InputText";
 import styled from "styled-components";
 
-const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, number }) => {
+
+const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, numberContact, removeContact }) => {
 
     const [firstnameState, setFirstnameState] = useState(firstname);
     const [lastnameState, setLastnameState] = useState(lastname);
     const [jobState, setJobState] = useState(job);
-    const [mailState, setMailState] = useState(phone);
-    const [phoneState, setPhoneState] = useState(mail);
+    const [mailState, setMailState] = useState(mail);
+    const [phoneState, setPhoneState] = useState(phone);
+
+    const DeleteButton = styled.button`
+      border: none;
+      background-color: transparent;
+      color: #b83c3c;
+      cursor: pointer;
+      margin-left: 10px;
+      
+      &:hover{
+        text-decoration: underline;
+      }
+    `
+
 
     useEffect(() => {
         onChange({
@@ -20,6 +34,7 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, number }
             mail: mailState
         })
     }, [firstnameState, lastnameState, jobState, phoneState, mailState, onChange]);
+
 
     const ListStyle = styled.li`
       list-style: none;
@@ -35,8 +50,11 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, number }
     `
 
     return (
-        <ListStyle>
-            <TitleContact>Contact n° {number+1}</TitleContact>
+        <ListStyle id={numberContact}>
+            <Flexbox align-items="baseline">
+                <TitleContact>Contact n° {numberContact + 1}</TitleContact>
+                <DeleteButton onClick={removeContact}>Supprimer X</DeleteButton>
+            </Flexbox>
             <Flexbox>
                 <InputText event={(e) => {
                     setLastnameState(e.target.value)

@@ -1,7 +1,6 @@
 import React from 'react';
 import InputText from "../../../components/Form/InputText";
 import styled from "styled-components";
-import {useState} from "react";
 
 const Container = styled.div`
   position: fixed;

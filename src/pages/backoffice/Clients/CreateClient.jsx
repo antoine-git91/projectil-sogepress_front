@@ -8,16 +8,33 @@ import InputSelect from "../../../components/Form/InputSelect";
 import BtnAjout from "../../../components/btn_ajout";
 import {ButtonPrimary} from "../../../utils/styles/button-primary";
 import styled from "styled-components";
+import {useEffect} from "react";
+
+const GroupList = styled.ul`
+      margin-left: 0;
+      padding-left: 0;
+    `
 
 const CreateClient = () => {
 
     const [arrayContact, setArrayContact] = useState([]);
+
+
 
     const addContact = () => {
         setArrayContact(
             arrayContact.concat({"firstname": "", "lastname": "", "job": "", "phone": "", "mail": ""})
         )
     }
+
+    const removeContact = (e, index) => {
+        const itemToRemove = arrayContact.indexOf(index);
+        setArrayContact(arrayContact.splice(itemToRemove, 1));
+    }
+
+    useEffect(() => {
+
+    }, [arrayContact])
 
     const insertDataFromChild = (newContact, index) => {
         arrayContact[index].firstname = newContact.firstname;
@@ -34,7 +51,6 @@ const CreateClient = () => {
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
-        console.log('coucou');
     }
 
     //TODO a refecto
@@ -49,10 +65,7 @@ const CreateClient = () => {
     }
     // ENDTODO
 
-    const GroupList = styled.ul`
-      margin-left: 0;
-      padding-left: 0;
-    `
+
 
 
     return(
@@ -77,8 +90,7 @@ const CreateClient = () => {
             <InputText label="Site internet" name="client_website" />
             <h2>Adresse de livraison</h2>
             <Flexbox>
-                <span>Adresse de livraison différente: </span>
-                <InputGroupRadio onchange={getValueDelivery} selected={deliverySelect} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
+                <InputGroupRadio label={"Adresse de de livraison différente :"} onchange={getValueDelivery} selected={deliverySelect} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
             </Flexbox>
                 {deliverySelect === "true" && (<div>
                     <InputText  label="Numéro et rue" name="client_address_delivery" />
@@ -96,13 +108,14 @@ const CreateClient = () => {
                 {arrayContact.map(
                     (contact, index) => <ContactBlock
                                                     key={index}
-                                                    number={index}
+                                                    numberContact={index}
                                                     firstname={contact.firstname}
                                                     lastname={contact.lastname}
                                                     job={contact.job}
                                                     phone={contact.phone}
                                                     mail={contact.mail}
                                                     onChange={(newContact) => insertDataFromChild(newContact, index)}
+                                                    removeContact={(e) => removeContact(e, index)}
                                                 />
                 )}
             </GroupList>
