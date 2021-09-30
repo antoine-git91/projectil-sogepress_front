@@ -3,11 +3,18 @@ import MainContainer from "../../../templates/Container";
 import {useParams} from "react-router-dom";
 import { ButtonPrimaryLink } from "../../../utils/styles/button-primary";
 import RelanceContainer from "../../../components/RelanceBox";
+import BtnAjout from "../../../components/btn_ajout";
+import InputText from "../../../components/Form/InputText";
 import BoxInfos from "../../../components/Single/BoxInfos";
-import {BoxButton, BoxTitle, InfoViewContainer, InfoContainer, InfoListeContainer} from "../../../utils/styles/single";
+import BoxContact from "../../../components/Single/BoxContact";
+import BoxAnneeCa from "../../../components/Single/BoxAnneeCa";
+import BoxHistorique from "../../../components/Single/BoxHistorique";
+import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer,ContactContainer,HistoriqueViewContainer, HistoriqueDataContainer,HeaderHistoriqueView,ChiffreDateContainer,ChiffreResultContainer} from "../../../utils/styles/single";
 import styled from "styled-components";
 import TablePotentiality from "../../../components/table/TablePotentiality";
+import TableCommandeSingle from "../../../components/table/TableCommandeSingle";
 import DivButtonAction from "../../../utils/styles/DivButton";
+import TableCommandesIndex from "../../../components/table/TableCommandesIndex";
 
 const BtnTabs = styled.button`
   background-color: transparent;
@@ -104,29 +111,65 @@ const Profile = () => {
                 ))}
             </div>
             { tabActive === "contact" && (
-                <InfoViewContainer>
-                    <h2>Coordonnées</h2>
-                    <InfoContainer>
-                        <BoxInfos titre="Téléphone" information="02 47 09 67 34" />
-                        <BoxInfos titre="Email" information="email@email.com" />
-                        <BoxInfos titre="Adresse" information="5 avenue du littoral 37000 TOURS" />
-                        <BoxInfos titre="Site internet" information="www.site.url" />
-                    </InfoContainer>
-                    <h2>Indice de potentialité</h2>
-                    <TablePotentiality />
-                </InfoViewContainer>
+                <SingleMainContainer>
+                    <InfoViewContainer>
+                        <h2>Coordonnées</h2>
+                        <InfoContainer>
+                            <BoxInfos titre="Téléphone" information="02 47 09 67 34" />
+                            <BoxInfos titre="Email" information="email@email.com" />
+                            <BoxInfos titre="Adresse" information="5 avenue du littoral 37000 TOURS" />
+                            <BoxInfos titre="Site internet" information="www.site.url" />
+                        </InfoContainer>
+                        <h2>Indice de potentialité</h2>
+                        <TablePotentiality />
+                    </InfoViewContainer>
+                    <ContactViewContainer>
+                        <h2>Contact</h2>
+                        <ContactContainer>
+                            <BoxContact />
+                            <BoxContact />
+                            <BoxContact />
+                        </ContactContainer>
+                    </ContactViewContainer>
+                </SingleMainContainer>
             ) ||
             tabActive === "commandes" && (
-                <p>z</p>
-                /* A faire vue de la commande*/
+                <SingleMainContainer>
+                    <InfoViewContainer>
+                        <h2>Commandes</h2>
+                        <TableCommandeSingle />
+                    </InfoViewContainer>
+                </SingleMainContainer>
             ) ||
             tabActive === "historiques" && (
-                <p>z</p>
-                /* A faire vue de l'historique*/
+                <SingleMainContainer>
+                    <HistoriqueViewContainer>
+                        <HeaderHistoriqueView>
+                        <h2>Historique de contact</h2>
+                        <BtnAjout text="Créer un historique"/>
+                        </HeaderHistoriqueView>
+                        <HistoriqueDataContainer>
+                            <BoxHistorique></BoxHistorique>
+                            <BoxHistorique></BoxHistorique>
+                            <BoxHistorique></BoxHistorique>
+                        </HistoriqueDataContainer>
+                    </HistoriqueViewContainer>
+                </SingleMainContainer>
             ) ||
             tabActive === "chiffres d'affaires" && (
-                <p>z</p>
-                /* A faire vue du chiffre d'affaire */
+                <SingleMainContainer>
+                    <InfoViewContainer>
+                        <h2>Chiffres d'affaires</h2>
+                        <ChiffreDateContainer>
+                            <InputText label="DE :" type="date"/>
+                            <InputText label="A :" type="date"/>
+                        </ChiffreDateContainer>
+                        <ChiffreResultContainer>
+                            <BoxAnneeCa />
+                            <BoxAnneeCa />
+                        </ChiffreResultContainer>
+                    </InfoViewContainer>
+                </SingleMainContainer>
             )}
 
 
