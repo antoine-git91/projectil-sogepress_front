@@ -1,15 +1,13 @@
-import React, {useState} from "react";
+import React from "react";
 import MainContainer from "../../../templates/Container";
 import InputText from "../../../components/Form/InputText";
-import {Link} from "react-router-dom";
 import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
 import InputSelect from "../../../components/Form/InputSelect";
 import BtnAjout from "../../../components/btn_ajout";
 import InputTextArea from "../../../components/Form/InputTextArea";
 import Header from "../../../components/Header";
-import Flexbox from "../../../templates/Flexbox";
-import {ButtonPrimary, ButtonPrimaryLink} from "../../../utils/styles/button-primary";
-
+import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
+import DivButtonAction from "../../../utils/styles/DivButton";
 
 const Home = () => {
 
@@ -19,11 +17,11 @@ const Home = () => {
         <React.Fragment>
             <Header />
             <MainContainer>
-                <Flexbox justify-content="flex-end">
+                <DivButtonAction>
                     <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
+                    <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
-                    <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
-                </Flexbox>
+                </DivButtonAction>
                 <h1>Dashboard</h1>
                 <InputGroupRadio selected={'value3'} name="groupe1" data={data}/>
                 <InputText labeltext="Coucou" />

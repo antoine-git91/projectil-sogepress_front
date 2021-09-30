@@ -1,15 +1,19 @@
 import React from "react";
 import MainContainer from "../../../templates/Container";
-import Table from "../../../components/table";
+import Table from "../../../components/table/TableClientsIndex";
+import DivButtonAction from "../../../utils/styles/DivButton";
+import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
+import TableClientsIndex from "../../../components/table/TableClientsIndex";
 
 const Clients = () => {
 
-    const headTable = ["id", "Raison sociale", "mail", "Type de facturation", "Site internet", "" ];
-
     return(
         <MainContainer>
+            <DivButtonAction>
+                <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
+            </DivButtonAction>
             <h1>Clients page</h1>
-            <Table headTable={headTable} />
+            <TableClientsIndex />
         </MainContainer>
     )
 }

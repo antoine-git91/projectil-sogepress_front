@@ -8,6 +8,12 @@ import InputSelect from "../../../components/Form/InputSelect";
 import BtnAjout from "../../../components/btn_ajout";
 import {ButtonPrimary} from "../../../utils/styles/button-primary";
 import styled from "styled-components";
+import {useEffect} from "react";
+
+const GroupList = styled.ul`
+      margin-left: 0;
+      padding-left: 0;
+    `
 
 const CreateClient = () => {
 
@@ -17,7 +23,14 @@ const CreateClient = () => {
         setArrayContact(
             arrayContact.concat({"firstname": "", "lastname": "", "job": "", "phone": "", "mail": ""})
         )
-    }
+    };
+
+    const removeContact = (e, index) => {
+        //console.log(index)
+        const itemToRemove = arrayContact.indexOf(index);
+        setArrayContact(arrayContact.splice(itemToRemove, 1));
+        //console.log(arrayContact)
+    };
 
     const insertDataFromChild = (newContact, index) => {
         arrayContact[index].firstname = newContact.firstname;
@@ -26,7 +39,7 @@ const CreateClient = () => {
         arrayContact[index].phone = newContact.phone;
         arrayContact[index].mail = newContact.mail;
         setArrayContact(arrayContact);
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -34,25 +47,19 @@ const CreateClient = () => {
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
-        console.log('coucou');
-    }
+    };
 
     //TODO a refecto
     const [deliverySelect, setDeliverySelect] = useState('false');
     const getValueDelivery = (e) => {
         setDeliverySelect(e.target.value)
-    }
+    };
 
     const [billTypeSelect, setBillTypeSelect] = useState('mail');
     const getValueBill = (e) => {
         setBillTypeSelect(e.target.value)
-    }
+    };
     // ENDTODO
-
-    const GroupList = styled.ul`
-      margin-left: 0;
-      padding-left: 0;
-    `
 
 
     return(
@@ -77,8 +84,7 @@ const CreateClient = () => {
             <InputText label="Site internet" name="client_website" />
             <h2>Adresse de livraison</h2>
             <Flexbox>
-                <span>Adresse de livraison différente: </span>
-                <InputGroupRadio onchange={getValueDelivery} selected={deliverySelect} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
+                <InputGroupRadio label={"Adresse de de livraison différente :"} onchange={getValueDelivery} selected={deliverySelect} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
             </Flexbox>
                 {deliverySelect === "true" && (<div>
                     <InputText  label="Numéro et rue" name="client_address_delivery" />
@@ -89,25 +95,24 @@ const CreateClient = () => {
                 </div>)  }
             <h2>Choix de la facturation</h2>
             <InputGroupRadio onchange={getValueBill} selected={billTypeSelect} name="billType" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
-            <Flexbox justify="space-between" align="center">
-                <h2>Contact</h2>
-            </Flexbox>
+            <h2>Contact</h2>
             <GroupList>
                 {arrayContact.map(
                     (contact, index) => <ContactBlock
                                                     key={index}
-                                                    number={index}
+                                                    numberContact={index}
                                                     firstname={contact.firstname}
                                                     lastname={contact.lastname}
                                                     job={contact.job}
                                                     phone={contact.phone}
                                                     mail={contact.mail}
                                                     onChange={(newContact) => insertDataFromChild(newContact, index)}
+                                                    removeContact={(e) => removeContact(e, index)}
                                                 />
                 )}
             </GroupList>
-                <BtnAjout text="Ajouter un contact" add={addContact}/>
-                <ButtonPrimary type="submit">Créer le client</ButtonPrimary>
+            <BtnAjout text="Ajouter un contact" add={addContact}/>
+            <ButtonPrimary type="submit">Créer le client</ButtonPrimary>
             </form>
         </MainContainer>
     )
