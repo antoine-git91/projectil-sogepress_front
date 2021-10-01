@@ -3,12 +3,15 @@ import InputRadio from "../radio/InputRadio";
 import Flexbox from "../../../templates/Flexbox";
 import styled from "styled-components";
 
+const GroupRadioStyle = styled.div`
+      margin-bottom: 20px;
+      
+      p{
+        margin-bottom: 10px;
+      }
+    `
 
 const InputGroupRadio = ({ data, name, selected, onchange, label }) => {
-
-    const GroupRadioStyle = styled.div`
-      margin-bottom: 20px;
-    `
 
       return (
           <GroupRadioStyle>
