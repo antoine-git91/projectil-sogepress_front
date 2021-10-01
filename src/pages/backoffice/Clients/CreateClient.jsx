@@ -8,7 +8,6 @@ import InputSelect from "../../../components/Form/InputSelect";
 import BtnAjout from "../../../components/btn_ajout";
 import {ButtonPrimary} from "../../../utils/styles/button-primary";
 import styled from "styled-components";
-import {useEffect} from "react";
 
 const GroupList = styled.ul`
       margin-left: 0;

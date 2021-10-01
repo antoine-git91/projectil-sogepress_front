@@ -1,6 +1,5 @@
 import React from "react";
 import MainContainer from "../../../templates/Container";
-import Table from "../../../components/table/TableClientsIndex";
 import DivButtonAction from "../../../utils/styles/DivButton";
 import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
 import TableClientsIndex from "../../../components/table/TableClientsIndex";
@@ -13,7 +12,13 @@ const Clients = () => {
 
     const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
 
-    const [typeClientSelect, setTypeClientSelect] = useState('acquis');
+    const [arrayClient, setArrayClient] = useState([]);
+
+    useEffect(() => {
+        setArrayClient(clients)
+    }, [clients])
+
+    const [typeClientSelect, setTypeClientSelect] = useState(null);
     const getValueType = (e) => {
         setTypeClientSelect(e.target.value)
     };
@@ -27,7 +32,7 @@ const Clients = () => {
     const handleChange = (e) => {
         const clientInput = e.target.value;
 
-        clients.forEach(suggestion => nameClients.push(suggestion.raison_sociale))
+        arrayClient.forEach(suggestion => nameClients.push(suggestion.raison_sociale))
 
         // Filter our suggestions that don't contain the user's input
         const unLinked = nameClients.filter(
@@ -61,14 +66,19 @@ const Clients = () => {
         }
     }
 
+    useEffect(() => {
+        setArrayClient(a =>a.filter(client => client.statut == typeClientSelect))
+    }, [typeClientSelect]);
+
+
     return(
         <MainContainer>
-            <ResearchClient onChangeSelect={getValueType} typeClientSelect={typeClientSelect} onKeyDown={onKeyDown} onClick={onClick} inputNameClient={handleChange} showSuggestions={showSuggestions} input={input} filteredSuggestions={filteredSuggestions} activeSuggestionIndex={activeSuggestionIndex} />
+            <ResearchClient clientsList={arrayClient} onChangeStatus={getValueType} typeClientSelect={typeClientSelect} onKeyDown={onKeyDown} onClick={onClick} inputNameClient={handleChange} showSuggestions={showSuggestions} input={input} filteredSuggestions={filteredSuggestions} activeSuggestionIndex={activeSuggestionIndex} />
             <DivButtonAction>
                 <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
             </DivButtonAction>
             <h1>Clients page</h1>
-            <TableClientsIndex clients={clients} loading={loading} load={load} nameClientSearch={input} />
+            <TableClientsIndex clients={arrayClient} loading={loading} load={load} nameClientSearch={input} statusClient={typeClientSelect} />
         </MainContainer>
     )
 }

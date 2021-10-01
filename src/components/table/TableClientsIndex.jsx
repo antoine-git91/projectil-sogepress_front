@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
-import {useState} from "react";
 
 const TableStyle = styled.table`
       width: 100%;
@@ -29,7 +28,7 @@ const TableClientsIndex = ({clients, load, loading, nameClientSearch}) => {
                         <td>{dataClient.raison_sociale}</td>
                         <td>{dataClient.email}</td>
                         <td>{dataClient.type_facturation ? "mail" : "courrier"}</td>
-                        <td>{dataClient.site_internet}</td>
+                        <td>{ dataClient.statut ? "Acquis" : "Prospect"}</td>
                         <td><Link to={{pathname: `/profile/${dataClient.id}`}}>Voir le profil</Link></td>
                     </tr>
                 ))}
