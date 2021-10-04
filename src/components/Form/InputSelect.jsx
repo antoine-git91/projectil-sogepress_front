@@ -9,34 +9,23 @@ const SelectStyle = styled.select`
       margin-bottom: 20px;
     `
 
-class InputSelect extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {value: 'coconut'};
-  
-      this.handleChange = this.handleChange.bind(this);
-    }
-  
-    handleChange(event) {
-      this.setState({value: event.target.value});
-    }
-  
-    render() {
+const InputSelect = ({data, label, option, selectValue, setSelectValue, optionValue}) => {
 
-        const data = this.props.data;
-        const label = this.props.label;
-
-      return (
-            <label>{label}
-            <SelectStyle value={this.state.value} onChange={this.handleChange}>
-
-                <option>{this.props.option}</option>
-                {data.map((select, key)=><option key={key} value={select.id}>{select.value}</option>)}
-            
-            </SelectStyle>
-            </label>
-      );
+    const handleChange = (event) => {
+      setSelectValue(event.target.value);
     }
+
+  return (
+        <label>{label}
+        <SelectStyle value={selectValue} onChange={handleChange}>
+
+            <option value={optionValue}>{option}</option>
+            {data.map((select, key)=><option key={key} value={select.value}>{select.value}</option>)}
+
+        </SelectStyle>
+        </label>
+  );
+
 }
 
 export default InputSelect;

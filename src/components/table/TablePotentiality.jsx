@@ -1,6 +1,5 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
-import {usePaginationFetch} from "../Hook";
 
 const TableStyle = styled.table`
       width: 60%;
@@ -8,16 +7,15 @@ const TableStyle = styled.table`
 
 const TableClientsIndex = () => {
 
-    const {items: clients, loading, load} = usePaginationFetch('#');
     const headTable = ["Type", "Magasine"];
 
     const dataPotentiality = [{type: "Site internet", magasine: ""}, {type: "Print", magasine: "Hello"}]
 
-    useEffect(() => load(), [load])
+    //useEffect(() => load(), [load])
 
     return(
         <div>
-            {!loading && 'Chargement...'}
+            {/*{!loading && 'Chargement...'}*/}
             <TableStyle>
                 <thead>
                     <tr>
@@ -26,7 +24,7 @@ const TableClientsIndex = () => {
                 </thead>
                 <tbody>
                 {dataPotentiality.map((potentiality, key) => (
-                    <tr>
+                    <tr key={key}>
                         <td>{potentiality.type}</td>
                         <td>{potentiality.magasine}</td>
                     </tr>
