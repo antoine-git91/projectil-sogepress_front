@@ -5,10 +5,10 @@ const BoxInfosStyle = styled.div`
   max-width: 200px;
   
   p{
-    font-size: 20px;
+    font-size: 16px;
     
     &:last-child{
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 600;
       margin-bottom: 15px;
       margin-top: 5px;

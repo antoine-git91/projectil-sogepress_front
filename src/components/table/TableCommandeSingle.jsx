@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
-import {usePaginationFetch} from "../Hook";
+import {Link} from "react-router-dom";
 
 export const TotalCa = styled.div`
 display : flex;
@@ -9,35 +9,35 @@ font-weight: 900;
 `
 
 const TableCommandeStyle = styled.table`
-      width: 60%;
+      width: 100%;
     `
 
-const TableCommandeSingle = () => {
+const TableCommandeSingle = (commandes) => {
 
-    const {items: clients, loading, load} = usePaginationFetch('#');
-    const headTable = ["Type", "Magasine"];
 
-    const dataPotentiality = [{type: "Site internet", magasine: ""}, {type: "Print", magasine: "Hello"}]
+    //const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients/' + idUser);
 
-    useEffect(() => load(), [load])
+    const headTable = ["Type", "Magasine", "Prix", "Status", ""];
+
+    //useEffect(() => load(), [load])
 
     return(
         <div>
-            {!loading && 'Chargement...'}
+            {/*{!loading && 'Chargement...'}*/}
             <TableCommandeStyle>
-                {/* <thead>
+                 <thead>
                     <tr>
                         {headTable.map((item, key) => <th key={key}>{item}</th>)}
                     </tr>
-                </thead> */}
+                </thead>
                 <tbody>
-                {dataPotentiality.map((potentiality, key) => (
-                    <tr>
-                        {/* <td>{potentiality.type}</td> */}
+                {commandes.commandes.map( (commande,key) => (
+                    <tr key={key}>
                         <td>Type de produit</td>
-                        <td>11/09/2021</td>
-                        <td>200€</td>
-                        <td>Status</td>
+                        <td>{commande.fin}</td>
+                        <td>Champ manquant</td>
+                        <td>A faire</td>
+                        <td><Link to={{pathname: `/commande/`}}>Voir la commande</Link></td>
                     </tr>
                 ))}
                 </tbody>

@@ -47,11 +47,13 @@ export const HistoriqueDataContainer = styled.div`
 export const InfoContainer = styled.div`
 display : grid; 
 grid-template-columns: repeat(auto-fill, 250px);
+
 `
 
 export const ContactContainer = styled.div`
   display: grid; 
   grid-template-columns: repeat(auto-fill, 250px);
+  gap: 10px;
 `
 
 export const InfoViewContainer = styled.div`

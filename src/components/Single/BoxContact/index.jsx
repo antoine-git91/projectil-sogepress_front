@@ -2,10 +2,13 @@ import React from "react";
 import styled from "styled-components";
 
 const BoxContactStyle = styled.div`
-  max-width: 220px;
   max-height: 250px;
-  padding: 10px;
+  padding: 20px;
   background-color: lightgrey;
+  
+  h3{
+    margin: 0;
+  }
   
   p{
     font-size: 18px;
