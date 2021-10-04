@@ -7,7 +7,6 @@ import TableCommandesIndex from "../../../components/table/TableCommandesIndex";
 const Commandes = () => {
 
     const headTable = ["Raison sociale", "mail", "Type de facturation", "Site internet", "" ];
-    const dataUrl= 'http://127.0.0.1:8000/api/clients';
 
     return(
         <MainContainer>
