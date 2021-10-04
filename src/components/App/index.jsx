@@ -8,6 +8,7 @@ import CreateCommande from "../../pages/backoffice/commandes/CreateCommande";
 import Header from "../Header";
 import Commandes from "../../pages/front/Commandes";
 import './app.css'
+import Commande from "../../pages/front/Commandes/Commande";
 
 const App = () => {
 
@@ -60,7 +61,7 @@ const App = () => {
                     <Commandes />
                 </Route>
                 <Route path="/commande/:id">
-                    <Commandes />
+                    <Commande />
                 </Route>
                 <Route path="/profile/:id">
                     <Profile />

@@ -30,6 +30,7 @@ const ResearchClient = ({clientsList,
                         setTypeClientRadio,
                         }) => {
 
+
     const [villeClients, setVilleClients] = useState([]);
     const villes = clientsList.map(client => client.adresses.map(adresse => adresse.ville.nom));
     villes.map( arrayVille => arrayVille.map( ville => villeClients.push(ville)));
@@ -39,7 +40,7 @@ const ResearchClient = ({clientsList,
     })
 
     const [codePostal, setCodePostal] = useState([]);
-    const cp = clientsList.map(client => client.adresses.map(adresse => adresse.ville.code_postal));
+    const cp = clientsList.map(client => client.adresses.map(adresse => adresse.ville.codePostal));
     cp.map( arrayVille => arrayVille.map( ville => codePostal.push(ville)));
     /* on évite les doublon */
     const uniqueCodePostal = codePostal.filter(function(elem, index, self) {
@@ -47,7 +48,7 @@ const ResearchClient = ({clientsList,
     })
 
     const [activites, setActivites] = useState([]);
-    clientsList.map( client => activites.push(client.naf_sous_classe.libelle));
+    clientsList.map( client => activites.push(client.nafSousClasse.libelle));
     /* on évite les doublon */
     const uniqueActivites = activites.filter(function(elem, index, self) {
         return index === self.indexOf(elem);
