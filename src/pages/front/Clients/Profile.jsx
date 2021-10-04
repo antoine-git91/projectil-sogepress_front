@@ -74,7 +74,6 @@ const Profile = () => {
 
     //const {raison_sociale, email} = {...items};
 
-    console.log(items)
     return (
         <MainContainer>
             
@@ -85,8 +84,8 @@ const Profile = () => {
                 <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
             </DivButtonAction>
             <BoxTitle>
-                <h1>{items.raison_sociale} / <span>Titre 2</span></h1>
-                <p>Activité</p>
+                <h1>{items.raisonSociale} / <span></span></h1>
+                {/* <p>{items.nafSousClasse.libelle}</p> */}
             </BoxTitle>
             <div>
                 {tabs.map(tab => (
@@ -109,7 +108,7 @@ const Profile = () => {
                             <BoxInfos titre="Email" information={items.email} />
                             {/*items.adresses[0].numero + ' ' + items.adresses[0].type_voie + ' ' + items.adresses[0].nom_voie + ' ' + items.adresses[0].ville.nom + ' ' + items.adresses[0].ville.code_postal*/}
                             <BoxInfos titre="Adresse" information={'25 rue du cefim 370000 Tours'} />
-                            <BoxInfos titre="Site internet" information={items.site_internet} />
+                            <BoxInfos titre="Site internet" information={items.siteInternet} />
                         </InfoContainer>
                         <h2>Indice de potentialité</h2>
                         <TablePotentiality />
