@@ -49,7 +49,6 @@ const Profile = () => {
 
     const {id} = useParams()
     const [items, setItems] = useState([])
-
     const [tabActive, setTabActive] = useState(tabs[0]);
 
     //const {item: client, loading, load} = usePaginationFetch(`http://127.0.0.1:8000/api/clients/${id}`)
@@ -70,11 +69,12 @@ const Profile = () => {
             )
     }, [id])
 
-
     /*useEffect(() => load(), [load])
     console.log(JSON.stringify(client))*/
 
     //const {raison_sociale, email} = {...items};
+
+    console.log(items)
     return (
         <MainContainer>
             
@@ -85,7 +85,7 @@ const Profile = () => {
                 <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
             </DivButtonAction>
             <BoxTitle>
-                <h1>Entreprise 1 / <span>Titre 2</span></h1>
+                <h1>{items.raison_sociale} / <span>Titre 2</span></h1>
                 <p>Activité</p>
             </BoxTitle>
             <div>
@@ -100,15 +100,16 @@ const Profile = () => {
                     >{tab}</BtnTabs>
                 ))}
             </div>
-            { tabActive === "contact" && (
+            { (tabActive === "contact" &&
                 <SingleMainContainer>
                     <InfoViewContainer>
                         <h2>Coordonnées</h2>
                         <InfoContainer>
-                            <BoxInfos titre="Téléphone" information="02 47 09 67 34" />
-                            <BoxInfos titre="Email" information="email@email.com" />
-                            <BoxInfos titre="Adresse" information="5 avenue du littoral 37000 TOURS" />
-                            <BoxInfos titre="Site internet" information="www.site.url" />
+                            <BoxInfos titre="Téléphone" information={'items.telephone'} />
+                            <BoxInfos titre="Email" information={items.email} />
+                            {/*items.adresses[0].numero + ' ' + items.adresses[0].type_voie + ' ' + items.adresses[0].nom_voie + ' ' + items.adresses[0].ville.nom + ' ' + items.adresses[0].ville.code_postal*/}
+                            <BoxInfos titre="Adresse" information={'25 rue du cefim 370000 Tours'} />
+                            <BoxInfos titre="Site internet" information={items.site_internet} />
                         </InfoContainer>
                         <h2>Indice de potentialité</h2>
                         <TablePotentiality />
@@ -123,15 +124,13 @@ const Profile = () => {
                     </ContactViewContainer>
                 </SingleMainContainer>
             ) ||
-            tabActive === "commandes" && (
-                <SingleMainContainer>
-                    <InfoViewContainer>
-                        <h2>Commandes</h2>
-                        <TableCommandeSingle />
-                    </InfoViewContainer>
-                </SingleMainContainer>
+            (tabActive === "commandes" &&
+               <>
+                   <h2>Commandes</h2>
+                   <TableCommandeSingle commandes={items.commandes} />
+               </>
             ) ||
-            tabActive === "historiques" && (
+            (tabActive === "historiques" &&
                 <SingleMainContainer>
                     <HistoriqueViewContainer>
                         <HeaderHistoriqueView>
@@ -139,14 +138,14 @@ const Profile = () => {
                         <BtnAjout text="Créer un historique"/>
                         </HeaderHistoriqueView>
                         <HistoriqueDataContainer>
-                            <BoxHistorique></BoxHistorique>
-                            <BoxHistorique></BoxHistorique>
-                            <BoxHistorique></BoxHistorique>
+                            {items.historiqueClients.map((historique, key) => (
+                                <BoxHistorique key={key} dataHistorique={historique} />
+                            ))}
                         </HistoriqueDataContainer>
                     </HistoriqueViewContainer>
                 </SingleMainContainer>
             ) ||
-            tabActive === "chiffres d'affaires" && (
+            (tabActive === "chiffres d'affaires" &&
                 <SingleMainContainer>
                     <InfoViewContainer>
                         <h2>Chiffres d'affaires</h2>

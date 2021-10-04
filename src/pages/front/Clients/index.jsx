@@ -7,28 +7,42 @@ import ResearchClient from "../../../components/Research/ResearchClient";
 import {usePaginationFetch} from "../../../components/Hook";
 import {useState} from "react";
 import {useEffect} from "react";
+import Pagination from "../../../components/Pagination";
 
 const Clients = () => {
 
     const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
 
     const [arrayClient, setArrayClient] = useState([]);
-
     useEffect(() => {
         setArrayClient(clients)
     }, [clients])
 
-    const [typeClientSelect, setTypeClientSelect] = useState(null);
-    const getValueType = (e) => {
-        setTypeClientSelect(e.target.value)
+    const [typeClientRadio, setTypeClientRadio] = useState("");
+    const [selectActivite, setSelectActivite] = useState('');
+    const [selectVille, setSelectVille] = useState('');
+    const [selectCodePostal, setSelectCodePostal] = useState('');
+
+    const getStatus = (a) => {
+        if(typeClientRadio === "Acquis"){
+            return a.statut === true;
+        } else if(typeClientRadio === "Prospect"){
+            return a.statut !== true;
+        } else {
+            return a;
+        }
     };
 
+
+
+    /* #### input de recherche par nom de client #### */
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [input, setInput] = useState("");
 
     const nameClients = [];
+
     const handleChange = (e) => {
         const clientInput = e.target.value;
 
@@ -65,20 +79,43 @@ const Clients = () => {
             setShowSuggestions(false);
         }
     }
-
-    useEffect(() => {
-        setArrayClient(a =>a.filter(client => client.statut == typeClientSelect))
-    }, [typeClientSelect]);
-
+    /* #########################*/
 
     return(
         <MainContainer>
-            <ResearchClient clientsList={arrayClient} onChangeStatus={getValueType} typeClientSelect={typeClientSelect} onKeyDown={onKeyDown} onClick={onClick} inputNameClient={handleChange} showSuggestions={showSuggestions} input={input} filteredSuggestions={filteredSuggestions} activeSuggestionIndex={activeSuggestionIndex} />
+            <ResearchClient clientsList={arrayClient}
+                            typeClientRadio={typeClientRadio}
+                            onKeyDown={onKeyDown} onClick={onClick}
+                            inputNameClient={handleChange}
+                            showSuggestions={showSuggestions}
+                            input={input}
+                            filteredSuggestions={filteredSuggestions}
+                            activeSuggestionIndex={activeSuggestionIndex}
+                            selectActivite={selectActivite}
+                            setSelectActivite={setSelectActivite}
+                            selectVille={selectVille}
+                            setSelectVille={setSelectVille}
+                            selectCodePostal={selectCodePostal}
+                            setSelectCodePostal={setSelectCodePostal}
+                            setTypeClientRadio={setTypeClientRadio}
+                            setArrayClient={setArrayClient}
+
+            />
             <DivButtonAction>
                 <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
             </DivButtonAction>
             <h1>Clients page</h1>
-            <TableClientsIndex clients={arrayClient} loading={loading} load={load} nameClientSearch={input} statusClient={typeClientSelect} />
+            <TableClientsIndex clients={arrayClient}
+                               loading={loading}
+                               load={load}
+                               nameClientSearch={input}
+                               selectVille={selectVille}
+                               selectCodePostal={selectCodePostal}
+                               selectActivite={selectActivite}
+                               getStatus={getStatus}
+                               setArrayClient={setArrayClient}
+            />
+            <Pagination />
         </MainContainer>
     )
 }
