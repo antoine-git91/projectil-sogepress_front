@@ -36,7 +36,7 @@ const TableCommandeSingle = (commandes) => {
                         <td>Type de produit</td>
                         <td>{commande.fin}</td>
                         <td>Champ manquant</td>
-                        <td>A faire</td>
+                        <td>{commande.facturation}</td>
                         <td><Link to={{pathname: `/commande/`}}>Voir la commande</Link></td>
                     </tr>
                 ))}
