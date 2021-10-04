@@ -7,9 +7,19 @@ th{
     padding: 10px;
 }
 
+tr:hover td {
+    background-color: #dedede;
+}
+
 td{
     text-align: left;
-    padding: 5px 10px;
+    cursor: pointer;
+}
+
+td a{
+    color: #3b3b3b;
+    padding: 10px 10px;
+    display: block;
 }
 
 tbody tr:nth-child(even){

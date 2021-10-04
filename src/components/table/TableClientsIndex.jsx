@@ -3,14 +3,14 @@ import styled from "styled-components";
 import {Link} from "react-router-dom";
 
 const TableStyle = styled.table`
-      width: 100%;
-    `
+  width: 100%;
+`
 
-const TableClientsIndex = ({clients, load, loading, nameClientSearch}) => {
+const TableClientsIndex = ({clients, load, loading, nameClientSearch, selectVille, selectCodePostal, selectActivite, getStatus}) => {
 
-    const headTable = ["Raison sociale", "mail", "Type de facturation", "Acquis/Prospect", "Code Postal" ];
+    const headTable = ["Raison sociale", "Activité", "Email", "Code Postal", "Ville" , "Acquis/Prospect" ];
 
-    useEffect(() => load(), [load])
+    useEffect(() => load(), [load]);
 
     return(
         <div>
@@ -22,14 +22,20 @@ const TableClientsIndex = ({clients, load, loading, nameClientSearch}) => {
                     </tr>
                 </thead>
                 <tbody>
-                {clients.filter(client => client.raison_sociale.toLowerCase().includes(nameClientSearch)).map((dataClient, key) => (
+                {clients.filter(client => client.raison_sociale.toLowerCase().includes(nameClientSearch)
+                    && client.naf_sous_classe.libelle.includes(selectActivite)
+                    && client.adresses[0].ville.code_postal.includes(selectCodePostal)
+                    && client.adresses[0].ville.nom.includes(selectVille)
+                    && getStatus(client))
+                    .map((dataClient, key) => (
                     <tr key={key}>
-                        {/*{Object.values(data.data).map((el, key) => <td key={key}>{el}</td>)}*/}
-                        <td>{dataClient.raison_sociale}</td>
-                        <td>{dataClient.email}</td>
-                        <td>{dataClient.type_facturation ? "mail" : "courrier"}</td>
-                        <td>{ dataClient.statut ? "Acquis" : "Prospect"}</td>
-                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>Voir le profil</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.raison_sociale}</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.naf_sous_classe.libelle}</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.email}</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresses[0].ville.code_postal}</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresses[0].ville.nom}</Link></td>
+                        <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.statut ? "Acquis" : "Prospect"}</Link></td>
+
                     </tr>
                 ))}
                 </tbody>

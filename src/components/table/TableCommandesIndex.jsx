@@ -10,7 +10,9 @@ const TableStyle = styled.table`
 const TableCommandesIndex = () => {
 
     const {items: commandes, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
-    const headTable = ["Type", "Client", "Ville", "Prix", "Date de livraison", "Status" ];
+    const headTable = ["Type", "Client", "Prix", "Date de livraison", "Status" ];
+
+    console.log(commandes)
 
     useEffect(() => load(), [load])
 
@@ -25,12 +27,12 @@ const TableCommandesIndex = () => {
                 </thead>
                 <tbody>
                 {commandes.map((dataCommande, key) => (
-                    <tr>
-                        <td>{dataCommande.raison_sociale}</td>
-                        <td>{dataCommande.email}</td>
-                        <td>{dataCommande.type_facturation ? "mail" : "courrier"}</td>
-                        <td>{dataCommande.site_internet}</td>
-                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>Voir le profil</Link></td>
+                    <tr key={key}>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>A faire</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raison_sociale}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.facturation}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.fin}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.statut.libelle}</Link></td>
                     </tr>
                 ))}
                 </tbody>
