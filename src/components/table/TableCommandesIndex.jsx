@@ -9,8 +9,10 @@ const TableStyle = styled.table`
 
 const TableCommandesIndex = () => {
 
-    const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
+    const {items: commandes, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
     const headTable = ["Type", "Client", "Prix", "Date de livraison", "Status" ];
+
+    console.log(commandes)
 
     useEffect(() => load(), [load])
 
@@ -24,13 +26,13 @@ const TableCommandesIndex = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {clients.map((dataClient, key) => (
+                {commandes.map((dataCommande, key) => (
                     <tr key={key}>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>{dataClient.client.nom}</Link></td>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>{dataClient.email}</Link></td>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>{dataClient.type_facturation ? "mail" : "courrier"}</Link></td>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>{dataClient.site_internet}</Link></td>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>{dataClient.statut.libelle}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>A faire</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raison_sociale}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.facturation}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.fin}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.statut.libelle}</Link></td>
                     </tr>
                 ))}
                 </tbody>
