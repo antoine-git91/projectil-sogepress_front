@@ -9,7 +9,7 @@ const TableStyle = styled.table`
 
 const TableCommandesIndex = () => {
 
-    const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
+    const {items: commandes, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
     const headTable = ["Type", "Client", "Ville", "Prix", "Date de livraison", "Status" ];
 
     useEffect(() => load(), [load])
@@ -24,13 +24,13 @@ const TableCommandesIndex = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {clients.map((dataClient, key) => (
+                {commandes.map((dataCommande, key) => (
                     <tr>
-                        <td>{dataClient.raison_sociale}</td>
-                        <td>{dataClient.email}</td>
-                        <td>{dataClient.type_facturation ? "mail" : "courrier"}</td>
-                        <td>{dataClient.site_internet}</td>
-                        <td><Link to={{pathname: `/commande/${dataClient.id}`}}>Voir le profil</Link></td>
+                        <td>{dataCommande.raison_sociale}</td>
+                        <td>{dataCommande.email}</td>
+                        <td>{dataCommande.type_facturation ? "mail" : "courrier"}</td>
+                        <td>{dataCommande.site_internet}</td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>Voir le profil</Link></td>
                     </tr>
                 ))}
                 </tbody>
