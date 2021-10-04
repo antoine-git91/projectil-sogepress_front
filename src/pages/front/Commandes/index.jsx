@@ -6,8 +6,6 @@ import TableCommandesIndex from "../../../components/table/TableCommandesIndex";
 
 const Commandes = () => {
 
-    const headTable = ["Raison sociale", "mail", "Type de facturation", "Site internet", "" ];
-
     return(
         <MainContainer>
             <DivButtonAction>

@@ -2,11 +2,13 @@ import React from "react";
 import Flexbox from "../../../templates/Flexbox";
 import styled from "styled-components";
 
-const InputRadio = ({labeltext, idRadio, nameRadio, valueRadio, checked}) => {
-
-    const RadioStyle = styled.input`
+const RadioStyle = styled.input`
       margin-right: 20px;
     `
+
+const InputRadio = ({labeltext, idRadio, nameRadio, valueRadio, checked}) => {
+
+
     return (
             <Flexbox>
                 <label htmlFor={idRadio}>{labeltext}</label>

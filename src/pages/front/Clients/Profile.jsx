@@ -14,7 +14,6 @@ import styled from "styled-components";
 import TablePotentiality from "../../../components/table/TablePotentiality";
 import TableCommandeSingle from "../../../components/table/TableCommandeSingle";
 import DivButtonAction from "../../../utils/styles/DivButton";
-import TableCommandesIndex from "../../../components/table/TableCommandesIndex";
 
 const BtnTabs = styled.button`
   background-color: transparent;
@@ -53,10 +52,6 @@ const Profile = () => {
 
     const [tabActive, setTabActive] = useState(tabs[0]);
 
-    const handleClickTab = () => {
-
-    }
-
     //const {item: client, loading, load} = usePaginationFetch(`http://127.0.0.1:8000/api/clients/${id}`)
 
     useEffect(() => {
@@ -89,11 +84,6 @@ const Profile = () => {
                 <ButtonPrimaryLink to="/creation_commande">Nouvelle commande</ButtonPrimaryLink>
                 <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
             </DivButtonAction>
-            {/*<BoxTitle>
-                    <h1>{raison_sociale} / <span>Titre 2</span></h1>
-                    <p>Activité</p>
-                    <p>{email}</p>
-            </BoxTitle>*/}
             <BoxTitle>
                 <h1>Entreprise 1 / <span>Titre 2</span></h1>
                 <p>Activité</p>
