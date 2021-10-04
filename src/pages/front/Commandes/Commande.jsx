@@ -45,7 +45,7 @@ const tabs = [
     "historiques",
     "chiffres d'affaires"
 ]
-const Profile = () => {
+const Commande = () => {
 
     const {id} = useParams()
     const [items, setItems] = useState([])
@@ -54,7 +54,7 @@ const Profile = () => {
     //const {item: client, loading, load} = usePaginationFetch(`http://127.0.0.1:8000/api/clients/${id}`)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/clients/${id}`)
+        fetch(`http://127.0.0.1:8000/api/commandes/${id}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -74,6 +74,10 @@ const Profile = () => {
 
     //const {raison_sociale, email} = {...items};
 
+    const getTypeCommande = (a) => {
+
+    };
+
     console.log(items)
     return (
         <MainContainer>
@@ -85,7 +89,7 @@ const Profile = () => {
                 <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
             </DivButtonAction>
             <BoxTitle>
-                <h1>{items.raison_sociale} / <span>Titre 2</span></h1>
+                <h1>{getTypeCommande(items)} / <span>Titre 2</span></h1>
                 <p>Activité</p>
             </BoxTitle>
             <div>
@@ -105,9 +109,8 @@ const Profile = () => {
                     <InfoViewContainer>
                         <h2>Coordonnées</h2>
                         <InfoContainer>
-                            <BoxInfos titre="Téléphone" information={items.contacts[0].tel} />
+                            <BoxInfos titre="Téléphone" information={'items.telephone'} />
                             <BoxInfos titre="Email" information={items.email} />
-                            {/*items.adresses[0].numero + ' ' + items.adresses[0].type_voie + ' ' + items.adresses[0].nom_voie + ' ' + items.adresses[0].ville.nom + ' ' + items.adresses[0].ville.code_postal*/}
                             <BoxInfos titre="Adresse" information={'25 rue du cefim 370000 Tours'} />
                             <BoxInfos titre="Site internet" information={items.site_internet} />
                         </InfoContainer>
@@ -166,4 +169,4 @@ const Profile = () => {
     )
 
 }
-export default Profile
+export default Commande;

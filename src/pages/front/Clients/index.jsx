@@ -46,7 +46,7 @@ const Clients = () => {
     const handleChange = (e) => {
         const clientInput = e.target.value;
 
-        arrayClient.forEach(suggestion => nameClients.push(suggestion.raison_sociale))
+        arrayClient.forEach(suggestion => nameClients.push(suggestion.raisonSociale))
 
         // Filter our suggestions that don't contain the user's input
         const unLinked = nameClients.filter(

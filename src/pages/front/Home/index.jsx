@@ -18,16 +18,9 @@ const Home = () => {
             <Header />
             <MainContainer>
                 <DivButtonAction>
-                    <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
-                    <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
-                    <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
+                    <ButtonPrimaryLink to="/creation_client">Créer i</ButtonPrimaryLink>
                 </DivButtonAction>
                 <h1>Dashboard</h1>
-                <InputGroupRadio selected={'value3'} name="groupe1" data={data}/>
-                <InputText labeltext="Coucou" />
-                <InputSelect data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
-                <BtnAjout text="Ajouter un commentaire"/>
-                <InputTextArea label="Commentaire" commentaireId="com1" commentaireName="comname" commentaireRows="10" commentaireCols="60" />
             </MainContainer>
         </React.Fragment>
     )
