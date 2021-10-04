@@ -21,14 +21,12 @@ padding: 20px;
 
 const BoxHistorique = ({dataHistorique}) => {
 
-    const {commentaire, contact, commande} = {...dataHistorique}
+    const {commentaire, contact, commande, createdAt} = {...dataHistorique}
 
     return (
-
-
         <BoxHistoriqueStyle>
             <HeadBoxHistorique>
-                <p>Date : <span></span></p>
+                <p>Date : <span>{createdAt}</span></p>
                 <p>Contact : <span>{contact.nom + " " + contact.prenom}</span> <span>(Physique)</span></p>
                 <p>Projet : <span>Projet n°</span></p>
             </HeadBoxHistorique>
@@ -36,7 +34,6 @@ const BoxHistorique = ({dataHistorique}) => {
                 <p>{commentaire}</p>
             </ContentBoxHistorique>
         </BoxHistoriqueStyle>
-
     )
 }
 
