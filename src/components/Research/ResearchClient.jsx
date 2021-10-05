@@ -29,6 +29,7 @@ const ResearchClient = ({clientsList,
                         setTypeClientRadio,
                         }) => {
 
+
     const [villeClients, setVilleClients] = useState([]);
     const villes = clientsList.map(client => client.adresses.map(adresse => adresse.ville.nom));
     villes.map( arrayVille => arrayVille.map( ville => villeClients.push(ville)));
