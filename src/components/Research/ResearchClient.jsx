@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import InputGroupRadio from "../Form/radio/InputGroupRadio";
 import Flexbox from "../../templates/Flexbox";
 import styled from "styled-components";
@@ -15,7 +15,6 @@ const ResearchClient = ({clientsList,
                         typeClientRadio,
                         inputNameClient,
                         input,
-                        setArrayClient,
                         onClick,
                         onKeyDown,
                         showSuggestions,

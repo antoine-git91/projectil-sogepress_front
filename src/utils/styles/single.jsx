@@ -45,9 +45,9 @@ export const HistoriqueDataContainer = styled.div`
 `
 
 export const InfoContainer = styled.div`
-display : grid; 
-grid-template-columns: repeat(auto-fill, 250px);
-
+  display : grid; 
+  grid-template-columns: repeat(auto-fill, 45%);
+  gap: 10px;
 `
 
 export const ContactContainer = styled.div`
@@ -57,11 +57,10 @@ export const ContactContainer = styled.div`
 `
 
 export const InfoViewContainer = styled.div`
-  width : 60%;
+  width : 55%;
 `
 
 export const ContactViewContainer = styled.div`
-width: 40%;
  display: flex;
  flex-direction: column;
 `
