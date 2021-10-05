@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Home from "../../pages/front/Home";
 import Clients from "../../pages/front/Clients";
@@ -9,13 +9,14 @@ import Header from "../Header";
 import Commandes from "../../pages/front/Commandes";
 import './app.css'
 import Commande from "../../pages/front/Commandes/Commande";
+import Login from "../../pages/front/Login";
 
 const App = () => {
 
-    /*const [token, setToken] = useState('');
-    const [errorMessage, setErrorMessage] = useState(null)*/
+    const [token, setToken] = useState(localStorage.getItem('itemName'));
+    //const [errorMessage, setErrorMessage] = useState(null)
 
-    /*const [value, setValue] = useState({
+    const [value, setValue] = useState({
         username: "",
         password: ""
     })
@@ -33,19 +34,26 @@ const App = () => {
 
         const requestOptions = {
             method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer ' + token
+            },
             body: JSON.stringify({username: value.username, password: value.password})
         };
         fetch('http://127.0.0.1:8000/api/login', requestOptions)
             .then(response => response.json())
             .then(data => setToken(data.token))
-    }*/
+    }
 
-    /*if(!token){
+    localStorage.setItem('itemName', token)
+    console.log(localStorage.getItem('itemName'))
+
+    if(!token || localStorage.getItem('itemName').includes(null) ){
+        console.log('nope')
         return (
             <Login submit={handleSubmit} inputChange={handleChange} valueUser={value.username} valuePass={value.password} />
         )
-    }*/
+    }
 
     return(
         <Router>

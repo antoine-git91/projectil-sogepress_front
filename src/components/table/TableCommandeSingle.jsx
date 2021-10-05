@@ -33,11 +33,10 @@ const TableCommandeSingle = (commandes) => {
                 <tbody>
                 {commandes.commandes.map( (commande,key) => (
                     <tr key={key}>
-                        <td>Type de produit</td>
-                        <td>{commande.fin}</td>
-                        <td>Champ manquant</td>
-                        <td>{commande.facturation}</td>
-                        <td><Link to={{pathname: `/commande/`}}>Voir la commande</Link></td>
+                        <td><Link to={{pathname: `/commande/${commande.id}`}}>Type de produit</Link></td>
+                        <td><Link to={{pathname: `/commande/${commande.id}`}}>{commande.fin}</Link></td>
+                        <td><Link to={{pathname: `/commande/${commande.id}`}}>Champ manquant</Link></td>
+                        <td><Link to={{pathname: `/commande/${commande.id}`}}>{commande.facturation}</Link></td>
                     </tr>
                 ))}
                 </tbody>

@@ -34,7 +34,6 @@ const Clients = () => {
     };
 
 
-
     /* #### input de recherche par nom de client #### */
     const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
@@ -85,7 +84,8 @@ const Clients = () => {
         <MainContainer>
             <ResearchClient clientsList={arrayClient}
                             typeClientRadio={typeClientRadio}
-                            onKeyDown={onKeyDown} onClick={onClick}
+                            onKeyDown={onKeyDown}
+                            onClick={onClick}
                             inputNameClient={handleChange}
                             showSuggestions={showSuggestions}
                             input={input}
