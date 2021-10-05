@@ -4,7 +4,6 @@ import styled from "styled-components";
 const BoxHistoriqueStyle = styled.div`
   border: 1px solid black;
   margin-bottom: 50px;
-}
 `
 
 export const HeadBoxHistorique = styled.div`
@@ -21,7 +20,7 @@ padding: 20px;
 
 const BoxHistorique = ({dataHistorique}) => {
 
-    const {commentaire, contact, commande, createdAt} = {...dataHistorique}
+    const {commentaire, contact, createdAt} = {...dataHistorique}
 
     return (
         <BoxHistoriqueStyle>
