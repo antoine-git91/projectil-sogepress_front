@@ -19,9 +19,7 @@ const BtnAjoutStyle = styled.button`
 const BtnAjout = ({text, add}) => {
 
     return (
-
         <BtnAjoutStyle onClick={add}>{text}</BtnAjoutStyle>
-
     )
 }
 

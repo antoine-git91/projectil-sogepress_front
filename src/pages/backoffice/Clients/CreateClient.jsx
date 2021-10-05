@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import InputText from "../../../components/Form/InputText";
 import Flexbox from "../../../templates/Flexbox";
 import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
@@ -8,6 +8,7 @@ import InputSelect from "../../../components/Form/InputSelect";
 import BtnAjout from "../../../components/btn_ajout";
 import {ButtonPrimary} from "../../../utils/styles/button-primary";
 import styled from "styled-components";
+import {usePaginationFetch} from "../../../components/Hook";
 
 const GroupList = styled.ul`
       margin-left: 0;
@@ -17,8 +18,40 @@ const GroupList = styled.ul`
 const CreateClient = () => {
 
     const [arrayContact, setArrayContact] = useState([]);
+    const [hasDeliveryAddress, setHasDeliveryAddress] = useState("false")
 
-    const addContact = () => {
+    const {items: activites, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/naf_sous_classes');
+    const [arrayActivites, setArrayActivites] = useState([]);
+
+    useEffect(() => {
+        setArrayActivites(arrayActivites)
+    }, [activites])
+
+    console.log(arrayActivites)
+    useEffect(() => load(), [load]);
+
+    const [inputSate, setInputState] = useState(
+        {
+            client_name: "",
+            client_ape: "",
+            client_phone: "",
+            client_mail: "",
+            client_street: "",
+            client_website: ""
+        }
+    )
+
+    const handleChangeInput = (e) => {
+        const value = e.target.event;
+
+        setInputState({
+            ...inputSate,
+            [e.target.name]: value
+        })
+    }
+
+    const addContact = (e) => {
+        e.preventDefault();
         setArrayContact(
             arrayContact.concat({"firstname": "", "lastname": "", "job": "", "phone": "", "mail": ""})
         )
@@ -59,30 +92,29 @@ const CreateClient = () => {
     };
     // ENDTODO
 
-
     return(
         <MainContainer>
             <h1>Créer un client</h1>
             <form onSubmit={handleSubmit}>
             <Flexbox>
-                <InputText label="Nom du client" name="client_name" />
-                <InputSelect label={"Activité"} data={[{"id" : "id1", "value" : "Site internet"}, {"id" : "id2", "value" : "Brochure"}, {"id" : "id3", "value" : "Flyer"} ]} />
-                <InputText label="Code APE" name="client_ape" />
+                <InputText label="Nom du client" name="client_name" onChange={handleChangeInput} value={inputSate.client_name} />
+                <InputSelect label={"Activité"} data={arrayActivites.map( (el, key) => ({id : key, value : el}))} />
+                <InputText label="Code APE" name="client_ape" onChange={handleChangeInput} value={inputSate.client_ape} />
             </Flexbox>
             <h2>Coordonnées</h2>
             <Flexbox>
-                <InputText label="Téléphone" name="client_phone" />
-                <InputText label="Mail" name="client_mail" />
+                <InputText label="Téléphone" name="client_phone" onChange={handleChangeInput} value={inputSate.client_phone} />
+                <InputText label="Mail" name="client_mail" onChange={handleChangeInput} value={inputSate.client_mail} />
             </Flexbox>
-            <InputText label="Numéro et rue" name="client_street" />
+            <InputText label="Numéro et rue" name="client_street" onChange={handleChangeInput} value={inputSate.client_street} />
             <Flexbox>
                 <InputText label="Code postal" name="client_cp" />
                 <InputText label="Ville" name="client_city" />
             </Flexbox>
-            <InputText label="Site internet" name="client_website" />
+            <InputText label="Site internet" name="client_website" onChange={handleChangeInput} value={inputSate.client_website} />
             <h2>Adresse de livraison</h2>
             <Flexbox>
-                <InputGroupRadio label={"Adresse de de livraison différente :"} onchange={getValueDelivery} selected={deliverySelect} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
+                <InputGroupRadio label={"Status du client"} setTypeClientRadio={setHasDeliveryAddress}  selected={hasDeliveryAddress} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"}]}/>
             </Flexbox>
                 {deliverySelect === "true" && (<div>
                     <InputText  label="Numéro et rue" name="client_address_delivery" />
@@ -92,7 +124,7 @@ const CreateClient = () => {
                     </Flexbox>
                 </div>)  }
             <h2>Choix de la facturation</h2>
-            <InputGroupRadio onchange={getValueBill} selected={billTypeSelect} name="billType" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
+            <InputGroupRadio setTypeClientRadio={setBillTypeSelect}  selected={billTypeSelect} name="typeBill" data={[{"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "courrier"}]}/>
             <h2>Contact</h2>
             <GroupList>
                 {arrayContact.map(

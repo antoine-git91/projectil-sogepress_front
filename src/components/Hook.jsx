@@ -7,12 +7,15 @@ export const usePaginationFetch = ( url ) => {
         setLoading(true)
         const response = await fetch(url, {
             headers: {
-                'Accept' : 'application/ld+json'
+                'Accept' : 'application/ld+json',
+                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
             }
         })
         const responseData = await response.json()
-        if (response.ok){
+        if (response.ok) if (responseData.hasOwnProperty("hydra:member")) {
             setItems(responseData['hydra:member'])
+        } else {
+            setItems(responseData)
         }
         else{
             console.error(responseData)

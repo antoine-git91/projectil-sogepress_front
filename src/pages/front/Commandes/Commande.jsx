@@ -16,11 +16,18 @@ const Commande = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/commandes/${id}`)
+        const requestOptions = {
+            method: 'Get',
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
+            }
+        };
+        fetch(`http://127.0.0.1:8000/api/commandes/${id}`, requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    setItems(result);
+                    setItems(result)
                     fetch(`http://127.0.0.1:8000` + result.client.adresses[0])
                         .then(res => res.json())
                         .then(
@@ -47,30 +54,6 @@ const Commande = () => {
 
         )
     }, [id])
-
-    /*useEffect(() => {
-        fetch(`http://127.0.0.1:8000` + items.client.adresses[0])
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setAdresse(result);
-
-                },
-                // Remarque : il faut gérer les erreurs ici plutôt que dans
-                // un bloc catch() afin que nous n’avalions pas les exceptions
-                // dues à de véritables bugs dans les composants.
-                (error) => {
-                    console.log(error)
-                }
-            )
-    }, [id])*/
-
-
-
-    /*useEffect(() => load(), [load])*/
-
-    console.log(items)
-    console.log(adresse)
 
     const getType = () => {
         if(items.hasOwnProperty("supportMagazine"))

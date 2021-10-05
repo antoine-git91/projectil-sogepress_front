@@ -14,6 +14,7 @@ import styled from "styled-components";
 import TablePotentiality from "../../../components/table/TablePotentiality";
 import TableCommandeSingle from "../../../components/table/TableCommandeSingle";
 import DivButtonAction from "../../../utils/styles/DivButton";
+import Spinner from "../../../components/Spinner";
 
 const BtnTabs = styled.button`
   background-color: transparent;
@@ -53,11 +54,18 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/clients/${id}`)
+        const requestOptions = {
+            method: 'Get',
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
+            }
+        };
+        fetch(`http://127.0.0.1:8000/api/clients/${id}`, requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    setItems(result)
+                    setItems(result);
                     setIsLoading(false)
                 },
                 // Remarque : il faut gérer les erreurs ici plutôt que dans
@@ -69,11 +77,10 @@ const Profile = () => {
             )
     }, [id])
 
-    /*useEffect(() => load(), [load])
-    console.log(JSON.stringify(client))*/
+    console.log(items)
 
     if(isLoading) {
-        return <div>Chargement</div>
+        return <Spinner />
     } else {
         return (
             <MainContainer>
@@ -85,7 +92,6 @@ const Profile = () => {
                 </DivButtonAction>
                 <BoxTitle>
                     <h1>{items.raisonSociale} / <span>{items.nafSousClasse.libelle}</span></h1>
-                    <p>Activité</p>
                 </BoxTitle>
                 <div>
                     {tabs.map(tab => (
