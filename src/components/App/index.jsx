@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from "react";
+import Login from "../../pages/front/Login";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Home from "../../pages/front/Home";
 import Clients from "../../pages/front/Clients";
@@ -12,10 +13,10 @@ import Commande from "../../pages/front/Commandes/Commande";
 
 const App = () => {
 
-    /*const [token, setToken] = useState('');
-    const [errorMessage, setErrorMessage] = useState(null)*/
+    const [token, setToken] = useState('');
+    const [errorMessage, setErrorMessage] = useState(null)
 
-    /*const [value, setValue] = useState({
+    const [value, setValue] = useState({
         username: "",
         password: ""
     })
@@ -33,19 +34,22 @@ const App = () => {
 
         const requestOptions = {
             method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : "Bearer " + token
+            },
             body: JSON.stringify({username: value.username, password: value.password})
         };
         fetch('http://127.0.0.1:8000/api/login', requestOptions)
             .then(response => response.json())
             .then(data => setToken(data.token))
-    }*/
+    }
 
-    /*if(!token){
+    if(!token){
         return (
             <Login submit={handleSubmit} inputChange={handleChange} valueUser={value.username} valuePass={value.password} />
         )
-    }*/
+    }
 
     return(
         <Router>

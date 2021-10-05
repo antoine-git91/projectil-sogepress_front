@@ -21,17 +21,17 @@ text-transform: uppercase;
 font-weight: 600;
 `
 
-const BoxContact = () => {
+const BoxContact = (nom, prenom, fonction, tel, mail) => {
 
     return (
         <BoxContactStyle>
-            <h3>DUPONT <span>Louison</span></h3>
+            <h3> {nom} <span>{prenom}</span></h3>
             <ContactTitle>Fonction</ContactTitle>
-            <p>Secrétaire</p>
+            <p>{fonction}</p>
             <ContactTitle>Téléphone</ContactTitle>
-            <p>0247458441</p>
+            <p>{tel}</p>
             <ContactTitle>Email</ContactTitle>
-            <p>a.dupont@exemple.com</p>
+            <p>{mail}</p>
         </BoxContactStyle>
 
     )

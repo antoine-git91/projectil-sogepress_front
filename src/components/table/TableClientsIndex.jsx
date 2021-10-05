@@ -12,13 +12,6 @@ const TableClientsIndex = ({clients, load, loading, nameClientSearch, selectVill
 
     useEffect(() => load(), [load]);
 
-<<<<<<< Updated upstream
-    console.log(clients)
-
-=======
-    console.log(clients);
->>>>>>> Stashed changes
-
     return(
         <div>
             {loading && 'Chargement...'}
