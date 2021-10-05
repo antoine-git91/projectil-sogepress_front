@@ -8,5 +8,6 @@ const MainContainer = styled.div`
   top: 58px;
   padding-left: 50px;
   padding-right: 50px;
+  padding-bottom: 50px;
 `;
 export default MainContainer;

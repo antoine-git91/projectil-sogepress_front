@@ -29,7 +29,7 @@ const TableCommandesIndex = () => {
                 {commandes.map((dataCommande, key) => (
                     <tr key={key}>
                         <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>A faire</Link></td>
-                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raison_sociale}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raisonSociale}</Link></td>
                         <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.facturation}</Link></td>
                         <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.fin}</Link></td>
                         <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.statut.libelle}</Link></td>
