@@ -1,5 +1,5 @@
 import React from "react";
-import plus from './plus.png';
+import plus from '../assets/images/plus.png';
 import styled from "styled-components";
 
 const BtnAjoutStyle = styled.button`

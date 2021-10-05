@@ -22,13 +22,12 @@ const CreateClient = () => {
         setArrayContact(
             arrayContact.concat({"firstname": "", "lastname": "", "job": "", "phone": "", "mail": ""})
         )
+        console.log(arrayContact)
     };
 
     const removeContact = (e, index) => {
-        //console.log(index)
-        const itemToRemove = arrayContact.indexOf(index);
-        setArrayContact(arrayContact.splice(itemToRemove, 1));
-        //console.log(arrayContact)
+        e.preventDefault();
+        setArrayContact([...arrayContact.slice(0, index), ...arrayContact.slice(index + 1)]);
     };
 
     const insertDataFromChild = (newContact, index) => {
@@ -98,7 +97,7 @@ const CreateClient = () => {
             <GroupList>
                 {arrayContact.map(
                     (contact, index) => <ContactBlock
-                                                    key={index}
+                                                    key={Object.values(contact).join('*=*') + index}
                                                     numberContact={index}
                                                     firstname={contact.firstname}
                                                     lastname={contact.lastname}

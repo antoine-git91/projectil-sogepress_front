@@ -2,38 +2,34 @@ import React from "react";
 import styled from "styled-components";
 
 const BoxContactStyle = styled.div`
-  max-height: 250px;
+  width: 200px;
   padding: 20px;
   background-color: lightgrey;
-  
+  font-size: 18px;
   h3{
-    margin: 0;
+    margin: 0 ;
   }
-  
-  p{
-    font-size: 18px;
-    margin-bottom: 5px;
-}
 `
 
 export const ContactTitle = styled.p`
-text-transform: uppercase;
-font-weight: 600;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 14px;
+  margin: 10px 0 5px 0 ;
 `
 
-const BoxContact = (nom, prenom, fonction, tel, mail) => {
+const BoxContact = ({contact}) => {
 
     return (
         <BoxContactStyle>
-            <h3> {nom} <span>{prenom}</span></h3>
+            <h3>{contact.nom} <span>{contact.prenom}</span></h3>
             <ContactTitle>Fonction</ContactTitle>
-            <p>{fonction}</p>
+            <p>{contact.fonction}</p>
             <ContactTitle>Téléphone</ContactTitle>
-            <p>{tel}</p>
+            <p>{contact.tel}</p>
             <ContactTitle>Email</ContactTitle>
-            <p>{mail}</p>
+            <p>{contact.email}</p>
         </BoxContactStyle>
-
     )
 }
 
