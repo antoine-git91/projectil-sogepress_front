@@ -1,8 +1,8 @@
 import React from "react";
-import MainContainer from "../../../templates/Container";
-import Header from "../../../components/Header";
-import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
-import DivButtonAction from "../../../utils/styles/DivButton";
+import MainContainer from "../../templates/Container";
+import Header from "../../components/Header";
+import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import DivButtonAction from "../../utils/styles/DivButton";
 
 const Home = () => {
     return(

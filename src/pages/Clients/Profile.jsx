@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from "react";
-import MainContainer from "../../../templates/Container";
+import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
-import { ButtonPrimaryLink } from "../../../utils/styles/button-primary";
-import RelanceContainer from "../../../components/RelanceBox";
-import BtnAjout from "../../../components/btn_ajout";
-import InputText from "../../../components/Form/InputText";
-import BoxInfos from "../../../components/Single/BoxInfos";
-import BoxContact from "../../../components/Single/BoxContact";
-import BoxAnneeCa from "../../../components/Single/BoxAnneeCa";
-import BoxHistorique from "../../../components/Single/BoxHistorique";
-import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer,ContactContainer,HistoriqueViewContainer, HistoriqueDataContainer,HeaderHistoriqueView,ChiffreDateContainer,ChiffreResultContainer} from "../../../utils/styles/single";
+import { ButtonPrimaryLink } from "../../utils/styles/button-primary";
+import RelanceContainer from "../../components/RelanceBox";
+import BtnAjout from "../../components/btn_ajout";
+import InputText from "../../components/Form/InputText";
+import BoxInfos from "../../components/Single/BoxInfos";
+import BoxContact from "../../components/Single/BoxContact";
+import BoxAnneeCa from "../../components/Single/BoxAnneeCa";
+import BoxHistorique from "../../components/Single/BoxHistorique";
+import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer,ContactContainer,HistoriqueViewContainer, HistoriqueDataContainer,HeaderHistoriqueView,ChiffreDateContainer,ChiffreResultContainer} from "../../utils/styles/single";
 import styled from "styled-components";
-import TablePotentiality from "../../../components/table/TablePotentiality";
-import TableCommandeSingle from "../../../components/table/TableCommandeSingle";
-import DivButtonAction from "../../../utils/styles/DivButton";
-import Spinner from "../../../components/Spinner";
+import TablePotentiality from "../../components/table/TablePotentiality";
+import TableCommandeSingle from "../../components/table/TableCommandeSingle";
+import DivButtonAction from "../../utils/styles/DivButton";
+import Spinner from "../../components/Spinner";
 
 const BtnTabs = styled.button`
   background-color: transparent;

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import MainContainer from "../../../templates/Container";
+import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
-import { ButtonPrimaryLink } from "../../../utils/styles/button-primary";
-import RelanceContainer from "../../../components/RelanceBox";
-import BoxInfos from "../../../components/Single/BoxInfos";
-import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer} from "../../../utils/styles/single";
-import DivButtonAction from "../../../utils/styles/DivButton";
-import BoxContact from "../../../components/Single/BoxContact";
+import { ButtonPrimaryLink } from "../../utils/styles/button-primary";
+import RelanceContainer from "../../components/RelanceBox";
+import BoxInfos from "../../components/Single/BoxInfos";
+import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer} from "../../utils/styles/single";
+import DivButtonAction from "../../utils/styles/DivButton";
+import BoxContact from "../../components/Single/BoxContact";
 
 const Commande = () => {
 
@@ -66,6 +66,9 @@ const Commande = () => {
             return "Community Manager"
     }
 
+    const date = new Date(items.fin);
+    const datend = date.getDate() + '-' + (date.getMonth()+1) + "-" + date.getFullYear();//prints expected format.
+
     if (isLoading){
         return <div>Chargement</div>
     } else {
@@ -79,10 +82,8 @@ const Commande = () => {
                 </DivButtonAction>
                 <BoxTitle>
                     <h1>{getType()} / <span>{items.client.raisonSociale}</span></h1>
-                    <p>Date de livraison: <span>{items.fin}</span></p>
+                    <p>Date de livraison: <span>{datend}</span></p>
                 </BoxTitle>
-
-
                     <SingleMainContainer>
                         <InfoViewContainer>
                             <h2>Informations liées à la commande</h2>

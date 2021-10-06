@@ -1,5 +1,5 @@
 import React from 'react';
-import InputText from "../../../components/Form/InputText";
+import InputText from "../../components/Form/InputText";
 import styled from "styled-components";
 
 const Container = styled.div`

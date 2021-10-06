@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Home from "../../pages/front/Home";
-import Clients from "../../pages/front/Clients";
-import Profile from "../../pages/front/Clients/Profile";
-import CreateClient from "../../pages/backoffice/Clients/CreateClient";
-import CreateCommande from "../../pages/backoffice/commandes/CreateCommande";
-import Header from "../Header";
-import Commandes from "../../pages/front/Commandes";
+import Home from "../Home";
+import Clients from "../Clients";
+import Profile from "../Clients/Profile";
+import CreateClient from "../Clients/CreateClient";
+import CreateCommande from "../Commandes/CreateCommande";
+import Header from "../../components/Header";
+import Commandes from "../Commandes";
 import './app.css'
-import Commande from "../../pages/front/Commandes/Commande";
-import Login from "../../pages/front/Login";
+import Commande from "../Commandes/Commande";
+import Login from "../Login";
 
 const App = () => {
 

@@ -1,8 +1,8 @@
 import React from "react";
-import MainContainer from "../../../templates/Container";
-import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
-import DivButtonAction from "../../../utils/styles/DivButton";
-import TableCommandesIndex from "../../../components/table/TableCommandesIndex";
+import MainContainer from "../../templates/Container";
+import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import DivButtonAction from "../../utils/styles/DivButton";
+import TableCommandesIndex from "../../components/table/TableCommandesIndex";
 
 const Commandes = () => {
 
