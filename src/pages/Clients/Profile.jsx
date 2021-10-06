@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react";
-import MainContainer from "../../../templates/Container";
+import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
-import { ButtonPrimaryLink } from "../../../utils/styles/button-primary";
-import RelanceContainer from "../../../components/RelanceBox";
-import BtnAjout from "../../../components/btn_ajout";
-import InputText from "../../../components/Form/InputText";
-import BoxInfos from "../../../components/Single/BoxInfos";
-import BoxContact from "../../../components/Single/BoxContact";
-import BoxAnneeCa from "../../../components/Single/BoxAnneeCa";
-import BoxHistorique from "../../../components/Single/BoxHistorique";
-import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer,ContactContainer,HistoriqueViewContainer, HistoriqueDataContainer,HeaderHistoriqueView,ChiffreDateContainer,ChiffreResultContainer} from "../../../utils/styles/single";
+import { ButtonPrimaryLink } from "../../utils/styles/button-primary";
+import RelanceContainer from "../../components/RelanceBox";
+import BtnAjout from "../../components/btn_ajout";
+import InputText from "../../components/Form/InputText";
+import BoxInfos from "../../components/Single/BoxInfos";
+import BoxContact from "../../components/Single/BoxContact";
+import BoxAnneeCa from "../../components/Single/BoxAnneeCa";
+import BoxHistorique from "../../components/Single/BoxHistorique";
+import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer,ContactContainer,HistoriqueViewContainer, HistoriqueDataContainer,HeaderHistoriqueView,ChiffreDateContainer,ChiffreResultContainer} from "../../utils/styles/single";
 import styled from "styled-components";
-import TablePotentiality from "../../../components/table/TablePotentiality";
-import TableCommandeSingle from "../../../components/table/TableCommandeSingle";
-import DivButtonAction from "../../../utils/styles/DivButton";
+import TablePotentiality from "../../components/table/TablePotentiality";
+import TableCommandeSingle from "../../components/table/TableCommandeSingle";
+import DivButtonAction from "../../utils/styles/DivButton";
+import Spinner from "../../components/Spinner";
 
 const BtnTabs = styled.button`
   background-color: transparent;
@@ -53,11 +54,18 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/clients/${id}`)
+        const requestOptions = {
+            method: 'Get',
+            headers: {
+                'Content-Type' : 'application/json',
+                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
+            }
+        };
+        fetch(`http://127.0.0.1:8000/api/clients/${id}`, requestOptions)
             .then(res => res.json())
             .then(
                 (result) => {
-                    setItems(result)
+                    setItems(result);
                     setIsLoading(false)
                 },
                 // Remarque : il faut gérer les erreurs ici plutôt que dans
@@ -69,11 +77,10 @@ const Profile = () => {
             )
     }, [id])
 
-    /*useEffect(() => load(), [load])
-    console.log(JSON.stringify(client))*/
+    console.log(items)
 
     if(isLoading) {
-        return <div>Chargement</div>
+        return <Spinner />
     } else {
         return (
             <MainContainer>
@@ -85,7 +92,6 @@ const Profile = () => {
                 </DivButtonAction>
                 <BoxTitle>
                     <h1>{items.raisonSociale} / <span>{items.nafSousClasse.libelle}</span></h1>
-                    <p>Activité</p>
                 </BoxTitle>
                 <div>
                     {tabs.map(tab => (

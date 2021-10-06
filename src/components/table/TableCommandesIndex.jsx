@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import {usePaginationFetch} from "../Hook";
 import {Link} from "react-router-dom";
+import Spinner from "../Spinner";
 
 const TableStyle = styled.table`
       width: 100%;
@@ -12,13 +13,14 @@ const TableCommandesIndex = () => {
     const {items: commandes, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
     const headTable = ["Type", "Client", "Prix", "Date de livraison", "Status" ];
 
-    console.log(commandes)
-
     useEffect(() => load(), [load])
+
+    if (loading){
+        return <Spinner />
+    }
 
     return(
         <div>
-            {loading && 'Chargement...'}
             <TableStyle>
                 <thead>
                     <tr>

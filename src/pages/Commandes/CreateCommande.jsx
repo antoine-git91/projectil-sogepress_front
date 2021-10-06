@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import MainContainer from "../../../templates/Container";
-import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
-import TitreForm from "../../../templates/TitreForm";
-import InputSelect from "../../../components/Form/InputSelect";
-import InputText from "../../../components/Form/InputText";
-import InputTextArea from "../../../components/Form/InputTextArea";
-import {ButtonPrimary} from "../../../utils/styles/button-primary";
+import MainContainer from "../../templates/Container";
+import InputGroupRadio from "../../components/Form/radio/InputGroupRadio";
+import TitreForm from "../../templates/TitreForm";
+import InputSelect from "../../components/Form/InputSelect";
+import InputText from "../../components/Form/InputText";
+import InputTextArea from "../../components/Form/InputTextArea";
+import {ButtonPrimary} from "../../utils/styles/button-primary";
 
 const CreateCommande = () => {
 

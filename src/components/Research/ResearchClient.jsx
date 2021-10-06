@@ -7,9 +7,9 @@ import InputAutoComplete from "../Form/InputAutocomplete";
 import {useState} from "react";
 
 const SearchBox = styled.div`
-      margin-top: 20px;
-      margin-bottom: 20px;
-    `
+  margin-top: 20px;
+  margin-bottom: 20px;
+`
 
 const ResearchClient = ({clientsList,
                         typeClientRadio,

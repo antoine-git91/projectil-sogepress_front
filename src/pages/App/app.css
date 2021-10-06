@@ -43,3 +43,7 @@ p{
 input{
     display: block;
 }
+
+button{
+    cursor: pointer;
+}
