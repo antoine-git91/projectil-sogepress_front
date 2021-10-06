@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
-import InputText from "../../../components/Form/InputText";
-import Flexbox from "../../../templates/Flexbox";
-import InputGroupRadio from "../../../components/Form/radio/InputGroupRadio";
-import MainContainer from "../../../templates/Container";
-import ContactBlock from "./ContactBlock";
-import InputSelect from "../../../components/Form/InputSelect";
-import BtnAjout from "../../../components/btn_ajout";
-import {ButtonPrimary} from "../../../utils/styles/button-primary";
+import InputText from "../../components/Form/InputText";
+import Flexbox from "../../templates/Flexbox";
+import InputGroupRadio from "../../components/Form/radio/InputGroupRadio";
+import MainContainer from "../../templates/Container";
+import ContactBlock from "../../components/Clients/ContactBlock";
+import InputSelect from "../../components/Form/InputSelect";
+import BtnAjout from "../../components/btn_ajout";
+import {ButtonPrimary} from "../../utils/styles/button-primary";
 import styled from "styled-components";
-import {usePaginationFetch} from "../../../components/Hook";
+import {usePaginationFetch} from "../../components/Hook";
 
 const GroupList = styled.ul`
       margin-left: 0;

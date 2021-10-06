@@ -1,13 +1,13 @@
 import React from "react";
-import MainContainer from "../../../templates/Container";
-import DivButtonAction from "../../../utils/styles/DivButton";
-import {ButtonPrimaryLink} from "../../../utils/styles/button-primary";
-import TableClientsIndex from "../../../components/table/TableClientsIndex";
-import ResearchClient from "../../../components/Research/ResearchClient";
-import {usePaginationFetch} from "../../../components/Hook";
+import MainContainer from "../../templates/Container";
+import DivButtonAction from "../../utils/styles/DivButton";
+import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import TableClientsIndex from "../../components/table/TableClientsIndex";
+import ResearchClient from "../../components/Research/ResearchClient";
+import {usePaginationFetch} from "../../components/Hook";
 import {useState} from "react";
 import {useEffect} from "react";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../components/Pagination";
 
 const Clients = () => {
 

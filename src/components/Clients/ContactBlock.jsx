@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import Flexbox from "../../../templates/Flexbox";
-import InputText from "../../../components/Form/InputText";
+import Flexbox from "../../templates/Flexbox";
+import InputText from "../Form/InputText";
 import styled from "styled-components";
 
 const DeleteButton = styled.button`
