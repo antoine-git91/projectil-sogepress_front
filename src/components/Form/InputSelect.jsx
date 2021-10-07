@@ -7,9 +7,10 @@ const SelectStyle = styled.select`
       margin-top: 10px;
       margin-right: 10px;
       margin-bottom: 20px;
+      max-width: 185px;
     `
 
-const InputSelect = ({data, label, option, selectValue, setSelectValue, optionValue}) => {
+const InputSelect = ({data, label, option, selectValue, setSelectValue, optionValue, disabled}) => {
 
     const handleChange = (event) => {
       setSelectValue(event.target.value);
@@ -17,7 +18,7 @@ const InputSelect = ({data, label, option, selectValue, setSelectValue, optionVa
 
   return (
         <label>{label}
-        <SelectStyle value={selectValue} onChange={handleChange}>
+        <SelectStyle value={selectValue} onChange={handleChange} disabled={disabled} >
 
             <option value={optionValue}>{option}</option>
             {data.map((select, key)=><option key={key} value={select.value}>{select.value}</option>)}

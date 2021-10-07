@@ -8,14 +8,15 @@ import {usePaginationFetch} from "../../components/Hook";
 import {useState} from "react";
 import {useEffect} from "react";
 import Pagination from "../../components/Pagination";
+import Header from "../../components/Header";
 
 const Clients = () => {
 
     const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
 
-    const [arrayClient, setArrayClient] = useState([]);
+    const [resultFetch, setResultFetch] = useState([]);
     useEffect(() => {
-        setArrayClient(clients)
+        setResultFetch(clients)
     }, [clients])
 
     const [typeClientRadio, setTypeClientRadio] = useState("");
@@ -40,57 +41,24 @@ const Clients = () => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [input, setInput] = useState("");
 
-    const nameClients = [];
 
-    const handleChange = (e) => {
-        const clientInput = e.target.value;
-
-        arrayClient.forEach(suggestion => nameClients.push(suggestion.raisonSociale))
-
-        // Filter our suggestions that don't contain the user's input
-        const unLinked = nameClients.filter(
-            (suggestion) =>
-                suggestion.toString().toLowerCase().indexOf(clientInput.toLowerCase()) > -1
-        );
-
-        setInput(e.target.value);
-        setFilteredSuggestions(unLinked);
-        setActiveSuggestionIndex(0);
-        setShowSuggestions(true);
-    };
-
-    const onClick = (e) => {
-        setFilteredSuggestions([]);
-        setInput(e.target.innerText);
-        setActiveSuggestionIndex(0);
-        setShowSuggestions(false);
-    };
-
-    const onKeyDown = (e) => {
-        if(e.keyCode === 40 && (activeSuggestionIndex < filteredSuggestions.length - 1) ){
-            setActiveSuggestionIndex(activeSuggestionIndex+1)
-            setInput(document.getElementsByClassName("suggestion-active")[0].innerText)
-        } else if (e.keyCode === 38 && activeSuggestionIndex > 0){
-            setActiveSuggestionIndex(activeSuggestionIndex - 1)
-            setInput(document.getElementsByClassName("suggestion-active")[0].innerText)
-        } else if(e.keyCode === 13){
-            setInput(document.getElementsByClassName("suggestion-active")[0].innerText)
-            setShowSuggestions(false);
-        }
-    }
     /* #########################*/
 
     return(
+        <>
+        <Header/>
         <MainContainer>
-            <ResearchClient clientsList={arrayClient}
+            <ResearchClient resultFetch={resultFetch}
+                            setResultFetch={setResultFetch}
                             typeClientRadio={typeClientRadio}
-                            onKeyDown={onKeyDown}
-                            onClick={onClick}
-                            inputNameClient={handleChange}
                             showSuggestions={showSuggestions}
+                            setShowSuggestions={setShowSuggestions}
                             input={input}
+                            setInput={setInput}
                             filteredSuggestions={filteredSuggestions}
+                            setFilteredSuggestions={setFilteredSuggestions}
                             activeSuggestionIndex={activeSuggestionIndex}
+                            setActiveSuggestionIndex={setActiveSuggestionIndex}
                             selectActivite={selectActivite}
                             setSelectActivite={setSelectActivite}
                             selectVille={selectVille}
@@ -98,14 +66,14 @@ const Clients = () => {
                             selectCodePostal={selectCodePostal}
                             setSelectCodePostal={setSelectCodePostal}
                             setTypeClientRadio={setTypeClientRadio}
-                            setArrayClient={setArrayClient}
+                            property={"raisonSociale"}
 
             />
             <DivButtonAction>
                 <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
             </DivButtonAction>
             <h1>Clients page</h1>
-            <TableClientsIndex clients={arrayClient}
+            <TableClientsIndex clients={resultFetch}
                                loading={loading}
                                load={load}
                                nameClientSearch={input}
@@ -113,10 +81,11 @@ const Clients = () => {
                                selectCodePostal={selectCodePostal}
                                selectActivite={selectActivite}
                                getStatus={getStatus}
-                               setArrayClient={setArrayClient}
+                               setArrayClient={setResultFetch}
             />
             <Pagination />
         </MainContainer>
+        </>
     )
 }
 export default Clients;
