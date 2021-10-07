@@ -11,15 +11,16 @@ const SearchBox = styled.div`
   margin-bottom: 20px;
 `
 
-const ResearchClient = ({clientsList,
+const ResearchClient = ({resultFetch,
                         typeClientRadio,
-                        inputNameClient,
                         input,
-                        onClick,
-                        onKeyDown,
+                        setInput,
                         showSuggestions,
+                        setShowSuggestions,
                         activeSuggestionIndex,
+                        setActiveSuggestionIndex,
                         filteredSuggestions,
+                        setFilteredSuggestions,
                         selectVille,
                         setSelectVille,
                         selectActivite,
@@ -27,11 +28,12 @@ const ResearchClient = ({clientsList,
                         selectCodePostal,
                         setSelectCodePostal,
                         setTypeClientRadio,
+                        property
                         }) => {
 
 
     const [villeClients, setVilleClients] = useState([]);
-    const villes = clientsList.map(client => client.adresses.map(adresse => adresse.ville.nom));
+    const villes = resultFetch.map(client => client.adresses.map(adresse => adresse.ville.nom));
     villes.map( arrayVille => arrayVille.map( ville => villeClients.push(ville)));
     /* on évite les doublon */
     const uniqueVillesClients = villeClients.filter(function(elem, index, self) {
@@ -39,7 +41,7 @@ const ResearchClient = ({clientsList,
     })
 
     const [codePostal, setCodePostal] = useState([]);
-    const cp = clientsList.map(client => client.adresses.map(adresse => adresse.ville.codePostal));
+    const cp = resultFetch.map(client => client.adresses.map(adresse => adresse.ville.codePostal));
     cp.map( arrayVille => arrayVille.map( ville => codePostal.push(ville)));
     /* on évite les doublon */
     const uniqueCodePostal = codePostal.filter(function(elem, index, self) {
@@ -47,7 +49,7 @@ const ResearchClient = ({clientsList,
     })
 
     const [activites, setActivites] = useState([]);
-    clientsList.map( client => activites.push(client.nafSousClasse.libelle));
+    resultFetch.map( client => activites.push(client.nafSousClasse.libelle));
     /* on évite les doublon */
     const uniqueActivites = activites.filter(function(elem, index, self) {
         return index === self.indexOf(elem);
@@ -56,13 +58,46 @@ const ResearchClient = ({clientsList,
     return (
         <SearchBox>
             <Flexbox>
-                <InputAutoComplete label={"Recherche par client"} onChange={inputNameClient} onKeyDown={onKeyDown} onClick={onClick} inputNameClient={inputNameClient} showSuggestions={showSuggestions} input={input} activeSuggestionIndex={activeSuggestionIndex} filteredSuggestions={filteredSuggestions} />
-                <InputSelect label={"Activités"} data={uniqueActivites.map( (el, key) => ({id : key, value : el}))} option={"Filter par activité"} optionValue={""} selectValue={selectActivite} setSelectValue={setSelectActivite} />
-                <InputSelect label={"Ville"} data={uniqueVillesClients.map( (el, key) => ({id : key, value : el}))} option={"Filter par ville"} optionValue={""} seleValue={selectVille} setSelectValue={setSelectVille} />
-                <InputSelect label={"Code postal"} data={uniqueCodePostal.map( (el, key) => ({id : key, value : el}))} option={"Filter par code postal"} optionValue={""} seleValue={selectCodePostal} setSelectValue={setSelectCodePostal} />
+                <InputAutoComplete label={"Recherche par client"}
+                                   resultFetch={resultFetch}
+                                   showSuggestions={showSuggestions}
+                                   setShowSuggestions={setShowSuggestions}
+                                   input={input} setInput={setInput}
+                                   activeSuggestionIndex={activeSuggestionIndex}
+                                   setActiveSuggestionIndex={setActiveSuggestionIndex}
+                                   filteredSuggestions={filteredSuggestions}
+                                   setFilteredSuggestions={setFilteredSuggestions}
+                                   property={property}
+                />
+                <InputSelect label={"Activités"}
+                             data={uniqueActivites.map( (el, key) => ({id : key, value : el}))}
+                             option={"Filter par activité"}
+                             optionValue={""}
+                             selectValue={selectActivite}
+                             setSelectValue={setSelectActivite}
+                />
+                <InputSelect label={"Ville"}
+                             data={uniqueVillesClients.map( (el, key) => ({id : key, value : el}))}
+                             option={"Filter par ville"}
+                             optionValue={""}
+                             seleValue={selectVille}
+                             setSelectValue={setSelectVille}
+                />
+                <InputSelect
+                    label={"Code postal"}
+                    data={uniqueCodePostal.map( (el, key) => ({id : key, value : el}))}
+                    option={"Filter par code postal"}
+                    optionValue={""}
+                    seleValue={selectCodePostal}
+                    setSelectValue={setSelectCodePostal} />
             </Flexbox>
             <Flexbox>
-                <InputGroupRadio label={"Status du client"} setTypeClientRadio={setTypeClientRadio}  selected={typeClientRadio} name="isHasAddressDelivery" data={[{"id": "id1", "label": "Acquis", "value": "Acquis"}, {"id": "id2", "label": "Prospect", "value": "Prospect"}, {"id": "id3", "label": "Les deux", "value": ""}]}/>
+                <InputGroupRadio
+                    label={"Status du client"}
+                    setTypeClientRadio={setTypeClientRadio}
+                    selected={typeClientRadio}
+                    name="isHasAddressDelivery"
+                    data={[{"id": "id1", "label": "Acquis", "value": "Acquis"}, {"id": "id2", "label": "Prospect", "value": "Prospect"}, {"id": "id3", "label": "Les deux", "value": ""}]}/>
             </Flexbox>
         </SearchBox>
     )
