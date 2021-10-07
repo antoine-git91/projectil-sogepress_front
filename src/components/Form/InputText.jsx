@@ -3,18 +3,18 @@ import styled from "styled-components";
 
 const InputStyle = styled.input`
       display: block;
-      margin-top: 10px;
       margin-bottom: 20px;
+      margin-top: 10px;
       margin-right: 10px;
-      padding: 5px 10px;
+      padding: 10px 20px;
     `
 
 
-const InputText = ({label, event, value, name}) => {
+const InputText = ({label, onChange, value, name, type}) => {
 
     return (
         <label>{label}
-            <InputStyle type="text" onChange={event} value={value} name={name}/>
+            <InputStyle type={{type} ? type :"text"} onChange={onChange} value={value} name={name} />
         </label>
     )
 }

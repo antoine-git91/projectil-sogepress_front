@@ -13,6 +13,12 @@ const NavItem = styled(Link)`
   text-decoration: none;
   text-transform: uppercase;
   font-weight: bold;
+  color: #fff;
+  
+  &:hover{
+    background-color: #fff;
+    color: #FF6700;
+  }
 `
 
 const Nav = () => {

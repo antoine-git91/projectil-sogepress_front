@@ -1,0 +1,49 @@
+/* Table style */
+table {
+    border-collapse: collapse;
+}
+th{
+    text-align: left;
+    padding: 10px;
+}
+
+tr:hover td {
+    background-color: #dedede;
+}
+
+td{
+    text-align: left;
+    cursor: pointer;
+}
+
+td a{
+    color: #3b3b3b;
+    padding: 10px 10px;
+    display: block;
+}
+
+tbody tr:nth-child(even){
+    background-color: #fff2e0;
+}
+
+/* General style */
+h1
+,h2
+,h3{
+    font-weight: 700;
+}
+a{
+    text-decoration: none;
+}
+p{
+    padding: 0;
+    margin: 0;
+}
+
+input{
+    display: block;
+}
+
+button{
+    cursor: pointer;
+}
