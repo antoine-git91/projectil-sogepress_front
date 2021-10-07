@@ -5,7 +5,6 @@ import Clients from "../Clients";
 import Profile from "../Clients/Profile";
 import CreateClient from "../Clients/CreateClient";
 import CreateCommande from "../Commandes/CreateCommande";
-import Header from "../../components/Header";
 import Commandes from "../Commandes";
 import './app.css'
 import Commande from "../Commandes/Commande";

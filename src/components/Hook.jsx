@@ -1,5 +1,4 @@
 import {useState, useCallback} from 'react';
-import {Redirect, Router} from "react-router";
 
 export const usePaginationFetch = ( url ) => {
     const [loading, setLoading] = useState(false);
@@ -13,17 +12,19 @@ export const usePaginationFetch = ( url ) => {
                 'Accept' : 'application/ld+json',
                 'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
             }
-        })
-        const responseData = await response.json()
+        });
+
+        const responseData = await response.json();
+
         if (response.ok) {
             if (responseData.hasOwnProperty("hydra:member")) {
-                setItems(responseData['hydra:member'])
+                setItems(responseData['hydra:member']);
             } else {
-                setItems(responseData)
+                setItems(responseData);
             }
-            setLoading(false)
+            setLoading(false);
         } else if (response.status === 401){
-            setLoading(true)
+            setLoading(true);
             /* On rafraichit le token avec le refresh token
             * On refait donc une requête pour le refresh token
             * */
@@ -40,8 +41,8 @@ export const usePaginationFetch = ( url ) => {
                 if(response.ok){
                     response.json()
                     .then(data => {
-                        setRefreshToken(data.refreshToken)
-                        localStorage.setItem("itemName", data.token)
+                        setRefreshToken(data.refreshToken);
+                        localStorage.setItem("itemName", data.token);
 
                         const requestOptions = {
                             method: 'GET',
@@ -69,7 +70,7 @@ export const usePaginationFetch = ( url ) => {
                 } else {/* Redirection vers le loginPage*/}
             })
         }
-    }, [url])
+    }, [url, refreshToken])
 
     return {
         items,
