@@ -6,36 +6,36 @@ const BoxAutocomplete = styled.div`
 `
 
 const SuggestionList = styled.ul`
-  border: 1px solid #999;
-  list-style: none;
-  margin-top: 0;
-  max-height: 143px;
-  overflow-y: auto;
-  padding: 0;
-  width: calc(300px + 1rem);
-  position: absolute;
-  background-color: #fff;
-  box-shadow: 0px 4px 39px -11px rgba(0, 0, 0, 0.17);
-
-  li {
+    border: 1px solid #999;
+    list-style: none;
+    margin-top: 0;
+    max-height: 143px;
+    overflow-y: auto;
+    padding: 0;
+    width: calc(300px + 1rem);
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0px 4px 39px -11px rgba(0, 0, 0, 0.17);
+    
+    li {
     padding: 0.5rem;
-
-    &.suggestion-active, &:hover {
-      background-color: #ffd4b3;
-      color: #000;
-      cursor: pointer;
-      font-weight: 700;
+    
+        &.suggestion-active, &:hover {
+          background-color: #ffd4b3;
+          color: #000;
+          cursor: pointer;
+          font-weight: 700;
+        }
     }
-  }
 `
 
 const InputStyle = styled.input`
-      display: block;
-      margin-bottom: 20px;
-      margin-top: 10px;
-      margin-right: 10px;
-      padding: 10px 20px;
-    `
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 10px 20px;
+`
 
 const NoSuggestionItem = styled.div`
     color: #999;
@@ -46,7 +46,64 @@ const NoSuggestionItem = styled.div`
     background-color: #fff;
 `
 
-const InputAutoComplete = ({ label, input, inputNameClient, onClick, showSuggestions, onKeyDown, filteredSuggestions, activeSuggestionIndex }) => {
+const InputAutoComplete = ({label,
+                           resultFetch,
+                           input,
+                           setInput,
+                           showSuggestions,
+                           setShowSuggestions,
+                           filteredSuggestions,
+                           setFilteredSuggestions,
+                           activeSuggestionIndex,
+                           setActiveSuggestionIndex,
+                           property }) => {
+
+    const resultsPropositions = [];
+
+    const handleChange = (e) => {
+        const valueInput = e.target.value;
+
+        resultFetch.forEach(suggestion => resultsPropositions.push(suggestion[property].toLowerCase()))
+        /* on évite les doublons */
+        const uniqueResultsPropositions = resultsPropositions.filter(function(elem, index, self) {
+            return index === self.indexOf(elem);
+        })
+
+        // Filter our suggestions that don't contain the user's input
+        const unLinked = uniqueResultsPropositions.filter(
+            (suggestion) =>
+                suggestion.toString().toLowerCase().indexOf(valueInput.toLowerCase()) > -1
+        );
+
+        setInput(e.target.value);
+        setFilteredSuggestions(unLinked);
+        setActiveSuggestionIndex(0);
+        setShowSuggestions(true);
+    };
+
+    /* Navigation dans les proposition
+    * TODO -> si on clique en dehors de la box des propositions */
+    const onKeyDown = (e) => {
+        if(e.keyCode === 40 && (activeSuggestionIndex < filteredSuggestions.length - 1) ){
+            setActiveSuggestionIndex(activeSuggestionIndex+1);
+            setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
+        } else if (e.keyCode === 38 && activeSuggestionIndex > 0){
+            setActiveSuggestionIndex(activeSuggestionIndex - 1);
+            setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
+        } else if(e.keyCode === 13){
+            e.preventDefault();
+            setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
+            setShowSuggestions(false);
+        }
+    }
+
+    /* Si on clique l'item de la propositions */
+    const onClick = (e) => {
+        setFilteredSuggestions([]);
+        setInput(e.target.innerText);
+        setActiveSuggestionIndex(0);
+        setShowSuggestions(false);
+    };
 
     const SuggestionsListComponent = () => {
         return filteredSuggestions.length ? (
@@ -62,7 +119,7 @@ const InputAutoComplete = ({ label, input, inputNameClient, onClick, showSuggest
                             {suggestion}
                         </li>
                     );
-                })}
+                })};
             </SuggestionList>
         ) : (
             <NoSuggestionItem>
@@ -77,9 +134,10 @@ const InputAutoComplete = ({ label, input, inputNameClient, onClick, showSuggest
             <InputStyle
                 name="search-client"
                 type="text"
-                onChange={inputNameClient}
+                onChange={handleChange}
                 onKeyDown={onKeyDown}
                 value={input}
+                autoComplete="off"
             />
             </label>
             {showSuggestions && input && <SuggestionsListComponent />}

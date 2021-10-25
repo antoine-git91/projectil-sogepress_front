@@ -12,6 +12,7 @@ const TableCommandesIndex = () => {
 
     const {items: commandes, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/commandes');
     const headTable = ["Type", "Client", "Prix", "Date de livraison", "Status" ];
+    console.log(commandes)
 
     useEffect(() => load(), [load])
 

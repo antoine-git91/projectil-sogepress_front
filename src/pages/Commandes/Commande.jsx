@@ -7,6 +7,7 @@ import BoxInfos from "../../components/Single/BoxInfos";
 import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer} from "../../utils/styles/single";
 import DivButtonAction from "../../utils/styles/DivButton";
 import BoxContact from "../../components/Single/BoxContact";
+import Header from "../../components/Header";
 
 const Commande = () => {
 
@@ -74,49 +75,51 @@ const Commande = () => {
     } else {
 
         return (
-            <MainContainer>
-
-                <RelanceContainer />
-                <DivButtonAction>
-                    <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
-                </DivButtonAction>
-                <BoxTitle>
-                    <h1>{getType()} / <span>{items.client.raisonSociale}</span></h1>
-                    <p>Date de livraison: <span>{datend}</span></p>
-                </BoxTitle>
-                    <SingleMainContainer>
-                        <InfoViewContainer>
-                            <h2>Informations liées à la commande</h2>
-                            <InfoContainer>
-                                <BoxInfos titre="Type de produit" information={'items.telephone'} />
-                                <BoxInfos titre="Format" information={items.email} />
-                                <BoxInfos titre="Nombre de pages" information={'25 rue du cefim 370000 Tours'} />
-                                <BoxInfos titre="Nombre d'exemplaires" information={items.site_internet} />
-                                <BoxInfos titre="Imprimeur" information={items.site_internet} />
-                            </InfoContainer>
-                            <h2>Clients</h2>
-                            <InfoContainer>
-                                <BoxInfos titre="Nom" information={items.client.raisonSociale} />
-                                <BoxInfos titre="Activités" information={items.client.email} />
-                                <BoxInfos titre="Email" information={items.client.email} />
-                                <BoxInfos titre="Téléphone" information={items.site_internet} />
-                                <BoxInfos titre="Adresse" information={items.site_internet} />
-                            </InfoContainer>
-                            <h2>Prospects</h2>
-                            <InfoContainer>
-                                <BoxInfos titre="Ville de propsection" tags={["37000", "37100", "37290"]} />
-                            </InfoContainer>
-                            <h2>Informations liés à la facturation</h2>
-                            <InfoContainer>
-                                <BoxInfos titre="Montant de la facture" information={items.facturation + " €"} />
-                            </InfoContainer>
-                        </InfoViewContainer>
-                        <ContactViewContainer>
-                            <h2>Contact du projet</h2>
-                            <BoxContact contact={items.contact[0]} />
-                        </ContactViewContainer>
-                    </SingleMainContainer>
-            </MainContainer>
+            <>
+                <Header />
+                <MainContainer>
+                    <RelanceContainer />
+                    <DivButtonAction>
+                        <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
+                    </DivButtonAction>
+                    <BoxTitle>
+                        <h1>{getType()} / <span>{items.client.raisonSociale}</span></h1>
+                        <p>Date de livraison: <span>{datend}</span></p>
+                    </BoxTitle>
+                        <SingleMainContainer>
+                            <InfoViewContainer>
+                                <h2>Informations liées à la commande</h2>
+                                <InfoContainer>
+                                    <BoxInfos titre="Type de produit" information={'items.telephone'} />
+                                    <BoxInfos titre="Format" information={items.email} />
+                                    <BoxInfos titre="Nombre de pages" information={'25 rue du cefim 370000 Tours'} />
+                                    <BoxInfos titre="Nombre d'exemplaires" information={items.site_internet} />
+                                    <BoxInfos titre="Imprimeur" information={items.site_internet} />
+                                </InfoContainer>
+                                <h2>Clients</h2>
+                                <InfoContainer>
+                                    <BoxInfos titre="Nom" information={items.client.raisonSociale} />
+                                    <BoxInfos titre="Activités" information={items.client.email} />
+                                    <BoxInfos titre="Email" information={items.client.email} />
+                                    <BoxInfos titre="Téléphone" information={items.site_internet} />
+                                    <BoxInfos titre="Adresse" information={items.site_internet} />
+                                </InfoContainer>
+                                <h2>Prospects</h2>
+                                <InfoContainer>
+                                    <BoxInfos titre="Ville de propsection" tags={["37000", "37100", "37290"]} />
+                                </InfoContainer>
+                                <h2>Informations liés à la facturation</h2>
+                                <InfoContainer>
+                                    <BoxInfos titre="Montant de la facture" information={items.facturation + " €"} />
+                                </InfoContainer>
+                            </InfoViewContainer>
+                            <ContactViewContainer>
+                                <h2>Contact du projet</h2>
+                                <BoxContact contact={items.contact[0]} />
+                            </ContactViewContainer>
+                        </SingleMainContainer>
+                </MainContainer>
+            </>
         )
     }
 }
