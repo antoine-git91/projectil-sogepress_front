@@ -5,8 +5,7 @@ import TitreForm from "../../templates/TitreForm";
 import InputSelect from "../../components/Form/InputSelect";
 import InputText from "../../components/Form/InputText";
 import InputTextArea from "../../components/Form/InputTextArea";
-import {ButtonPrimary} from "../../utils/styles/button-primary";
-import Header from "../../components/Header";
+import {ButtonPrimary} from "../../utils/styles/button";
 
 const CreateCommande = () => {
 
@@ -37,7 +36,6 @@ const CreateCommande = () => {
 
     return(
         <>
-            <Header />
             <MainContainer>
                 <h1>Création d'une nouvelle commande</h1>
 

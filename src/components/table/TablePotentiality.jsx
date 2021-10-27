@@ -1,17 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import {DeleteButton} from "../../utils/styles/button";
 
 const TableStyle = styled.table`
       width: 60%;
     `
+const AutoWidth = styled.td`
+  width: 1px;
+  white-space: nowrap;
+`
 
-const TableClientsIndex = () => {
+const TablePotentiality = ({headTable, dataPotentiality, removePotentiality}) => {
 
-    const headTable = ["Type", "Magasine"];
-
-    const dataPotentiality = [{type: "Site internet", magasine: ""}, {type: "Print", magasine: "Hello"}]
-
-    //useEffect(() => load(), [load])
 
     return(
         <div>
@@ -23,17 +23,16 @@ const TableClientsIndex = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {dataPotentiality.map((potentiality, key) => (
-                    <tr key={key}>
-                        <td>{potentiality.type}</td>
-                        <td>{potentiality.magasine}</td>
-                    </tr>
-                ))}
+                    {dataPotentiality && dataPotentiality.length > 0 ? dataPotentiality.map((potentiality, key) => (
+                        <tr key={key+potentiality.type.value} id={key}>
+                            <AutoWidth>{potentiality ? potentiality.type.valueDisplay : ""}</AutoWidth>
+                            <AutoWidth>{potentiality ? potentiality.magazine.valueDisplay : ""}</AutoWidth>
+                            {removePotentiality && <AutoWidth ><DeleteButton onClick={(e) => removePotentiality(e, key)}>Supprimer X</DeleteButton></AutoWidth>}
+                        </tr>
+                    )): ""}
                 </tbody>
             </TableStyle>
-            {/*{JSON.stringify(client)}*/}
-
         </div>
     )
 }
-export default TableClientsIndex;
+export default TablePotentiality;

@@ -1,22 +1,23 @@
 import {useState, useCallback} from 'react';
 
-export const usePaginationFetch = ( url ) => {
+export const useFetchGet = ( url ) => {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
-    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refresh'));
-    localStorage.setItem('refresh', refreshToken);
-    const load = useCallback(async () => {
-        setLoading(true)
+
+    const load = useCallback(
+        async () => {
+            setLoading(true)
+
         const response = await fetch(url, {
             headers: {
                 'Accept' : 'application/ld+json',
-                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
             }
         });
 
         const responseData = await response.json();
-
         if (response.ok) {
+            console.log('ok')
             if (responseData.hasOwnProperty("hydra:member")) {
                 setItems(responseData['hydra:member']);
             } else {
@@ -25,35 +26,37 @@ export const usePaginationFetch = ( url ) => {
             setLoading(false);
         } else if (response.status === 401){
             setLoading(true);
+            console.log('401')
             /* On rafraichit le token avec le refresh token
-            * On refait donc une requête pour le refresh token
+            * On fait donc une requête pour le refresh token
             * */
-            const requestOptions = {
+            fetch('http://localhost:8000/api/token/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'
                 },
-                body: JSON.stringify({refreshToken: refreshToken })
-            };
-            fetch('http://127.0.0.1:8000/api/token/refresh', requestOptions)
+                body: JSON.stringify({"refreshToken":localStorage.getItem('refreshToken')})
+            })
             .then(response => {
                 /* Si la réponse est ok on relance la requête initiale */
                 if(response.ok){
+                    console.log('ok')
                     response.json()
                     .then(data => {
-                        setRefreshToken(data.refreshToken);
-                        localStorage.setItem("itemName", data.token);
+                        console.log(data)
+                        localStorage.setItem('token', data['token']);
+                        localStorage.setItem('refreshToken', data['refreshToken']);
 
-                        const requestOptions = {
+                        fetch(url, {
                             method: 'GET',
                             headers: {
                                 'Content-Type' : 'application/json',
-                                'Authorization' : 'Bearer ' + localStorage.getItem("itemName")
+                                'Authorization' : 'Bearer ' + localStorage.getItem("token")
                             }
-                        };
-                        fetch(url, requestOptions)
+                        })
                         .then(response => {
                             if(response.ok){
+                                console.log('ok')
                                 response.json()
                                     .then(data => {
                                         if(data.hasOwnProperty("hydra:member")){
@@ -63,14 +66,20 @@ export const usePaginationFetch = ( url ) => {
                                         }
                                     }
                                 )
-                                setLoading(false)
-                            } else if (response.status === 401){/* rediriger vers login*/}
+                                setLoading(false);
+                            } else if (response.status === 401){
+                                /* rediriger vers login*/
+                                console.log('401')
+                            }
                         })
                     })
-                } else {/* Redirection vers le loginPage*/}
+                } else {
+                    console.log('401')
+                    /* Redirection vers le loginPage*/
+                }
             })
         }
-    }, [url, refreshToken])
+    }, [url])
 
     return {
         items,

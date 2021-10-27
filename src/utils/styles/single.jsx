@@ -16,9 +16,6 @@ export const BoxTitle = styled.div`
       } 
   }
 `
-export const SingleMainContainer = styled.div`
-display : flex;
-`
 
 export const HistoriqueViewContainer = styled.div`
 width: 100%;

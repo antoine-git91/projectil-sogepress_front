@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 const SpinnerStyle = styled.div`
 
-  display: block;
+  display: flex;
+  align-items: center;
   position: relative;
   width: 80px;
   height: 80px;

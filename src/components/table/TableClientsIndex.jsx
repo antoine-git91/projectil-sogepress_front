@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import Spinner from "../Spinner";
@@ -7,16 +7,16 @@ const TableStyle = styled.table`
   width: 100%;
 `
 
-const TableClientsIndex = ({clients, load, loading, nameClientSearch, selectVille, selectCodePostal, selectActivite, getStatus}) => {
+const TableClientsIndex = ({clients, loading, nameClientSearch, selectVille, selectCodePostal, selectActivite, getStatus}) => {
 
     const headTable = ["Raison sociale", "Activité", "Email", "Code Postal", "Ville" , "Acquis/Prospect" ];
 
-    useEffect(() => load(), [load]);
-
+    console.log(selectCodePostal)
         if (loading) {
             return <Spinner />
         }
 
+    console.log(selectActivite.value)
         return(
             <div>
                 <TableStyle>
@@ -26,11 +26,11 @@ const TableClientsIndex = ({clients, load, loading, nameClientSearch, selectVill
                     </tr>
                     </thead>
                     <tbody>
-                    {clients.filter(client => client.raisonSociale.toLowerCase().includes(nameClientSearch)
-                        && client.nafSousClasse.libelle.includes(selectActivite)
-                        && client.adresses[0].ville.codePostal.includes(selectCodePostal)
-                        && client.adresses[0].ville.nom.includes(selectVille)
-                        && getStatus(client))
+                    {clients.filter(client => nameClientSearch ?client.raisonSociale.toLowerCase().includes(nameClientSearch) : client.raisonSociale
+                        && selectActivite.value ? client.nafSousClasse.libelle.includes(selectActivite.value) : client.nafSousClasse.libelle
+                        && selectCodePostal.value ? client.adresses[0].ville.codePostal.includes(selectCodePostal.value) : client.adresses[0].ville.codePostal
+                        && selectVille.value ? client.adresses[0].ville.nom.includes(selectVille.value) : client.adresses[0].ville.nom
+                        && getStatus(client) ? getStatus(client) : "")
                         .map((dataClient, key) => (
                             <tr key={key}>
                                 <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.raisonSociale}</Link></td>

@@ -1,15 +1,13 @@
 import React from "react";
 import MainContainer from "../../templates/Container";
-import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import {ButtonPrimaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
 import TableCommandesIndex from "../../components/table/TableCommandesIndex";
-import Header from "../../components/Header";
 
 const Commandes = () => {
 
     return(
         <>
-            <Header />
             <MainContainer>
                 <DivButtonAction>
                     <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>

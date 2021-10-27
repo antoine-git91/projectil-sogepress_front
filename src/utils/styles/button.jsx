@@ -37,3 +37,27 @@ export const ButtonPrimaryLink = styled(Link) `
     background: #FF6700;
   }
 `
+
+export const ButtonSecondary = styled(Link)`
+  margin: ${({ margin }) => margin ?? 0};
+  font-weight: bold;
+  color: #FF6700;
+  display: block;
+  transition: .3s;
+  
+  &:hover{
+    color: #000;
+  }
+`
+
+export const DeleteButton = styled.button`
+      border: none;
+      background-color: transparent;
+      color: #b83c3c;
+      cursor: pointer;
+      margin-left: 10px;
+      
+      &:hover{
+        text-decoration: underline;
+      }
+`
