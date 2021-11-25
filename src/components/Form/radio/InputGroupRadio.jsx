@@ -8,19 +8,20 @@ const GroupRadioStyle = styled.div`
       
       p{
         margin-bottom: 10px;
+        font-weight: 500;
       }
     `
 
-const InputGroupRadio = ({ data, name, selected, setTypeClientRadio, label }) => {
+const InputGroupRadio = ({ data, name, selected, setRadioChecked, label }) => {
 
-    const getValueType = (e) => {
-        setTypeClientRadio(e.target.value)
+    const getValue = (e) => {
+        setRadioChecked(e.target.value)
     };
 
       return (
           <GroupRadioStyle>
             <p>{label}</p>
-            <Flexbox onChange={getValueType} >
+            <Flexbox onChange={getValue} >
               {data.map(( radio, i ) => <InputRadio key={i} labeltext={radio.label} idRadio={radio.id} valueRadio={radio.value} nameRadio={name} checked={radio.value === selected} />)}
             </Flexbox>
           </GroupRadioStyle>

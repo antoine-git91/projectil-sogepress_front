@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
-import {useState} from "react";
 import Spinner from "../../Spinner";
 import {useFetchGet} from "../../../utils/misc/useFetchGet";
 
 const BoxHistoriqueStyle = styled.div`
   border: 1px solid black;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+  max-width: 60%;
 `
 
 export const HeadBoxHistorique = styled.div`
@@ -16,9 +16,9 @@ padding: 10px; 20px;
 `
 
 export const ContentBoxHistorique = styled.div`
-display : flex;
-border-top: 1px solid black;
-padding: 20px;
+    display : flex;
+    border-top: 1px solid black;
+    padding: 20px;
 `
 
 const BoxHistorique = ({dataHistorique}) => {

@@ -9,8 +9,10 @@ const Commandes = () => {
     return(
         <>
             <MainContainer>
-                <DivButtonAction>
+                <DivButtonAction margin={"0 0 50px 0"}>
+                    <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
+                    <ButtonPrimaryLink to="/creation_relance">Créer une relance</ButtonPrimaryLink>
                 </DivButtonAction>
                 <h1>Commandes page</h1>
                 <TableCommandesIndex />

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from "styled-components";
-import styleMessage from '../../utils/styles/responseMessageStatut.css'
 
 const MessageBox = styled.div`
   padding: 20px 25px;

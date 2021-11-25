@@ -17,6 +17,6 @@ const InputTextArea = ({label,commentaireId, name,commentaireRows,commentaireCol
         <textarea id={commentaireId} name={name} rows={commentaireRows} cols={commentaireCols} onChange={onChange} />
         </TextAreaStyle>
     )
-}
 
+}
 export default InputTextArea;

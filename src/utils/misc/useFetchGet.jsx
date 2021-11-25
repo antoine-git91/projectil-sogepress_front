@@ -1,13 +1,12 @@
 import {useState, useCallback} from 'react';
 
 export const useFetchGet = ( url ) => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [items, setItems] = useState([]);
 
     const load = useCallback(
-        async () => {
-            setLoading(true)
 
+        async () => {
         const response = await fetch(url, {
             headers: {
                 'Accept' : 'application/ld+json',
@@ -17,7 +16,6 @@ export const useFetchGet = ( url ) => {
 
         const responseData = await response.json();
         if (response.ok) {
-            console.log('ok')
             if (responseData.hasOwnProperty("hydra:member")) {
                 setItems(responseData['hydra:member']);
             } else {
@@ -25,8 +23,6 @@ export const useFetchGet = ( url ) => {
             }
             setLoading(false);
         } else if (response.status === 401){
-            setLoading(true);
-            console.log('401')
             /* On rafraichit le token avec le refresh token
             * On fait donc une requête pour le refresh token
             * */
@@ -40,7 +36,7 @@ export const useFetchGet = ( url ) => {
             .then(response => {
                 /* Si la réponse est ok on relance la requête initiale */
                 if(response.ok){
-                    console.log('ok')
+
                     response.json()
                     .then(data => {
                         console.log(data)
@@ -56,7 +52,7 @@ export const useFetchGet = ( url ) => {
                         })
                         .then(response => {
                             if(response.ok){
-                                console.log('ok')
+
                                 response.json()
                                     .then(data => {
                                         if(data.hasOwnProperty("hydra:member")){
@@ -69,7 +65,7 @@ export const useFetchGet = ( url ) => {
                                 setLoading(false);
                             } else if (response.status === 401){
                                 /* rediriger vers login*/
-                                console.log('401')
+
                             }
                         })
                     })
@@ -79,7 +75,7 @@ export const useFetchGet = ( url ) => {
                 }
             })
         }
-    }, [url])
+    }, [url]);
 
     return {
         items,

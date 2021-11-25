@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import {Link} from "react-router-dom";
 import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
 import { ButtonPrimaryLink } from "../../utils/styles/button";
@@ -43,7 +44,7 @@ const Commande = () => {
     }
 
     const date = new Date(commande.fin);
-    const datend = date.getDate() + '-' + (date.getMonth()+1) + "-" + date.getFullYear();//prints expected format.
+    const dateEnd = date.getDate() + '-' + (date.getMonth()+1) + "-" + date.getFullYear();//prints expected format.
 
     if (loading){
         return <div>Chargement</div>
@@ -57,8 +58,8 @@ const Commande = () => {
                         <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
                     </DivButtonAction>
                     <BoxTitle>
-                        <h1>{getType()} / <span>{commande.client ? commande.client.raisonSociale : "loading"}</span></h1>
-                        <p>Date de livraison: <span>{datend}</span></p>
+                        <h1>{getType()} / <Link to={"/profile/" + commande.client.id}>{commande.client ? commande.client.raisonSociale : "loading"}</Link></h1>
+                        <p>Date de livraison: <span>{dateEnd}</span></p>
                     </BoxTitle>
                         <Flexbox>
                             <InfoViewContainer>

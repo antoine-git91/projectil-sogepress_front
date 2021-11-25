@@ -9,6 +9,11 @@ const BoxContactStyle = styled.div`
   h3{
     margin: 0 ;
   }
+  
+  a{
+    text-decoration: underline;
+    color: inherit;
+  }
 `
 
 export const ContactTitle = styled.p`
@@ -28,7 +33,7 @@ const BoxContact = ({contact}) => {
             <ContactTitle>Téléphone</ContactTitle>
             <p>{contact.tel}</p>
             <ContactTitle>Email</ContactTitle>
-            <p>{contact.email}</p>
+            <a href="#">{contact.email}</a>
         </BoxContactStyle>
     )
 }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {Link} from "react-router-dom";
 
 export const ButtonPrimary = styled.button`
-  background-color: #000;
+  background-color: #FF6700;
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -10,17 +10,16 @@ export const ButtonPrimary = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: .3s;
-  margin-bottom: 40px;
-  margin-top: 40px;
+  margin: ${({ margin }) => margin ?? 0};
 
   &:hover {
-    background: #FF6700;
+    background: #000;
   }
 `
 
 export const ButtonPrimaryLink = styled(Link) `
-  display: block;
-  background-color: #000;
+        font-size: 14px;
+  background-color: #FF6700;
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -28,17 +27,27 @@ export const ButtonPrimaryLink = styled(Link) `
   font-weight: bold;
   cursor: pointer;
   transition: .3s;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  margin-left: 10px;
-  text-decoration: none;
+  margin: ${({ margin }) => margin ?? 0};
+  border-right: 1px solid #fff;
 
   &:hover {
-    background: #FF6700;
+    background: #000;
   }
 `
 
-export const ButtonSecondary = styled(Link)`
+export const ButtonSecondaryLink = styled(Link)`
+  margin: ${({ margin }) => margin ?? 0};
+  font-weight: bold;
+  color: #FF6700;
+  display: block;
+  transition: .3s;
+  
+  &:hover{
+    color: #000;
+  }
+`
+
+export const ButtonSecondary = styled.button`
   margin: ${({ margin }) => margin ?? 0};
   font-weight: bold;
   color: #FF6700;

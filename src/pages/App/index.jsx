@@ -13,6 +13,7 @@ import Header from "../../components/Header";
 import Account from "../Account";
 import UpdateAccount from "../Account/UpdateAccount";
 import UpdatePassword from "../Account/UpdatePassword";
+import UpdateClient from "../Clients/UpdateClient";
 
 
 const App = () => {
@@ -46,6 +47,9 @@ const App = () => {
                 </Route>
                 <Route path="/creation_client">
                     <CreateClient />
+                </Route>
+                <Route path="/update_client/:id">
+                    <UpdateClient />
                 </Route>
                 <Route path="/creation_commande">
                     <CreateCommande />

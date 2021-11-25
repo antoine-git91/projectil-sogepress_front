@@ -17,6 +17,8 @@ const Clients = () => {
         load()
     }, [load])
 
+    console.log(items)
+
     const [resultFetch, setResultFetch] = useState([]);
     useEffect(() => {
         setResultFetch(items)
@@ -52,6 +54,11 @@ const Clients = () => {
     return(
         <>
         <MainContainer>
+            <DivButtonAction margin={"0 0 50px 0"}>
+                <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
+                <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
+                <ButtonPrimaryLink to="/creation_relance">Créer une relance</ButtonPrimaryLink>
+            </DivButtonAction>
             <ResearchClient resultFetch={resultFetch}
                             setResultFetch={setResultFetch}
                             typeClientRadio={typeClientRadio}
@@ -73,9 +80,6 @@ const Clients = () => {
                             property={"raisonSociale"}
 
             />
-            <DivButtonAction>
-                <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
-            </DivButtonAction>
             <h1>Clients page</h1>
             <TableClientsIndex clients={resultFetch}
                                loading={loading}

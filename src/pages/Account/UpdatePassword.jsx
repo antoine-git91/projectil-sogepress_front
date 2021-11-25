@@ -16,7 +16,7 @@ const UpdatePassword = () => {
     const [loading, setLoading] = useState(false);
 
     /* On initialise les input text simple */
-    const [inputSate, setInputState] = useReducer(
+    const [inputState, setInputState] = useReducer(
         (state, newState) => ({...state, ...newState}),
         {
             new_password: "",
@@ -34,7 +34,7 @@ const UpdatePassword = () => {
     const handleUpdateAccount = (e) => {
         e.preventDefault();
 
-        if(inputSate.new_password !== inputSate.confirm_new_password){
+        if(inputState.new_password !== inputState.confirm_new_password){
             alert("Il y a une erreur dans a confirmation de votre mot de passe")
             return
         }
@@ -45,7 +45,7 @@ const UpdatePassword = () => {
                 'Authorization' : 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify({
-                plainPassword: inputSate.new_password
+                plainPassword: inputState.new_password
             })
         };
         fetch('http://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
@@ -74,8 +74,8 @@ const UpdatePassword = () => {
                     <h1>Modifier mon mot de passe</h1>
                 </BoxTitle>
                 <form onSubmit={handleUpdateAccount}>
-                    <InputText type="password" label={"Nouveau mot de passe"} name="new_password" value={inputSate.new_password} onChange={handleChangeInput} autocomplete="new-password" />
-                    <InputText type="password" label={"Confirmer votre nouveau mot de passe"} name="confirm_new_password" value={inputSate.confirm_new_password} onChange={handleChangeInput} autocomplete="new-password" />
+                    <InputText type="password" label={"Nouveau mot de passe"} name="new_password" value={inputState.new_password} onChange={handleChangeInput} autocomplete="new-password" />
+                    <InputText type="password" label={"Confirmer votre nouveau mot de passe"} name="confirm_new_password" value={inputState.confirm_new_password} onChange={handleChangeInput} autocomplete="new-password" />
                     <ButtonPrimary>Je modifie mon mot de passe</ButtonPrimary>
                 </form>
                 {updateSuccess && <Success messageTitle={"Demande Validée"} messageText={"Votre mot de passe à bien été mis à jour"} />}

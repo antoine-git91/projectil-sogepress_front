@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import styled from "styled-components";
 import {DeleteButton} from "../../utils/styles/button";
 
@@ -12,9 +12,8 @@ const AutoWidth = styled.td`
 
 const TablePotentiality = ({headTable, dataPotentiality, removePotentiality}) => {
 
-
     return(
-        <div>
+        <Fragment>
             {/*{!loading && 'Chargement...'}*/}
             <TableStyle>
                 <thead>
@@ -26,13 +25,13 @@ const TablePotentiality = ({headTable, dataPotentiality, removePotentiality}) =>
                     {dataPotentiality && dataPotentiality.length > 0 ? dataPotentiality.map((potentiality, key) => (
                         <tr key={key+potentiality.type.value} id={key}>
                             <AutoWidth>{potentiality ? potentiality.type.valueDisplay : ""}</AutoWidth>
-                            <AutoWidth>{potentiality ? potentiality.magazine.valueDisplay : ""}</AutoWidth>
-                            {removePotentiality && <AutoWidth ><DeleteButton onClick={(e) => removePotentiality(e, key)}>Supprimer X</DeleteButton></AutoWidth>}
+                            <AutoWidth>{potentiality ? potentiality.magazine.valueDisplay : "n"}</AutoWidth>
+                            {removePotentiality && <AutoWidth><DeleteButton onClick={(e) => removePotentiality(e, key)}>Supprimer X</DeleteButton></AutoWidth>}
                         </tr>
                     )): ""}
                 </tbody>
             </TableStyle>
-        </div>
+        </Fragment>
     )
 }
 export default TablePotentiality;

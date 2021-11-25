@@ -1,13 +1,13 @@
 import {useState, useCallback} from 'react';
 
 export const useFetchPost = ( url, body ) => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [responseStatut, setResponseStatut] = useState(0);
 
     const post = useCallback(
         async () => {
-            setLoading(true)
 
             const response = await fetch(url, {
                 method: "POST",
@@ -19,13 +19,15 @@ export const useFetchPost = ( url, body ) => {
             });
 
             const responseData = await response.json();
+
             if (response.status === 201) {
-                console.log('ok')
-                setSuccess(responseData)
+                setResponseStatut(response.status);
+                setSuccess(responseData);
                 setLoading(false);
             } else {
+                setResponseStatut(response.status);
                 setError(responseData);
-                setLoading(true);
+                setLoading(false);
             }
         }, [url, body])
 
@@ -33,6 +35,7 @@ export const useFetchPost = ( url, body ) => {
         success,
         error,
         post,
-        loading
+        loading,
+        responseStatut
     }
 }

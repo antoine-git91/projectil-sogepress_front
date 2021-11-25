@@ -32,7 +32,7 @@ const ResearchClient = ({resultFetch,
 
     const villeClients = [];
 
-    const allVilles = resultFetch.map(client => client.adresses.map(adresse => adresse.ville));
+    const allVilles = resultFetch.map(client => client.adresse.map(adresse => adresse.ville));
     allVilles.map( arrayVille => arrayVille.map( ville => villeClients.push(ville.nom)));
     /* on évite les doublon */
     const uniqueVillesClients = villeClients.filter(function(item, pos, self) {
@@ -40,7 +40,7 @@ const ResearchClient = ({resultFetch,
     })
 
     const codePostal = [];
-    const allCp = resultFetch.map(client => client.adresses.map(adresse => adresse.ville));
+    const allCp = resultFetch.map(client => client.adresse.map(adresse => adresse.ville));
     allCp.map( arrayCp => arrayCp.map( cp => codePostal.push(cp.codePostal)));
     /* on évite les doublon */
     const uniqueCodePostal = codePostal.filter(function(item, pos, self) {

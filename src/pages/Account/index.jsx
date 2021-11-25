@@ -1,6 +1,6 @@
 import React from "react";
 import MainContainer from "../../templates/Container";
-import {ButtonPrimaryLink, ButtonSecondary} from "../../utils/styles/button";
+import {ButtonPrimaryLink, ButtonSecondaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
 import {BoxTitle, InfoContainer, InfoViewContainer} from "../../utils/styles/single";
 import BoxInfos from "../../components/Single/BoxInfos";
@@ -9,6 +9,10 @@ import styled from "styled-components";
 
 const BoxSecondaryAction = styled.div`
   margin-top: 50px;
+  
+  h3{
+    margin-bottom: 20px;
+  }
 `
 
 const Account = () => {
@@ -59,8 +63,8 @@ const Account = () => {
             </Flexbox>
             <BoxSecondaryAction>
                 <h3>Mes actions</h3>
-                <ButtonSecondary to={"/password_update"} >Modifier mon mot de passe</ButtonSecondary>
-                <ButtonSecondary to="/account_update">Modifier mon profil</ButtonSecondary>
+                <ButtonSecondaryLink to={"/password_update"} margin={"0 0 10px 0"}>Modifier mon mot de passe</ButtonSecondaryLink>
+                <ButtonSecondaryLink to="/account_update">Modifier mon profil</ButtonSecondaryLink>
             </BoxSecondaryAction>
         </MainContainer>
     )

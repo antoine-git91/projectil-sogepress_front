@@ -11,39 +11,37 @@ const TableClientsIndex = ({clients, loading, nameClientSearch, selectVille, sel
 
     const headTable = ["Raison sociale", "Activité", "Email", "Code Postal", "Ville" , "Acquis/Prospect" ];
 
-    console.log(selectCodePostal)
-        if (loading) {
-            return <Spinner />
-        }
+    if (loading) {
+        return <Spinner />
+    }
 
-    console.log(selectActivite.value)
-        return(
-            <div>
-                <TableStyle>
-                    <thead>
-                    <tr>
-                        {headTable.map((item, key) => <th key={key}>{item}</th>)}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {clients.filter(client => nameClientSearch ?client.raisonSociale.toLowerCase().includes(nameClientSearch) : client.raisonSociale
-                        && selectActivite.value ? client.nafSousClasse.libelle.includes(selectActivite.value) : client.nafSousClasse.libelle
-                        && selectCodePostal.value ? client.adresses[0].ville.codePostal.includes(selectCodePostal.value) : client.adresses[0].ville.codePostal
-                        && selectVille.value ? client.adresses[0].ville.nom.includes(selectVille.value) : client.adresses[0].ville.nom
-                        && getStatus(client) ? getStatus(client) : "")
-                        .map((dataClient, key) => (
-                            <tr key={key}>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.raisonSociale}</Link></td>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.nafSousClasse.libelle}</Link></td>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.email}</Link></td>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresses[0].ville.codePostal}</Link></td>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresses[0].ville.nom}</Link></td>
-                                <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.statut ? "Acquis" : "Prospect"}</Link></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </TableStyle>
-            </div>
-        )
+    return(
+        <div>
+            <TableStyle>
+                <thead>
+                <tr>
+                    {headTable.map((item, key) => <th key={key}>{item}</th>)}
+                </tr>
+                </thead>
+                <tbody>
+                {clients.filter(client => nameClientSearch ?client.raisonSociale.toLowerCase().includes(nameClientSearch) : client.raisonSociale
+                    && selectActivite.value ? client.nafSousClasse.libelle.includes(selectActivite.value) : client.nafSousClasse.libelle
+                    && selectCodePostal.value ? client.adresse[0].ville.codePostal.includes(selectCodePostal.value) : client.adresse[0].ville.codePostal
+                    && selectVille.value ? client.adresse[0].ville.nom.includes(selectVille.value) : client.adresse[0].ville.nom
+                    && getStatus(client) ? getStatus(client) : "")
+                    .map((dataClient, key) => (
+                        <tr key={key}>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.raisonSociale}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.nafSousClasse.libelle}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.email}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0].ville.codePostal}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0].ville.nom}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.statut ? "Acquis" : "Prospect"}</Link></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </TableStyle>
+        </div>
+    )
 }
 export default TableClientsIndex;

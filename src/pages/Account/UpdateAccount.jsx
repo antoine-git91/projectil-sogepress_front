@@ -21,7 +21,7 @@ const UpdateAccount = () => {
         setState({[name]: value});
     };
     /* On initialise les input text simple */
-    const [inputSate, setInputState] = useReducer(
+    const [inputState, setInputState] = useReducer(
         (state, newState) => ({...state, ...newState}),
         {
             lastname_user: meUser.nom,
@@ -40,9 +40,9 @@ const UpdateAccount = () => {
                 'Authorization' : 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify({
-                nom: inputSate.lastname_user,
-                prenom: inputSate.firstname_user,
-                email: inputSate.email_user
+                nom: inputState.lastname_user,
+                prenom: inputState.firstname_user,
+                email: inputState.email_user
             })
         };
         fetch('http://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
@@ -89,14 +89,14 @@ const UpdateAccount = () => {
                 <form onSubmit={handleUpdateAccount}>
                     <Flexbox>
                         <label>Nom
-                            <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputSate.lastname_user} name="lastname_user" />
+                            <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputState.lastname_user} name="lastname_user" />
                         </label>
                         <label>Prénom
-                            <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputSate.firstname_user} name="firstname_user" />
+                            <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputState.firstname_user} name="firstname_user" />
                         </label>
                     </Flexbox>
                     <label>Email
-                        <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputSate.email_user} name="email_user" />
+                        <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputState.email_user} name="email_user" />
                     </label>
                     <ButtonPrimary>Je modifie mon profil</ButtonPrimary>
                 </form>

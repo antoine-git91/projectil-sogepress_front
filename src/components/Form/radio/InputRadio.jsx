@@ -12,7 +12,7 @@ const InputRadio = ({labeltext, idRadio, nameRadio, valueRadio, checked}) => {
     return (
             <Flexbox>
                 <label htmlFor={idRadio}>{labeltext}</label>
-                <RadioStyle type="radio" id={idRadio} name={nameRadio} value={valueRadio} defaultChecked={checked} />
+                <RadioStyle type="radio" id={nameRadio + idRadio} name={nameRadio} value={valueRadio} defaultChecked={checked} />
             </Flexbox>
     )
 }

@@ -35,11 +35,12 @@ const BtnTabs = styled.button`
   }
 
   ${({active}) =>
-          active &&
+  active &&
           `
-          color:#FF6700;
+    color:#FF6700;
     border-bottom: 3px solid #FF6700;
     opacity: 1;
+    font-weight: bold;
   `}
 `
 
@@ -69,12 +70,12 @@ const Profile = () => {
     return (
         <>
             <MainContainer>
-                <RelanceContainer />
                 <DivButtonAction>
-                    <ButtonPrimaryLink to="/creation_client">Modifier le profil</ButtonPrimaryLink>
+                    <ButtonPrimaryLink to={{pathname: `/update_client/${id}`}}>Modifier le client</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_commande">Nouvelle commande</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
                 </DivButtonAction>
+                <RelanceContainer />
                 <BoxTitle>
                     <h1>{items.raisonSociale} / {items.nafSousClasse ? items.nafSousClasse.libelle : "loading"}</h1>
                 </BoxTitle>
@@ -131,7 +132,6 @@ const Profile = () => {
                                 {items.historiqueClients && items.historiqueClients.length > 0
                                     ? items.historiqueClients.map((historique, key) => <BoxHistorique key={key} dataHistorique={historique} />)
                                     : "Loading..."}
-                               {/* {items.historiqueClients.map( (historique, key) => <BoxHistorique key={key} dataHistorique={historique} /> )}*/}
                             </HistoriqueDataContainer>
                         </HistoriqueViewContainer>
                     </Flexbox>

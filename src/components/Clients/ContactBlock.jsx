@@ -44,31 +44,50 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, numberCo
             </Flexbox>
             <Flexbox>
                 <label>Nom
-                    <InputStyle type="text" onChange={(e) => {
-                        setLastnameState(e.target.value);
-                    }} value={lastnameState} name="client_contact_lastname" required/>
+                    <InputStyle
+                        type="text"
+                        onChange={(e) => {setLastnameState(e.target.value);}}
+                        value={lastnameState}
+                        name="client_contact_lastname"
+                        required
+                    />
                 </label>
                 <label>Prénom
-                    <InputStyle type="text" onChange={(e) => {
-                        setFirstnameState(e.target.value)
-                    }} value={firstnameState} name="client_contact_firstname" required/>
+                    <InputStyle
+                        type="text"
+                        onChange={(e) => {setFirstnameState(e.target.value)}}
+                        value={firstnameState}
+                        name="client_contact_firstname"
+                        required
+                    />
                 </label>
                 <label>Fonction
-                    <InputStyle type="text" onChange={(e) => {
-                        setJobState(e.target.value)
-                    }} value={jobState} name="client_contact_job" required/>
+                    <InputStyle
+                        type="text" onChange={(e) => {setJobState(e.target.value)}}
+                        value={jobState}
+                        name="client_contact_job"
+                        required
+                    />
                 </label>
             </Flexbox>
             <Flexbox>
                 <label>Téléphone
-                    <InputStyle type="tel" onChange={(e) => {
-                        setPhoneState(e.target.value)
-                    }} value={phoneState} name="client_contact_phone" pattern="[0-9]{10}" required/>
+                    <InputStyle
+                        type="tel"
+                        onChange={(e) => {setPhoneState(e.target.value)}}
+                        value={phoneState}
+                        name="client_contact_phone"
+                        pattern="[0-9]{10}"
+                        required
+                    />
                 </label>
                 <label>Mail
-                    <InputStyle type="email" onChange={(e) => {
-                        setMailState(e.target.value)
-                    }} value={mailState} name="client_contact_mail" required/>
+                    <InputStyle
+                        type="email"
+                        onChange={(e) => {setMailState(e.target.value)}}
+                        value={mailState}
+                        name="client_contact_mail"
+                        required/>
                 </label>
             </Flexbox>
         </ListStyle>
