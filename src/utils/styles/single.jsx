@@ -16,9 +16,6 @@ export const BoxTitle = styled.div`
       } 
   }
 `
-export const SingleMainContainer = styled.div`
-display : flex;
-`
 
 export const HistoriqueViewContainer = styled.div`
 width: 100%;
@@ -28,6 +25,8 @@ export const HeaderHistoriqueView = styled.div`
 width: 100%;
 display : flex;
 justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
 `
 
 export const ChiffreDateContainer = styled.div`
@@ -48,6 +47,7 @@ export const InfoContainer = styled.div`
   display : grid; 
   grid-template-columns: repeat(auto-fill, 45%);
   gap: 10px;
+  margin-bottom: 40px;
 `
 
 export const ContactContainer = styled.div`

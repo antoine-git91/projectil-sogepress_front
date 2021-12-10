@@ -84,7 +84,6 @@ const InputAutoComplete = ({label,
     /* Navigation dans les proposition
     * TODO -> si on clique en dehors de la box des propositions */
     const onKeyDown = (e) => {
-        e.preventDefault();
         if(e.keyCode === 40 && (activeSuggestionIndex < filteredSuggestions.length - 1) ){
             setActiveSuggestionIndex(activeSuggestionIndex+1);
             setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
@@ -92,6 +91,7 @@ const InputAutoComplete = ({label,
             setActiveSuggestionIndex(activeSuggestionIndex - 1);
             setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
         } else if(e.keyCode === 13){
+            e.preventDefault();
             setInput(document.getElementsByClassName("suggestion-active")[0].innerText);
             setShowSuggestions(false);
         }

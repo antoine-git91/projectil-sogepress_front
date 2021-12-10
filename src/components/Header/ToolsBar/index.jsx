@@ -2,6 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 
 const ToolNav = styled.nav`
+  display: flex;
   position: fixed;
   top: 0;
   width: calc(100vw - 240px);
@@ -24,15 +25,28 @@ const LogoutButton = styled.button`
   }
 `
 
+const Welcome = styled.p`
+  display: block;
+  
+  span{
+    font-weight: bold;
+  }
+`
+
 const ToolsBar = () => {
 
     const logout = (e) => {
         e.preventDefault();
-        localStorage.clear();
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         window.location.href = '/';
     }
+
+    const meUser = JSON.parse(localStorage.getItem('meUser'));
+
     return(
         <ToolNav>
+            <Welcome>Bonjour <span>{meUser ? meUser.nom + " " + meUser.prenom : ""}</span></Welcome>
             <LogoutButton onClick={logout}>Déconnexion</LogoutButton>
         </ToolNav>
     )

@@ -1,108 +1,83 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
+import {Link} from "react-router-dom";
 import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
-import { ButtonPrimaryLink } from "../../utils/styles/button-primary";
+import { ButtonPrimaryLink } from "../../utils/styles/button";
 import RelanceContainer from "../../components/RelanceBox";
 import BoxInfos from "../../components/Single/BoxInfos";
-import {SingleMainContainer,ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer} from "../../utils/styles/single";
+import {ContactViewContainer, BoxTitle, InfoViewContainer, InfoContainer} from "../../utils/styles/single";
 import DivButtonAction from "../../utils/styles/DivButton";
 import BoxContact from "../../components/Single/BoxContact";
-import Header from "../../components/Header";
+import Flexbox from "../../templates/Flexbox";
+import {useFetchGet} from "../../utils/misc/useFetchGet";
 
 const Commande = () => {
 
     const {id} = useParams()
-    const [items, setItems] = useState({})
-    const [adresse, setAdresse] = useState("")
-    const [isLoading, setIsLoading] = useState(true)
 
+    const {items: commande, load, loading} = useFetchGet(`http://127.0.0.1:8000/api/commandes/${id}`);
     useEffect(() => {
-        const requestOptions = {
-            method: 'Get',
-            headers: {
-                'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer ' + localStorage.getItem('itemName')
-            }
-        };
-        fetch(`http://127.0.0.1:8000/api/commandes/${id}`, requestOptions)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setItems(result)
-                    fetch(`http://127.0.0.1:8000` + result.client.adresses[0])
-                        .then(res => res.json())
-                        .then(
-                            (result) => {
-                                setAdresse(result);
+        load()
+    }, [load])
+    console.log(commande)
 
-                            },
-                            // Remarque : il faut gérer les erreurs ici plutôt que dans
-                            // un bloc catch() afin que nous n’avalions pas les exceptions
-                            // dues à de véritables bugs dans les composants.
-                            (error) => {
-                                console.log(error)
-                            }
-                        )
-                    setIsLoading(false);
-                },
-                // Remarque : il faut gérer les erreurs ici plutôt que dans
-                // un bloc catch() afin que nous n’avalions pas les exceptions
-                // dues à de véritables bugs dans les composants.
-                (error) => {
-                    console.log(error)
-                }
-            ).then(
+    const adresseClient = commande.client ? commande.client.adresses[0] : "" ;
+    const {items: adresse, load: loadAdresse, loading: loadingAdresse} = useFetchGet('http://127.0.0.1:8000'  + adresseClient  );
+    useEffect(() => {
+        loadAdresse()
+    }, [loadAdresse])
+    console.log(adresse)
 
-        )
-    }, [id])
+    const adresseRue = adresse.numero + " " + adresse.typeVoie + " " + adresse.nomVoie;
+    const adresseVille = adresse.ville ? adresse.ville.nom + " " + adresse.ville.codePostal : "";
+    const adresseFull = adresseRue + " " + adresseVille;
 
     const getType = () => {
-        if(items.hasOwnProperty("supportMagazine"))
+        if(commande.hasOwnProperty("supportMagazine"))
             return "Magasine"
-        if(items.hasOwnProperty("supportPrint"))
+        if(commande.hasOwnProperty("supportPrint"))
             return "Print"
-        if(items.hasOwnProperty("supportWeb"))
+        if(commande.hasOwnProperty("supportWeb"))
             return "Site Web"
-        if(items.hasOwnProperty("reseauSocial"))
+        if(commande.hasOwnProperty("reseauSocial"))
             return "Community Manager"
     }
 
-    const date = new Date(items.fin);
-    const datend = date.getDate() + '-' + (date.getMonth()+1) + "-" + date.getFullYear();//prints expected format.
+    const date = new Date(commande.fin);
+    const dateEnd = date.getDate() + '-' + (date.getMonth()+1) + "-" + date.getFullYear();//prints expected format.
 
-    if (isLoading){
+    if (loading){
         return <div>Chargement</div>
     } else {
 
         return (
             <>
-                <Header />
                 <MainContainer>
                     <RelanceContainer />
                     <DivButtonAction>
                         <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
                     </DivButtonAction>
                     <BoxTitle>
-                        <h1>{getType()} / <span>{items.client.raisonSociale}</span></h1>
-                        <p>Date de livraison: <span>{datend}</span></p>
+                        <h1>{getType()} / <Link to={"/profile/" + commande.client.id}>{commande.client ? commande.client.raisonSociale : "loading"}</Link></h1>
+                        <p>Date de livraison: <span>{dateEnd}</span></p>
                     </BoxTitle>
-                        <SingleMainContainer>
+                        <Flexbox>
                             <InfoViewContainer>
                                 <h2>Informations liées à la commande</h2>
                                 <InfoContainer>
                                     <BoxInfos titre="Type de produit" information={'items.telephone'} />
-                                    <BoxInfos titre="Format" information={items.email} />
-                                    <BoxInfos titre="Nombre de pages" information={'25 rue du cefim 370000 Tours'} />
-                                    <BoxInfos titre="Nombre d'exemplaires" information={items.site_internet} />
-                                    <BoxInfos titre="Imprimeur" information={items.site_internet} />
+                                    <BoxInfos titre="Format" information={"A faire"} />
+                                    <BoxInfos titre="Nombre de pages" information={"a faire"} />
+                                    <BoxInfos titre="Nombre d'exemplaires" information={"a faire"} />
+                                    <BoxInfos titre="Imprimeur" information={"a faire"} />
                                 </InfoContainer>
                                 <h2>Clients</h2>
                                 <InfoContainer>
-                                    <BoxInfos titre="Nom" information={items.client.raisonSociale} />
-                                    <BoxInfos titre="Activités" information={items.client.email} />
-                                    <BoxInfos titre="Email" information={items.client.email} />
-                                    <BoxInfos titre="Téléphone" information={items.site_internet} />
-                                    <BoxInfos titre="Adresse" information={items.site_internet} />
+                                    <BoxInfos titre="Nom" information={commande.client ? commande.client.raisonSociale : "loading"} />
+                                    <BoxInfos titre="Activités" information={commande.client ? commande.client.email : "loading"} />
+                                    <BoxInfos titre="Email" information={commande.client ? commande.client.email : "loading"} />
+                                    <BoxInfos titre="Téléphone" information={commande.client ? commande.client.tel : "loading"} />
+                                    <BoxInfos titre="Adresse" information={ adresseFull } />
                                 </InfoContainer>
                                 <h2>Prospects</h2>
                                 <InfoContainer>
@@ -110,14 +85,14 @@ const Commande = () => {
                                 </InfoContainer>
                                 <h2>Informations liés à la facturation</h2>
                                 <InfoContainer>
-                                    <BoxInfos titre="Montant de la facture" information={items.facturation + " €"} />
+                                    <BoxInfos titre="Montant de la facture" information={commande.facturation + " €"} />
                                 </InfoContainer>
                             </InfoViewContainer>
                             <ContactViewContainer>
                                 <h2>Contact du projet</h2>
-                                <BoxContact contact={items.contact[0]} />
+                                <BoxContact contact={commande.contact && commande.contact.length > 0 ? commande.contact[0] : "loading"} />
                             </ContactViewContainer>
-                        </SingleMainContainer>
+                        </Flexbox>
                 </MainContainer>
             </>
         )

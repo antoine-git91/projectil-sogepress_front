@@ -9,7 +9,6 @@ const InputStyle = styled.input`
       padding: 10px 20px;
     `
 
-
 const InputText = ({label, onChange, value, name, type}) => {
 
     return (
@@ -18,5 +17,4 @@ const InputText = ({label, onChange, value, name, type}) => {
         </label>
     )
 }
-
 export default InputText;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from "styled-components";
 
 const SelectStyle = styled.select`
@@ -10,19 +10,29 @@ const SelectStyle = styled.select`
       max-width: 185px;
     `
 
-const InputSelect = ({data, label, option, selectValue, setSelectValue, optionValue, disabled}) => {
+const InputSelect = ({name, data, label, option, selectValue, setSelectValue, optionValue, disabled, required}) => {
 
-    const handleChange = (event) => {
-      setSelectValue(event.target.value);
+    const handleChange = (e) => {
+        e.preventDefault();
+        const index = e.target.selectedIndex;
+        const el = e.target.childNodes[index];
+        setSelectValue({"value": e.target.value, "valueDisplay": el.text});
     }
+
+    const allInputsSelect = document.getElementsByTagName('select');
+    useEffect(() => {
+        for(let i = 0; i < allInputsSelect.length; i++) {
+            if(disabled === "true"){
+                allInputsSelect[i].selectedIndex = 0
+            }
+        }
+    }, [disabled])
 
   return (
         <label>{label}
-        <SelectStyle value={selectValue} onChange={handleChange} disabled={disabled} >
-
+        <SelectStyle name={name} id={selectValue} onChange={(e) => handleChange(e)} disabled={disabled} required={required}>
             <option value={optionValue}>{option}</option>
-            {data.map((select, key)=><option key={key} value={select.value}>{select.value}</option>)}
-
+            {data ? data.map((select, key) => <option key={key} value={select.value}>{select.valueDisplay}</option>) : ''}
         </SelectStyle>
         </label>
   );

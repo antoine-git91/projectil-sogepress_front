@@ -12,7 +12,7 @@ const BoxInfosStyle = styled.div`
   }
   
   .title{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
   }
 `
@@ -31,10 +31,11 @@ const BoxInfos = ({titre, information, tags}) => {
         <BoxInfosStyle>
             <p className="title">{titre}</p>
             {information && <p>{information}</p>}
-            {tags && <Flexbox>
-                {tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
-            </Flexbox>}
-
+            {tags &&
+                <Flexbox>
+                    {tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
+                </Flexbox>
+            }
         </BoxInfosStyle>
 
     )

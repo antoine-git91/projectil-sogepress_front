@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 
@@ -6,16 +6,24 @@ export const TotalCa = styled.div`
 display : flex;
 justify-content: flex-end;
 font-weight: 900;
+  margin-top: 30px;
 `
 
 const TableCommandeStyle = styled.table`
       width: 100%;
     `
 
-const TableCommandeSingle = (commandes) => {
+const TableCommandeSingle = ({commandes}) => {
 
 
     //const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients/' + idUser);
+    const [totalCommandesPrice, setTotalCommandesPrice] = useState(0);
+
+    useEffect(() => {
+        let allPrice = commandes.map(commande => totalCommandesPrice + commande.facturation )
+        const total = allPrice.reduce((previousValue, currentValue) => previousValue + currentValue)
+        setTotalCommandesPrice(total)
+    }, [])
 
     const headTable = ["Type", "Magasine", "Prix", "Status", ""];
 
@@ -31,7 +39,7 @@ const TableCommandeSingle = (commandes) => {
                     </tr>
                 </thead>
                 <tbody>
-                {commandes.commandes.map( (commande,key) => (
+                {commandes.map( (commande,key) => (
                     <tr key={key}>
                         <td><Link to={{pathname: `/commande/${commande.id}`}}>Type de produit</Link></td>
                         <td><Link to={{pathname: `/commande/${commande.id}`}}>{commande.fin}</Link></td>
@@ -41,8 +49,7 @@ const TableCommandeSingle = (commandes) => {
                 ))}
                 </tbody>
             </TableCommandeStyle>
-            {/*{JSON.stringify(client)}*/}
-            <TotalCa>Total de CA : 1854€</TotalCa>
+            <TotalCa>Total de CA : {totalCommandesPrice}€</TotalCa>
 
         </div>
     )

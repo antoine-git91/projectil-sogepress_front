@@ -1,13 +1,12 @@
 import React from "react";
 import MainContainer from "../../templates/Container";
-import Header from "../../components/Header";
-import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import {ButtonPrimaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
 
 const Home = () => {
+
     return(
         <React.Fragment>
-            <Header />
             <MainContainer>
                 <DivButtonAction>
                     <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>

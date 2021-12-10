@@ -1,23 +1,30 @@
 import React from "react";
 import MainContainer from "../../templates/Container";
 import DivButtonAction from "../../utils/styles/DivButton";
-import {ButtonPrimaryLink} from "../../utils/styles/button-primary";
+import {ButtonPrimaryLink} from "../../utils/styles/button";
 import TableClientsIndex from "../../components/table/TableClientsIndex";
 import ResearchClient from "../../components/Research/ResearchClient";
-import {usePaginationFetch} from "../../components/Hook";
-import {useState} from "react";
-import {useEffect} from "react";
+import {useState, useEffect} from "react";
 import Pagination from "../../components/Pagination";
-import Header from "../../components/Header";
+import {useFetchGet} from "../../utils/misc/useFetchGet";
+
+
 
 const Clients = () => {
 
-    const {items: clients, loading, load} = usePaginationFetch('http://127.0.0.1:8000/api/clients');
+    const {items, loading, load} = useFetchGet('http://localhost:8000/api/clients');
+    useEffect(() => {
+        load()
+    }, [load])
+
+    console.log(items)
 
     const [resultFetch, setResultFetch] = useState([]);
     useEffect(() => {
-        setResultFetch(clients)
-    }, [clients])
+        setResultFetch(items)
+    }, [items])
+
+
 
     const [typeClientRadio, setTypeClientRadio] = useState("");
     const [selectActivite, setSelectActivite] = useState('');
@@ -46,8 +53,12 @@ const Clients = () => {
 
     return(
         <>
-        <Header/>
         <MainContainer>
+            <DivButtonAction margin={"0 0 50px 0"}>
+                <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
+                <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
+                <ButtonPrimaryLink to="/creation_relance">Créer une relance</ButtonPrimaryLink>
+            </DivButtonAction>
             <ResearchClient resultFetch={resultFetch}
                             setResultFetch={setResultFetch}
                             typeClientRadio={typeClientRadio}
@@ -69,13 +80,9 @@ const Clients = () => {
                             property={"raisonSociale"}
 
             />
-            <DivButtonAction>
-                <ButtonPrimaryLink to="/creation_client">Créer un client</ButtonPrimaryLink>
-            </DivButtonAction>
             <h1>Clients page</h1>
             <TableClientsIndex clients={resultFetch}
                                loading={loading}
-                               load={load}
                                nameClientSearch={input}
                                selectVille={selectVille}
                                selectCodePostal={selectCodePostal}
