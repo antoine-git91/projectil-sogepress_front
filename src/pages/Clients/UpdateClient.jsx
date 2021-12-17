@@ -478,13 +478,25 @@ const UpdateClient = () => {
 
     /* Si la modal est fermée on réinitialise l'affichage des autres contenus de la modales */
     useEffect(() => {
-        if(showModalConfirm === false){
-            setLoading(false);
-            setPostError(false);
-            setPostSuccess(false);
+        if( showModalConfirm === false ){
+            setLoading(false );
+            setPostError(false );
+            setPostSuccess(false );
         }
-    }, [showModalConfirm])
+    }, [ showModalConfirm ]);
 
+    
+    /* Lorsque l'on clique sur fermer ou la croix :
+    * - Si c'est la modale récapitulative on ferme simplement la modal
+    * - Si la modale est après la soumission des données on ferme la modale est recharge la page pour mettre à jour les informations
+    *  */
+    const closeModal = (e) => {
+        e.preventDefault();
+        setShowModalConfirm(false)
+        if( postSuccess === true || postError === true){
+            window.location.reload();
+        }
+    }
 
 
     return(
@@ -743,9 +755,9 @@ const UpdateClient = () => {
                         if(isValid){
                             setShowModalConfirm(true)
                         }
-                    } }>Créer le client</ButtonPrimary>
+                    } }>Modifier le client</ButtonPrimary>
                     {showModalConfirm &&
-                        <Modal>
+                        <Modal closeButton={closeModal}>
                             {
                                 (!loading && !postError && !postSuccess && <ModalConfirm
                                     setShowModal={setShowModalConfirm}
@@ -760,9 +772,8 @@ const UpdateClient = () => {
                                     potentialities={dataPotentiality}
                                 />) ||
                                 (loading && (<Spinner />)) ||
-                                (postSuccess && (<ModalSuccess message={"Le client a bien été créé"} idClient={postClientSuccess.id} />)) ||
-                                (postError && <ModalError message={"Une erreur s'est produite"} setShowModal={setShowModalConfirm}/>)
-
+                                (postSuccess && (<ModalSuccess message={"Le client a bien été modifié. En cliquant sur fermer un rechargement de la page sera effectué pour mettre les informations à jour et renverra au formulaire."} idClient={postClientSuccess.id} />)) ||
+                                (postError && <ModalError message={"Une erreur s'est produite. Veuillez réessayer. Si le problème persiste, contacter la personne en charge du développement"} setShowModal={setShowModalConfirm}/>)
                             }
                         </Modal>
                     }
@@ -775,11 +786,22 @@ export default UpdateClient;
 
 
 
-const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, villeDelivery, deliveryAddress, billType, contacts, contactCommentaire, typeContact, potentialities }) => {
+const ModalConfirm = (
+    { postRequest,
+      setShowModal,
+      field,
+      clientStatut,
+      ville,
+      villeDelivery,
+      deliveryAddress,
+      billType,
+      contacts,
+      potentialities }) => {
+
     return (
     <Fragment>
         <ModalHeader>
-            <h1>Souhaitez-vous créer ce client ?</h1>
+            <h1>Souhaitez-vous modifier ce client ?</h1>
             <p>Vérifier les informations saisies avant de confirmer</p>
         </ModalHeader>
         <ModalBody>
@@ -830,8 +852,8 @@ const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, v
                 <ButtonSecondaryLink onClick={(e) => {
                     e.preventDefault();
                     setShowModal( false );
-                }}>Annuler</ButtonSecondaryLink>
-                <ButtonPrimary margin={"0 0 0 20px"} type="submit" onClick={postRequest}>Oui, je souhaite créer ce client</ButtonPrimary>
+                }}>Revenir au formulaire</ButtonSecondaryLink>
+                <ButtonPrimary margin={"0 0 0 20px"} type="submit" onClick={postRequest}>Oui, je souhaite modifier ce client</ButtonPrimary>
             </Flexbox>
         </ModalFooter>
     </Fragment>
@@ -848,7 +870,7 @@ const ModalError = ({ message, setShowModal }) => {
                 <p>{message}</p>
             </ModalBody>
             <ModalFooter>
-                <ButtonPrimary onClick={ ( e ) => { e.preventDefault(); setShowModal(false) } }>Fermer</ButtonPrimary>
+                <ButtonPrimary onClick={ ( e ) => { e.preventDefault(); setShowModal(false) } }>Réessayer</ButtonPrimary>
             </ModalFooter>
         </Fragment>
     )

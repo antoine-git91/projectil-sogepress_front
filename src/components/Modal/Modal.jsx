@@ -26,12 +26,23 @@ const ModalContainer = styled.div`
   flex-direction: column;
 `
 
+const ModalCross = styled.button`
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-weight: bold;
+  font-size: 20px;
+  border: transparent;
+  background-color: transparent;
+`
+
 const Modal = (props) => {
 
     return (
         <ModalOverlay>
             <ModalContainer>
                 {props.children}
+                <ModalCross onClick={props.closeButton}>X</ModalCross>
             </ModalContainer>
         </ModalOverlay>
     )
