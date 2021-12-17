@@ -35,12 +35,10 @@ const BtnTabs = styled.button`
   }
 
   ${({active}) =>
-  active &&
-          `
+  active && `
     color:#FF6700;
     border-bottom: 3px solid #FF6700;
     opacity: 1;
-    font-weight: bold;
   `}
 `
 
@@ -97,7 +95,8 @@ const Profile = () => {
                             <InfoContainer>
                                 <BoxInfos titre="Téléphone" information="" />
                                 <BoxInfos titre="Email" information={items.email} />
-                                <BoxInfos titre="Adresse" information={ items.adresse[0].numero + ' ' + items.adresse[0].typeVoie + ' ' + items.adresse[0].nomVoie + ' ' + items.adresse[0].ville.nom + ' ' + items.adresse[0].ville.codePostal} />
+                                { items.adresse &&
+                                <BoxInfos titre="Adresse" information={ items.adresse[0].numero + ' ' + items.adresse[0].typeVoie + ' ' + items.adresse[0].nomVoie + ' ' + items.adresse[0].ville.nom + ' ' + items.adresse[0].ville.codePostal} />}
                                 { items.adresse && items.adresse.length > 1 &&
                                 (<BoxInfos titre="Adresse de livraison" information={ items.adresse[1].numero + ' ' + items.adresse[1].typeVoie + ' ' + items.adresse[1].nomVoie + ' ' + items.adresse[1].ville.nom + ' ' + items.adresse[1].ville.codePostal} />)}
                                 <BoxInfos titre="Site internet" information={items.siteInternet ? items.siteInternet : "Aucun site internet"} />
@@ -115,7 +114,7 @@ const Profile = () => {
                                     { items.potentialites.map(( potentiality, key ) => (
                                         <tr key={key + potentiality.id} id={ key }>
                                             <td>{ potentiality.typePotentialite.libelle }</td>
-                                            <td>{ potentiality ? potentiality.magazine.nom : "" }</td>
+                                            <td>{ potentiality.magazine ? potentiality.magazine.nom : "" }</td>
                                         </tr>
                                     )) }
                                     </tbody>

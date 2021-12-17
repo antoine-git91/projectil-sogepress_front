@@ -5,7 +5,7 @@ import MainContainer from "../../templates/Container";
 import ContactBlock from "../../components/Clients/ContactBlock";
 import InputSelect from "../../components/Form/InputSelect";
 import BtnAjout from "../../components/btn_ajout";
-import {ButtonPrimary, ButtonPrimaryLink, ButtonSecondaryLink} from "../../utils/styles/button";
+import {ButtonPrimary, ButtonPrimaryLink, ButtonReturn, ButtonSecondaryLink} from "../../utils/styles/button";
 import styled from "styled-components";
 import {handleChangeInput} from "../../utils/misc/inputChange";
 import {InputStyle} from "../../utils/styles/InputStyle";
@@ -18,6 +18,7 @@ import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 import {useParams} from "react-router-dom";
 import {useFetchPatch} from "../../utils/misc/useFetchPatch";
+import DivButtonAction from "../../utils/styles/DivButton";
 
 const GroupList = styled.ul`
   margin-left: 0;
@@ -502,6 +503,9 @@ const UpdateClient = () => {
     return(
         <Fragment>
             <MainContainer>
+                <DivButtonAction justify={"flex-start"}>
+                    <ButtonReturn to={{pathname: `/profile/` + client.id}}>Retour profil client</ButtonReturn>
+                </DivButtonAction>
                 <h1>Modifier le client : {inputState.client_name}</h1>
                 <form onSubmit={ (e) => { e.preventDefault(); }}>
                     <Flexbox>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import arrow from '../../assets/images/arrowreturn.svg';
 
 export const ButtonPrimary = styled.button`
   background-color: #FF6700;
@@ -47,6 +48,26 @@ export const ButtonSecondaryLink = styled(Link)`
   }
 `
 
+export const ButtonReturn = styled(Link)`
+  margin: ${({margin}) => margin ?? 0};
+  padding: 15px 0;
+  font-weight: 400;
+  color: #FF6700;
+  display: block;
+  transition: .3s;
+
+  &:hover {
+    color: #2f2f2f;
+  }
+
+  &:before {
+    content: url(${arrow});
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+`
+
 export const ButtonSecondary = styled.button`
   margin: ${({ margin }) => margin ?? 0};
   font-weight: bold;
@@ -60,13 +81,13 @@ export const ButtonSecondary = styled.button`
 `
 
 export const DeleteButton = styled.button`
-      border: none;
-      background-color: transparent;
-      color: #b83c3c;
-      cursor: pointer;
-      margin-left: 10px;
-      
-      &:hover{
-        text-decoration: underline;
-      }
+    border: none;
+    background-color: transparent;
+    color: #b83c3c;
+    cursor: pointer;
+    margin-left: 10px;
+    
+    &:hover{
+    text-decoration: underline;
+    }
 `
