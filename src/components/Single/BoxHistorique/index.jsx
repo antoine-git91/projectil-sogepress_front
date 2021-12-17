@@ -23,7 +23,7 @@ export const ContentBoxHistorique = styled.div`
 
 const BoxHistorique = ({dataHistorique}) => {
 
-    const {items, load, loading} = useFetchGet(`http://127.0.0.1:8000/api/historique_clients/${dataHistorique.id}`)
+    const {items, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/historique_clients/${dataHistorique.id}`)
     useEffect(() => {
         load()
     }, [load])

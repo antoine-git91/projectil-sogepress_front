@@ -12,17 +12,15 @@ import {useFetchGet} from "../../utils/misc/useFetchGet";
 
 const Clients = () => {
 
-    const {items, loading, load} = useFetchGet('http://localhost:8000/api/clients');
+    const { items, loading, load } = useFetchGet('https://localhost:8000/api/clients' );
     useEffect(() => {
-        load()
-    }, [load])
+        load();
+    }, [ load ]);
 
-    console.log(items)
-
-    const [resultFetch, setResultFetch] = useState([]);
+    const  [resultFetch, setResultFetch ] = useState([] );
     useEffect(() => {
-        setResultFetch(items)
-    }, [items])
+        setResultFetch( items )
+    }, [ items, load, loading ]);
 
 
 
@@ -51,7 +49,9 @@ const Clients = () => {
 
     /* #########################*/
 
+
     return(
+
         <>
         <MainContainer>
             <DivButtonAction margin={"0 0 50px 0"}>
@@ -59,7 +59,7 @@ const Clients = () => {
                 <ButtonPrimaryLink to="/creation_commande">Créer une commande</ButtonPrimaryLink>
                 <ButtonPrimaryLink to="/creation_relance">Créer une relance</ButtonPrimaryLink>
             </DivButtonAction>
-            <ResearchClient resultFetch={resultFetch}
+            {/*<ResearchClient resultFetch={resultFetch}
                             setResultFetch={setResultFetch}
                             typeClientRadio={typeClientRadio}
                             showSuggestions={showSuggestions}
@@ -79,7 +79,7 @@ const Clients = () => {
                             setTypeClientRadio={setTypeClientRadio}
                             property={"raisonSociale"}
 
-            />
+            />*/}
             <h1>Clients page</h1>
             <TableClientsIndex clients={resultFetch}
                                loading={loading}

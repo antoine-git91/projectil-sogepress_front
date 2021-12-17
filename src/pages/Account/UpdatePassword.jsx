@@ -48,7 +48,7 @@ const UpdatePassword = () => {
                 plainPassword: inputState.new_password
             })
         };
-        fetch('http://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
+        fetch('https://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
             .then(response => {
                 if(response.ok){
                     setTimeout(() => {

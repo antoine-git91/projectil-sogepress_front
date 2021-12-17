@@ -26,7 +26,7 @@ export const useFetchGet = ( url ) => {
             /* On rafraichit le token avec le refresh token
             * On fait donc une requête pour le refresh token
             * */
-            fetch('http://localhost:8000/api/token/refresh', {
+            fetch('https://localhost:8000/api/token/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json'

@@ -11,6 +11,8 @@ const TableClientsIndex = ({clients, loading, nameClientSearch, selectVille, sel
 
     const headTable = ["Raison sociale", "Activité", "Email", "Code Postal", "Ville" , "Acquis/Prospect" ];
 
+    console.log(clients)
+
     if (loading) {
         return <Spinner />
     }
@@ -20,22 +22,22 @@ const TableClientsIndex = ({clients, loading, nameClientSearch, selectVille, sel
             <TableStyle>
                 <thead>
                 <tr>
-                    {headTable.map((item, key) => <th key={key}>{item}</th>)}
+                    { headTable.map( ( item, key) => <th key={key}>{item}</th> ) }
                 </tr>
                 </thead>
                 <tbody>
-                {clients.filter(client => nameClientSearch ?client.raisonSociale.toLowerCase().includes(nameClientSearch) : client.raisonSociale
+                {clients && clients.filter(client => nameClientSearch ? client.raisonSociale.toLowerCase().includes(nameClientSearch) : client.raisonSociale
                     && selectActivite.value ? client.nafSousClasse.libelle.includes(selectActivite.value) : client.nafSousClasse.libelle
-                    && selectCodePostal.value ? client.adresse[0].ville.codePostal.includes(selectCodePostal.value) : client.adresse[0].ville.codePostal
-                    && selectVille.value ? client.adresse[0].ville.nom.includes(selectVille.value) : client.adresse[0].ville.nom
+                    /*&& selectCodePostal.value && client.adresses ? client.adresses[0].ville.codePostal.includes(selectCodePostal.value) : client.adresses[0].ville.codePostal
+                    && selectVille.value && client.adresses ? client.adresses[0].ville.nom.includes(selectVille.value) : client.adresses[0].ville.nom*/
                     && getStatus(client) ? getStatus(client) : "")
                     .map((dataClient, key) => (
                         <tr key={key}>
                             <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.raisonSociale}</Link></td>
                             <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.nafSousClasse.libelle}</Link></td>
                             <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{dataClient.email}</Link></td>
-                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0].ville.codePostal}</Link></td>
-                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0].ville.nom}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0] && dataClient.adresse[0].ville.codePostal}</Link></td>
+                            <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.adresse[0] && dataClient.adresse[0].ville.nom}</Link></td>
                             <td><Link to={{pathname: `/profile/${dataClient.id}`}}>{ dataClient.statut ? "Acquis" : "Prospect"}</Link></td>
                         </tr>
                     ))}

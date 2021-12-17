@@ -16,7 +16,7 @@ const FormStyle = styled.form`
 `
 
 async function loginUser(credentials) {
-    return fetch('http://localhost:8000/api/login', {
+    return fetch('https://localhost:8000/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const Login = ({setToken, setCurrentUser, setLoading}) => {
         setToken(token['token']);
         setIsLoggedIn(true);
 
-        fetch('http://localhost:8000/api/loggedin', {
+        fetch('https://localhost:8000/api/loggedin', {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json',
