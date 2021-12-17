@@ -485,7 +485,7 @@ const UpdateClient = () => {
         }
     }, [ showModalConfirm ]);
 
-    
+
     /* Lorsque l'on clique sur fermer ou la croix :
     * - Si c'est la modale récapitulative on ferme simplement la modal
     * - Si la modale est après la soumission des données on ferme la modale est recharge la page pour mettre à jour les informations

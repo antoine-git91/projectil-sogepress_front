@@ -42,7 +42,7 @@ const App = () => {
                 <Route path="/commande/:id">
                     <Commande />
                 </Route>
-                <Route path="/profile/:id">
+                <Route path="/profile/:idClient">
                     <Profile />
                 </Route>
                 <Route path="/creation_client">

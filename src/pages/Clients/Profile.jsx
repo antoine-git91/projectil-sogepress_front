@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import MainContainer from "../../templates/Container";
 import {useParams} from "react-router-dom";
-import { ButtonPrimaryLink } from "../../utils/styles/button";
+import {ButtonPrimaryLink, DeleteButton} from "../../utils/styles/button";
 import RelanceContainer from "../../components/RelanceBox";
 import BtnAjout from "../../components/btn_ajout";
 import InputText from "../../components/Form/InputText";
@@ -44,20 +44,19 @@ const BtnTabs = styled.button`
   `}
 `
 
-const tabs = [
-    "contact",
-    "commandes",
-    "historiques",
-    "chiffres d'affaires"
-]
+
 const Profile = () => {
 
-    const {id} = useParams()
+    const {idClient} = useParams();
+    const tabs = [
+        "contacts",
+        "commandes",
+        "historiques",
+        "chiffres d'affaires"
+    ]
     const [tabActive, setTabActive] = useState(tabs[0]);
+    const {items, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/clients/${idClient}`);
 
-
-
-    const {items, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/clients/${id}`);
     useEffect(() => {
         load()
     }, [load])
@@ -71,7 +70,7 @@ const Profile = () => {
         <>
             <MainContainer>
                 <DivButtonAction>
-                    <ButtonPrimaryLink to={{pathname: `/update_client/${id}`}}>Modifier le client</ButtonPrimaryLink>
+                    <ButtonPrimaryLink to={{pathname: `/update_client/${idClient}`}}>Modifier le client</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_commande">Nouvelle commande</ButtonPrimaryLink>
                     <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
                 </DivButtonAction>
@@ -91,26 +90,44 @@ const Profile = () => {
                         >{tab}</BtnTabs>
                     ))}
                 </div>
-                { (tabActive === "contact" &&
+                { (tabActive === "contacts" &&
                     <Flexbox>
                         <InfoViewContainer>
                             <h2>Coordonnées</h2>
                             <InfoContainer>
                                 <BoxInfos titre="Téléphone" information="" />
                                 <BoxInfos titre="Email" information={items.email} />
-                                {/*items.adresses[0].numero + ' ' + items.adresses[0].type_voie + ' ' + items.adresses[0].nom_voie + ' ' + items.adresses[0].ville.nom + ' ' + items.adresses[0].ville.code_postal*/}
-                                <BoxInfos titre="Adresse" information={'25 rue du cefim 370000 Tours'} />
-                                <BoxInfos titre="Site internet" information={items.siteInternet} />
+                                <BoxInfos titre="Adresse" information={ items.adresse[0].numero + ' ' + items.adresse[0].typeVoie + ' ' + items.adresse[0].nomVoie + ' ' + items.adresse[0].ville.nom + ' ' + items.adresse[0].ville.codePostal} />
+                                { items.adresse && items.adresse.length > 1 &&
+                                (<BoxInfos titre="Adresse de livraison" information={ items.adresse[1].numero + ' ' + items.adresse[1].typeVoie + ' ' + items.adresse[1].nomVoie + ' ' + items.adresse[1].ville.nom + ' ' + items.adresse[1].ville.codePostal} />)}
+                                <BoxInfos titre="Site internet" information={items.siteInternet ? items.siteInternet : "Aucun site internet"} />
                             </InfoContainer>
-                            <h2>Indice de potentialité</h2>
-                            <TablePotentiality headTable={["", "", ""]} />
+                            <h2>Potentialité</h2>
+                            { items.potentialites && items.potentialites.length > 0 ?
+                                (<table>
+                                    <thead>
+                                    <tr>
+                                        <th>Type de potentialité</th>
+                                        <th>Magazine</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    { items.potentialites.map(( potentiality, key ) => (
+                                        <tr key={key + potentiality.id} id={ key }>
+                                            <td>{ potentiality.typePotentialite.libelle }</td>
+                                            <td>{ potentiality ? potentiality.magazine.nom : "" }</td>
+                                        </tr>
+                                    )) }
+                                    </tbody>
+                                </table>)
+                            : "Aucune potentialité"}
                         </InfoViewContainer>
                         <ContactViewContainer>
-                            <h2>Contact</h2>
+                            <h2>Contacts</h2>
                             <ContactContainer>
                                 {items.contacts && items.contacts.length > 0
                                     ? items.contacts.map((contact,key) => <BoxContact key={key} contact={contact} />)
-                                    : "Loading..."}
+                                    : "Aucun contact"}
                             </ContactContainer>
                         </ContactViewContainer>
                     </Flexbox>
