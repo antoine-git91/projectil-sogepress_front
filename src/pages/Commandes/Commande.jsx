@@ -15,14 +15,14 @@ const Commande = () => {
 
     const {id} = useParams()
 
-    const {items: commande, load, loading} = useFetchGet(`http://127.0.0.1:8000/api/commandes/${id}`);
+    const {items: commande, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/commandes/${id}`);
     useEffect(() => {
         load()
     }, [load])
     console.log(commande)
 
     const adresseClient = commande.client ? commande.client.adresses[0] : "" ;
-    const {items: adresse, load: loadAdresse, loading: loadingAdresse} = useFetchGet('http://127.0.0.1:8000'  + adresseClient  );
+    const {items: adresse, load: loadAdresse, loading: loadingAdresse} = useFetchGet('https://127.0.0.1:8000'  + adresseClient  );
     useEffect(() => {
         loadAdresse()
     }, [loadAdresse])

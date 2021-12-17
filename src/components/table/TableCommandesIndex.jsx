@@ -12,7 +12,7 @@ const TableCommandesIndex = () => {
 
     const headTable = ["Type", "Client", "Prix", "Date de livraison", "Status" ];
 
-    const {items: commandes, loading, load} = useFetchGet('http://localhost:8000/api/commandes');
+    const {items: commandes, loading, load} = useFetchGet('https://localhost:8000/api/commandes');
     useEffect(() => {
         load()
     }, [load])

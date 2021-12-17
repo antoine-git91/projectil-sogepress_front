@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import InputGroupRadio from "../Form/radio/InputGroupRadio";
 import Flexbox from "../../templates/Flexbox";
 import styled from "styled-components";
@@ -30,17 +30,20 @@ const ResearchClient = ({resultFetch,
                         property
                         }) => {
 
-    const villeClients = [];
+    console.log(resultFetch)
 
-    const allVilles = resultFetch.map(client => client.adresse.map(adresse => adresse.ville));
-    allVilles.map( arrayVille => arrayVille.map( ville => villeClients.push(ville.nom)));
+    const [villeClients, setVilleClients] = useState([]);
+    const villes = resultFetch.map(client => client.adresses.map(adresse => adresse.ville.nom));
+    villes.map( arrayVille => arrayVille.map( ville => villeClients.push(ville)));
     /* on évite les doublon */
     const uniqueVillesClients = villeClients.filter(function(item, pos, self) {
         return self.indexOf(item) === pos;
     })
 
     const codePostal = [];
-    const allCp = resultFetch.map(client => client.adresse.map(adresse => adresse.ville));
+    const allCp = resultFetch.map(client => client.adresses.map(adresse => adresse.ville));
+    /*const allCp = resultFetch.map(client => console.log(client.adresses));*/
+    console.log(resultFetch)
     allCp.map( arrayCp => arrayCp.map( cp => codePostal.push(cp.codePostal)));
     /* on évite les doublon */
     const uniqueCodePostal = codePostal.filter(function(item, pos, self) {

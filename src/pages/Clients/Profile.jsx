@@ -57,7 +57,7 @@ const Profile = () => {
 
 
 
-    const {items, load, loading} = useFetchGet(`http://127.0.0.1:8000/api/clients/${id}`);
+    const {items, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/clients/${id}`);
     useEffect(() => {
         load()
     }, [load])

@@ -11,13 +11,13 @@ import {handleChangeInput} from "../../utils/misc/inputChange";
 import {InputStyle} from "../../utils/styles/InputStyle";
 import {useFetchGet} from "../../utils/misc/useFetchGet";
 import TablePotentiality from "../../components/table/TablePotentiality";
-import {useFetchPost} from "../../utils/misc/useFetchPost";
 import Spinner from "../../components/Spinner";
 import Modal from "../../components/Modal/Modal";
 import ModalHeader from "../../components/Modal/ModalHeader";
 import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 import {useParams} from "react-router-dom";
+import {useFetchPatch} from "../../utils/misc/useFetchPatch";
 
 const GroupList = styled.ul`
   margin-left: 0;
@@ -27,7 +27,7 @@ const GroupList = styled.ul`
 const UpdateClient = () => {
 
     const {id} = useParams()
-    const {items:client, load:loadClient, loading:loadingClient} = useFetchGet(`http://127.0.0.1:8000/api/clients/${id}`);
+    const {items:client, load:loadClient, loading:loadingClient} = useFetchGet(`https://127.0.0.1:8000/api/clients/${id}`);
 
     useEffect(() => {
         loadClient();
@@ -60,7 +60,7 @@ const UpdateClient = () => {
     /* a - villes client */
         /* Requête pour avoir les villes par rapport au code postal */
     const[ villes, setVilles ] = useState([] );
-    const {items: villesClient, load: loadVilles, loadingVilles } = useFetchGet('http://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
+    const {items: villesClient, load: loadVilles, loadingVilles } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
     /* On récupère la donnée voulue du select villes */
     const [ selectVilles, setSelectVilles ] = useState({"value": "", "valueDisplay": ""} );
     /* Select villes suivant le code postal */
@@ -69,7 +69,7 @@ const UpdateClient = () => {
     /* b - villes de livraison client */
         /* Requête pour avoir les villes par rapport au code postal */
     const[ villesDelivery, setVillesDelivery ] = useState([] );
-    const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('http://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
+    const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
     /* On récupère la donnée voulue du select villes */
     const [ selectVillesDelivery, setSelectVillesDelivery ] = useState({"value": "", "valueDisplay": ""});
     /* Si adresse de livraison : Select villes suivant le code postal */
@@ -91,12 +91,12 @@ const UpdateClient = () => {
 
 
     /* Input type Radio */
-    const [ billType, setBillType ] = useState(true );
-    const [ clientStatut, setClientStatut ] = useState(false );
-    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState("false");
+    const [ billType, setBillType ] = useState("mail" );
+    const [ clientStatut, setClientStatut ] = useState("prospect" );
+    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState("no" );
 
     /* Modal */
-    const [ showModalConfirm, setShowModalConfirm ] = useState(false);
+    const [ showModalConfirm, setShowModalConfirm ] = useState(false );
 
 
     /* --- Activites --- */
@@ -105,8 +105,13 @@ const UpdateClient = () => {
 
     /* On remplace le point du code APE pour être conforme */
     const codeApe = inputState.client_ape && inputState.client_ape.replace(".", "" );
-    const { items : activiteClient, load: loadActivite, loading: loadingActivite } = useFetchGet('http://localhost:8000/api/naf_sous_classes/' + codeApe );
+    const { items : activiteClient, load: loadActivite, loading: loadingActivite } = useFetchGet('https://localhost:8000/api/naf_sous_classes/' + codeApe );
 
+
+    /* Mise à jour du status du client */
+    useEffect(() => {
+        client.statut === true && setClientStatut("client_validated");
+    }, [ client.statut ]);
 
     /* Récupère le libelle du code NAF */
     useEffect(() => {
@@ -116,16 +121,21 @@ const UpdateClient = () => {
             if( valueLength === 6 ){
                 loadActivite();
             }
-            else if( valueLength === 0 ){
+            else if( valueLength < 6 ){
                 setActivite( "" );
+                console.log("game over")
             }
         }
-
-
     }, [ inputState.client_ape ]);
 
+    /* Mise à jour du libellé de l'activité */
+    useEffect(() => {
+        setActivite( activiteClient.libelle );
+    }, [ activiteClient ] );
 
-    /* Initialisation des données du formulaire avec les informations du client */
+
+    /* Mise à jour des adresses du client dans les champs du formulaire */
+    // Adresse principale
     useEffect(() => {
 
         const a = client.nafSousClasse && client.nafSousClasse.code.slice( 0, 2 );
@@ -144,10 +154,12 @@ const UpdateClient = () => {
             client_street_codePostal: client.adresse && client.adresse[ 0 ].ville.codePostal,
             client_website: client.siteInternet
         })
+    }, [ client ]);
 
-        if(client.adresse && client.adresse.length === 2 ){
-            setHasDeliveryAddress("true")
-
+    // Adresse de livraison si différente
+    useEffect(() => {
+        if( client.adresse && client.adresse.length === 2 ){
+            setHasDeliveryAddress("yes");
             setInputState({
                 client_street_number_delivery: client.adresse && client.adresse[ 1 ].numero,
                 client_street_wayType_delivery: client.adresse && client.adresse[ 1 ].typeVoie,
@@ -155,12 +167,12 @@ const UpdateClient = () => {
                 client_street_codePostal_delivery: client.adresse && client.adresse[ 1 ].ville.codePostal,
             })
         }
+    }, [ client.adresse ]);
 
+    console.log(client)
 
-
-    }, [ client ]);
-
-
+    /* On mets à jour le tableau des adresses via les données du client */
+    // Adresse principale
     useEffect(() => {
         arrayAdressesClient[0] = {
             "numero" : inputState.client_street_number,
@@ -171,9 +183,9 @@ const UpdateClient = () => {
         }
     }, [ arrayAdressesClient, inputState.client_street_number, inputState.client_street_wayType, inputState.client_street_name, selectVilles.value ]);
 
-
+    // Adresse de livraison si différente
     useEffect(() => {
-        if( hasDeliveryAddress === "true" ){
+        if( hasDeliveryAddress === "yes" ){
             setArrayAdressesClient( arrayAdressesClient.concat(
                 {
                     "numero": "",
@@ -183,8 +195,7 @@ const UpdateClient = () => {
                     "statutAdresse": null
                 }
             ) )
-
-        } else if( hasDeliveryAddress === "false" ){
+        } else if( hasDeliveryAddress === false ){
             if( arrayAdressesClient[1] ) {
                 setInputState({
                     client_street_number_delivery: "",
@@ -214,22 +225,18 @@ const UpdateClient = () => {
     }, [ arrayAdressesClient, inputState.client_street_number_delivery, inputState.client_street_wayType_delivery, inputState.client_street_name_delivery, selectVillesDelivery.value ] );
 
 
-    /* Mise à jour du state */
+    /* Function onBlur sur input code postal : Adresse principale */
     useEffect(() => {
-        setActivite( activiteClient.libelle );
-    }, [ activiteClient ] );
-
-
-    /* Function onBlur sur input code postal */
-    useEffect(() => {
+        const selectAddress = document.querySelector('select[name="select_villes_client"]')
         const valueLength = inputState.client_street_codePostal && inputState.client_street_codePostal.length;
-        const villeClient = client.adresse && client.adresse[ 0 ].ville.nom;
+        const villeClient = client.adresse && client.adresse[ 0 ].ville.id;
 
-            if( valueLength < 6 ) {
+            if( valueLength === 5 ) {
                 loadVilles();
                 setDisabledSelectVilles(false);
-                let i = villes.findIndex(el => el.nom === villeClient);
-                document.querySelector('select[name="select_villes_client"]').selectedIndex = i + 1;
+                let i = villes.findIndex(el => el.id === villeClient);
+                selectAddress.selectedIndex = i + 1;
+                setSelectVilles( { "value": client.adresse[ 0 ].ville.id, "valueDisplay": client.adresse[ 0 ].ville.nom })
             }
             else if( valueLength === 0 ){
                 setVilles( [] );
@@ -237,42 +244,28 @@ const UpdateClient = () => {
             }
     }, [ inputState.client_street_codePostal , client.adresse, villes.length ]);
 
-
-    /* Function onBlur sur input code postal */
+    /* Function onBlur sur input code postal : Adresse de livraison si différente */
     useEffect(() => {
-        if(client.adresse && client.adresse.length > 1);
-            const valueLength = inputState.client_street_codePostal_delivery && inputState.client_street_codePostal_delivery.length;
-            const villeClient = client.adresse && client.adresse[ 1 ].ville.nom;
+        const selectDeliveryAddress = document.querySelector('select[ name="select_villes_delivery" ]' );
 
-            if( valueLength < 6 ) {
+        if(client.adresse && client.adresse.length > 1){
+            const valueLength = inputState.client_street_codePostal_delivery && inputState.client_street_codePostal_delivery.length;
+            const villesClientDelivery = client.adresse && client.adresse[ 1 ].ville.id;
+
+            if( valueLength === 5 && selectDeliveryAddress ) {
                 loadVillesDelivery();
                 setDisabledSelectVillesDelivery(false);
-                let i = villesDelivery.findIndex(el => el.nom === villeClient);
-                document.querySelector('select[name="select_villes_delivery"]').selectedIndex = i + 1;
+                let i = villesDelivery.findIndex(el => el.id === villesClientDelivery);
+                selectDeliveryAddress.selectedIndex = i + 1;
+                setSelectVillesDelivery( { "value": client.adresse[ 1 ].ville.id, "valueDisplay": client.adresse[ 1 ].ville.nom })
+
             }
             else if( valueLength === 0 ){
                 setVilles( [] );
                 setDisabledSelectVillesDelivery( true );
             }
+        }
     }, [ inputState.client_street_codePostal_delivery , client.adresse, villesDelivery.length ]);
-
-/*    const getVilles = ( e, setState, setDisabledSelect, request ) => {
-        e.preventDefault();
-
-        const valueLength = e.target.value.length;
-
-        if( valueLength < 6 ){
-            setTimeout(() => {
-                request();
-                setDisabledSelect( false );
-
-            }, 1000 );
-        }
-        if( valueLength === 0 ){
-            setState( [] );
-            setDisabledSelect( true );
-        }
-    };*/
 
     /* Mise à jour du state */
     useEffect(() => {
@@ -285,7 +278,20 @@ const UpdateClient = () => {
     }, [ villesClientDelivery ] );
 
 
+    // Mise à jour choix de la facturation
+    useEffect(() => {
+        client.typeFacturation === true && setBillType("post");
+    }, [ client.typeFacturation ]);
+
+
     /* CONTACTBLOCK COMPONENT */
+
+    // Mise à jour du tableau des contacts du client
+    useEffect( () => {
+        if(client.contacts && client.contacts.length > 0){
+            setArrayContact(arrayContact.concat(client.contacts))
+        }
+    }, [client.contacts])
 
     /* On Créé un contactBlock à chaque clique de buttonAjout */
     const addContact = ( e ) => {
@@ -319,7 +325,7 @@ const UpdateClient = () => {
     /* 1 - Potentialités types */
 
     /* On lance une requête pour récupérer les types de potentialités */
-    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet('http://localhost:8000/api/type_potentialites' );
+    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet('https://localhost:8000/api/type_potentialites' );
 
     useEffect(() => {
         loadPotentialities();
@@ -332,7 +338,7 @@ const UpdateClient = () => {
     /* 2 - Magazines */
 
     /* On lance une requête pour récupérer les magazines si potentialitiesType === Régie */
-    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('http://localhost:8000/api/magazines' );
+    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('https://localhost:8000/api/magazines' );
     const [ selectMagazine, setSelectMagazine ] = useState({"value": "", "valueDisplay": ""} );
     const [ disabledSelectMagazine, setDisabledSelectMagazine ] = useState(true );
 
@@ -350,7 +356,34 @@ const UpdateClient = () => {
     /* Affichage des potentialité en Front */
     const [ dataPotentiality, setDataPotentiality ] = useState([] );
     /* Données des potentialités pour persister en BDD */
-    const [ potentialitePost, setPotentialityPost ] = useState([] );
+    const [ potentialitePost, setPotentialitePost ] = useState([] );
+
+    useEffect( () => {
+        if( client.potentialites && client.potentialites.length > 0 ){
+            client.potentialites.map( potentialite =>
+                dataPotentiality.push(
+                {
+                    "type": {
+                        "value": potentialite.typePotentialite.id, "valueDisplay" : potentialite.typePotentialite.libelle
+                    },
+                    "magazine": {
+                        "value": potentialite.magazine && potentialite.magazine.id, "valueDisplay" : potentialite.magazine && potentialite.magazine.nom
+                    }
+                }
+            )) ;
+            client.potentialites.map( potentialite => potentialitePost.push(
+                {
+                    "magazine": potentialite.magazine && potentialite.magazine.id !== "" ? "/api/magazines/" + potentialite.magazine.id : null ,
+                    "typePotentialite": "/api/type_potentialites/" + potentialite.typePotentialite.id
+                }
+            ))
+        }
+
+
+    }, [ client.potentialites ])
+
+    console.log(dataPotentiality)
+    console.log(potentialitePost)
 
     const addPotentiality = ( e ) => {
         e.preventDefault();
@@ -368,7 +401,7 @@ const UpdateClient = () => {
                 )
             )
 
-            setPotentialityPost( potentialitePost.concat(
+            setPotentialitePost( potentialitePost.concat(
                 {
                     "magazine": selectMagazine.value !== "" ? "/api/magazines/" + selectMagazine.value : null ,
                     "typePotentialite": "/api/type_potentialites/" + selectPotentialityType.value
@@ -380,6 +413,7 @@ const UpdateClient = () => {
     const removePotentiality = (e, index) => {
         e.preventDefault();
         setDataPotentiality([...dataPotentiality.slice( 0, index ), ...dataPotentiality.slice( index + 1 )] );
+        setPotentialitePost([...potentialitePost.slice( 0, index ), ...potentialitePost.slice( index + 1 )] );
     }
     /* ################# */
     /* ################# */
@@ -387,19 +421,18 @@ const UpdateClient = () => {
 
     /* --- POST CREATION CLIENT ---
     * 1 - POST CLIENT: on envoie les données pour créer le client en premier
-    * 2 - POST HISTORIQUE: on récupère l'id du Client + l'id du contact séléctionné
     *  */
 
     /* Etape 1: POST CLIENT */
-    const { success: postClientSuccess, error: postClientError, post: postClient , loading: loadingPostClient, responseStatut } = useFetchPost(
-        'http://localhost:8000/api/clients',
+    const { success: postClientSuccess, error: postClientError, post: postClient , loading: loadingPostClient, responseStatut } = useFetchPatch(
+        'https://localhost:8000/api/clients/' + client.id,
         {
             "raisonSociale": inputState.client_name,
-            "statut": clientStatut === "true" ? true : false,
+            "statut": clientStatut === "client_validated" ? true : false,
             "email": inputState.client_mail,
             "siteInternet": inputState.client_website,
-            "typeFacturation": billType === "true" ? true : false,
-            "nafSousClasse": "/api/naf_sous_classes/",
+            "typeFacturation": billType === "mail" ? false : true,
+            "nafSousClasse": "/api/naf_sous_classes/" + codeApe,
             "adresse": arrayAdressesClient,
             "contacts": arrayContact,
             "potentialites": potentialitePost
@@ -408,7 +441,6 @@ const UpdateClient = () => {
 
 
     /* Modal */
-
     const [fieldsRequired, setFieldsRequired] = useState()
     /* On met à jour les éléments Required à chaque changement des dépendances */
     useEffect(() => {
@@ -426,32 +458,23 @@ const UpdateClient = () => {
         postClient();
     };
 
-    /* On check la réponse de la requete POST pour afficher différentes modales  */
+    /* On check la réponse de la requete PATCH pour afficher différentes modales  */
     useEffect(() => {
-        if( loadingPostClient === false && responseStatut === 201){
+
+        if( loadingPostClient === false && responseStatut === 200){
             setTimeout(() => {
                 setLoading(false)
                 setPostSuccess(true)
-                console.log(responseStatut)
             },1000)
-        } else if( loadingPostClient === false && responseStatut !== 201)  {
+            console.log(responseStatut)
+        } else if( loadingPostClient === false && responseStatut !== 200)  {
             setTimeout(() => {
                 setLoading(false)
                 setPostError(true)
-                console.log('error')
             },1000)
         }
-    }, [responseStatut, loadingPostClient])
+    }, [responseStatut, loadingPostClient, postClientSuccess])
 
-
-    /* Si on clique sur le bouton "Créer un autre client
-*  -> On efface les données de l'ancien formulaire
-*  */
-    const otherCreateNewClient = ( e ) => {
-        e.preventDefault();
-        window.location.reload();
-        window.scrollTo(0,0)
-    }
 
     /* Si la modal est fermée on réinitialise l'affichage des autres contenus de la modales */
     useEffect(() => {
@@ -460,7 +483,6 @@ const UpdateClient = () => {
             setPostError(false);
             setPostSuccess(false);
         }
-        console.log(loading, postSuccess, postError)
     }, [showModalConfirm])
 
 
@@ -476,7 +498,7 @@ const UpdateClient = () => {
                             setRadioChecked={setClientStatut}
                             selected={clientStatut}
                             name="client_statut"
-                            data={ [{"id": "id1", "label": "Prospect", "value": false}, {"id": "id2", "label": "Acquis", "value": true}] }
+                            data={ [{"id": "id1", "label": "Prospect", "value": "prospect"}, {"id": "id2", "label": "Acquis", "value": "client_validated"}] }
                         />
                     </Flexbox>
                     <Flexbox>
@@ -598,11 +620,11 @@ const UpdateClient = () => {
                             setRadioChecked={ setHasDeliveryAddress }
                             selected={ hasDeliveryAddress }
                             name="isHasAddressDelivery"
-                            data={ [ {"id": "id1", "label": "Non", "value": "false"}, {"id": "id2", "label": "Oui", "value": "true"} ] }
+                            data={[ { "id": "id1", "label": "Non", "value": "no" }, { "id": "id2", "label": "Oui", "value": "yes" } ]}
                         />
                     </Flexbox>
-                    {hasDeliveryAddress === "true" &&
-                        (<>
+                    {hasDeliveryAddress === "yes" &&
+                        (<React.Fragment>
                             <Flexbox>
                                 <label htmlFor={"client_street_number_delivery"}>Numéro
                                     <InputStyle
@@ -654,7 +676,7 @@ const UpdateClient = () => {
                                     required={ disabledSelectVilles === "true" && "required" }
                                 />
                             </Flexbox>
-                        </>)
+                        </React.Fragment>)
                     }
                     <h2>Choix de la facturation</h2>
                     <InputGroupRadio
@@ -662,8 +684,8 @@ const UpdateClient = () => {
                         setRadioChecked={ setBillType }
                         selected={ billType }
                         name="typeBill"
-                        data={ [ {"id": "id1", "label": "Mail", "value": true}, {"id": "id2", "label": "Courrier", "value": false} ] } />
-                    <h2>Contact</h2>
+                        data={ [ {"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "post"} ] } />
+                    <h2>Contacts</h2>
                     <GroupList>
                         { arrayContact.map(
                             ( contact, index) =>
@@ -738,7 +760,7 @@ const UpdateClient = () => {
                                     potentialities={dataPotentiality}
                                 />) ||
                                 (loading && (<Spinner />)) ||
-                                (postSuccess && (<ModalSuccess message={"Le client a bien été créé"} idClient={postClientSuccess.id} otherCreateNewClient={otherCreateNewClient} />)) ||
+                                (postSuccess && (<ModalSuccess message={"Le client a bien été créé"} idClient={postClientSuccess.id} />)) ||
                                 (postError && <ModalError message={"Une erreur s'est produite"} setShowModal={setShowModalConfirm}/>)
 
                             }
@@ -832,7 +854,7 @@ const ModalError = ({ message, setShowModal }) => {
     )
 }
 
-const ModalSuccess = ({ message, idClient, otherCreateNewClient }) => {
+const ModalSuccess = ({ message, idClient }) => {
     return (
         <Fragment>
             <ModalHeader>
@@ -843,7 +865,6 @@ const ModalSuccess = ({ message, idClient, otherCreateNewClient }) => {
             </ModalBody>
             <ModalFooter>
                 <Flexbox>
-                    <ButtonSecondaryLink to={"/creation_client"} onClick={ ( e ) => otherCreateNewClient(e) }>Créer un nouveau Client</ButtonSecondaryLink>
                     <ButtonPrimaryLink to={ "/profile/" + idClient } margin={"0 10px"}>Voir la fiche client</ButtonPrimaryLink>
                     <ButtonPrimaryLink to={ "/" }>Retour à l'accueil</ButtonPrimaryLink>
                 </Flexbox>

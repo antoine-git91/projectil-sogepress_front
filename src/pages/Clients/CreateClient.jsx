@@ -63,14 +63,14 @@ const CreateClient = () => {
     const[ activite, setActivite ] = useState('' );
     /* On remplace le point du code APE pour être conforme */
     const codeApe = inputState.client_ape.replace(".", "" );
-    const { items : activiteClient, loading: loadingActivite, load: loadActivite } = useFetchGet('http://localhost:8000/api/naf_sous_classes/' + codeApe );
+    const { items : activiteClient, loading: loadingActivite, load: loadActivite } = useFetchGet('https://localhost:8000/api/naf_sous_classes/' + codeApe );
 
 
     /* --- Villes --- */
     /* a - villes client */
         /* Requête pour avoir les villes par rapport au code postal */
     const[ villes, setVilles ] = useState([] );
-    const {items: villesClient, load: loadVilles } = useFetchGet('http://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
+    const {items: villesClient, load: loadVilles } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
     /* On récupère la donnée voulue du select villes */
     const [ selectVilles, setSelectVilles ] = useState({"value": "", "valueDisplay": ""} );
     /* Select villes suivant le code postal */
@@ -79,7 +79,7 @@ const CreateClient = () => {
     /* b - villes de livraison client */
         /* Requête pour avoir les villes par raport au code postal */
     const[ villesDelivery, setVillesDelivery ] = useState([] );
-    const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('http://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
+    const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
     /* On récupère la donnée voulue du select villes */
     const [ selectVillesDelivery, setSelectVillesDelivery ] = useState({"value": "", "valueDisplay": ""});
     /* Si adresse de livraison : Select villes suivant le code postal */
@@ -108,9 +108,9 @@ const CreateClient = () => {
 
 
     /* Input type Radio */
-    const [ billType, setBillType ] = useState(true );
-    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState(false );
-    const [ clientStatut, setClientStatut ] = useState(false );
+    const [ billType, setBillType ] = useState("mail" );
+    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState("no" );
+    const [ clientStatut, setClientStatut ] = useState("prospect" );
 
     /* Modal */
     const [ showModalConfirm, setShowModalConfirm ] = useState(false);
@@ -123,7 +123,7 @@ const CreateClient = () => {
         if( valueLength === 6 ){
             loadActivite();
         }
-        else if( valueLength === 0 ){
+        else if( valueLength < 6 ){
             setActivite( "" );
         }
 
@@ -141,7 +141,7 @@ const CreateClient = () => {
 
 
     useEffect(() => {
-        if( hasDeliveryAddress === "true" ){
+        if( hasDeliveryAddress === "yes" ){
             setArrayAdressesClient( arrayAdressesClient.concat(
                 {
                     "numero": "",
@@ -152,7 +152,7 @@ const CreateClient = () => {
                 }
             ) )
 
-        } else if( hasDeliveryAddress === "false" ){
+        } else if( hasDeliveryAddress === "no" ){
             if( arrayAdressesClient[1] ) {
                 setInputState({
                     client_street_number_delivery: "",
@@ -251,7 +251,7 @@ const CreateClient = () => {
     /* COMMENTAIRE */
 
     /* On lance la requête pour recupérer le type d'historique */
-    const { items: typeHistorique, load: loadTypeHistorique, loading: loadingTypeHistorique } = useFetchGet('http://localhost:8000/api/type_historiques' );
+    const { items: typeHistorique, load: loadTypeHistorique, loading: loadingTypeHistorique } = useFetchGet('https://localhost:8000/api/type_historiques' );
 
     /* On récupère le type d'historique choisi dans le select */
     const [ selectContactType, setSelectContactType ] = useState({"value": "", "valueDisplay": ""} );
@@ -314,7 +314,7 @@ const CreateClient = () => {
     /* 1 - Potentialités types */
 
     /* On lance une requête pour récupérer les types de potentialités */
-    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet('http://localhost:8000/api/type_potentialites' );
+    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet('https://localhost:8000/api/type_potentialites' );
 
     useEffect(() => {
         loadPotentialities();
@@ -327,7 +327,7 @@ const CreateClient = () => {
     /* 2 - Magazines */
 
     /* On lance une requête pour récupérer les magazines si potentialitiesType === Régie */
-    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('http://localhost:8000/api/magazines' );
+    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('https://localhost:8000/api/magazines' );
     const [ selectMagazine, setSelectMagazine ] = useState({"value": "", "valueDisplay": ""} );
     const [ disabledSelectMagazine, setDisabledSelectMagazine ] = useState(true );
 
@@ -387,13 +387,13 @@ const CreateClient = () => {
 
     /* Etape 1: POST CLIENT */
     const { success: postClientSuccess, error: postClientError, post: postClient , loading: loadingPostClient, responseStatut } = useFetchPost(
-        'http://localhost:8000/api/clients',
+        'https://localhost:8000/api/clients',
         {
             "raisonSociale": inputState.client_name,
-            "statut": clientStatut === "true" ? true : false,
+            "statut": clientStatut === "client_validated" ,
             "email": inputState.client_mail,
             "siteInternet": inputState.client_website,
-            "typeFacturation": billType === "true" ? true : false,
+            "typeFacturation": billType === "post",
             "nafSousClasse": "/api/naf_sous_classes/" + codeApe,
             "adresse": arrayAdressesClient,
             "contacts": arrayContact,
@@ -413,7 +413,7 @@ const CreateClient = () => {
     const [ loadingHistorique, setLoadingHistorique ] = useState(true )
     useEffect(() => {
         if( fullContactSelected && fullContactSelected.id && inputState.commentaire !== "" && selectContact.value !== "" && selectContactType.value !== "" ){
-            fetch('http://localhost:8000/api/historique_clients', {
+            fetch('https://localhost:8000/api/historique_clients', {
                 method: "POST",
                 headers: {
                     'Content-type': 'application/json',
@@ -507,7 +507,7 @@ const CreateClient = () => {
                             setRadioChecked={setClientStatut}
                             selected={clientStatut}
                             name="client_statut"
-                            data={ [{"id": "id1", "label": "Prospect", "value": false}, {"id": "id2", "label": "Acquis", "value": true}] }
+                            data={ [{"id": "id1", "label": "Prospect", "value": "prospect"}, {"id": "id2", "label": "Acquis", "value": "client_validated"}] }
                         />
                     </Flexbox>
                     <Flexbox>
@@ -629,10 +629,10 @@ const CreateClient = () => {
                             setRadioChecked={ setHasDeliveryAddress }
                             selected={ hasDeliveryAddress }
                             name="isHasAddressDelivery"
-                            data={ [ {"id": "id1", "label": "Non", "value": false}, {"id": "id2", "label": "Oui", "value": true} ] }
+                            data={ [ {"id": "id1", "label": "Non", "value": "no"}, {"id": "id2", "label": "Oui", "value": "yes"} ] }
                         />
                     </Flexbox>
-                    {hasDeliveryAddress === "true" &&
+                    {hasDeliveryAddress === "yes" &&
                         (<>
                             <Flexbox>
                                 <label htmlFor={"client_street_number_delivery"}>Numéro
@@ -693,7 +693,7 @@ const CreateClient = () => {
                         setRadioChecked={ setBillType }
                         selected={ billType }
                         name="typeBill"
-                        data={ [ {"id": "id1", "label": "Mail", "value": true}, {"id": "id2", "label": "Courrier", "value": false} ] } />
+                        data={ [ {"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "post"} ] } />
                     <h2>Contact</h2>
                     <GroupList>
                         { arrayContact.map(

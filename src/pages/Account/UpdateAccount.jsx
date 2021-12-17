@@ -45,7 +45,7 @@ const UpdateAccount = () => {
                 email: inputState.email_user
             })
         };
-        fetch('http://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
+        fetch('https://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
         .then(response => {
             setLoading(true)
             if(response.ok){
