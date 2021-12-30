@@ -1,12 +1,13 @@
 import {useState, useCallback} from 'react';
 
 export const useFetchGet = ( url ) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([]);
 
     const load = useCallback(
 
         async () => {
+            setLoading(true);
         const response = await fetch(url, {
             headers: {
                 'Accept' : 'application/ld+json',
@@ -23,6 +24,7 @@ export const useFetchGet = ( url ) => {
             }
             setLoading(false);
         } else if (response.status === 401){
+            setLoading(true)
             /* On rafraichit le token avec le refresh token
             * On fait donc une requête pour le refresh token
             * */
@@ -36,7 +38,6 @@ export const useFetchGet = ( url ) => {
             .then(response => {
                 /* Si la réponse est ok on relance la requête initiale */
                 if(response.ok){
-
                     response.json()
                     .then(data => {
                         console.log(data)
@@ -52,7 +53,6 @@ export const useFetchGet = ( url ) => {
                         })
                         .then(response => {
                             if(response.ok){
-
                                 response.json()
                                     .then(data => {
                                         if(data.hasOwnProperty("hydra:member")){

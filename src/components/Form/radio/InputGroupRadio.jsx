@@ -5,35 +5,39 @@ import styled from "styled-components";
 import {f} from "react-select/dist/index-4bd03571.esm";
 
 const GroupRadioStyle = styled.div`
-      margin-bottom: 20px;
-      
-      p{
-        margin-bottom: 10px;
-        font-weight: 500;
-      }
-    `
+  margin-bottom: 20px;
+`
 
 const RadioStyle = styled.input`
-      margin-right: 20px;
-    `
+  margin-right: 20px;
+`
 
-const InputGroupRadio = ({ data, name, selected, setRadioChecked, label }) => {
+const Label = styled.p`
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  
+  &.required:before{
+    content: "* ";
+    color: orangered;
+  }
+`
+
+const InputGroupRadio = ( { data, name, selected, setRadioChecked, label, required } ) => {
 
     const getValue = (e) => {
-        setRadioChecked(e.target.value)
-        console.log(selected)
-        console.log(e.target.value)
-        console.log(e.target.value === selected)
+        setRadioChecked({"value": e.target.value, "id": e.target.id})
+        console.log(e.target.name)
     };
 
     return (
       <GroupRadioStyle>
-        <p>{label}</p>
+        <Label className={required && "required"}>{label}</Label>
         <Flexbox>
           {data.map(( radio, i ) =>
               <Flexbox key={i}>
                   <label htmlFor={name}>{radio.label}</label>
-                  <RadioStyle onChange={getValue} type="radio" id={radio.id} name={name} value={radio.value} checked={radio.value === selected} />
+                  <RadioStyle onChange={getValue} type="radio" id={radio.id} name={name} value={radio.value} checked={radio.value === selected.value} />
               </Flexbox>
           )}
         </Flexbox>

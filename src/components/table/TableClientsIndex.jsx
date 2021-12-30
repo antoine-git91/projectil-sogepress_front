@@ -11,8 +11,6 @@ const TableClientsIndex = ({clients, loading, nameClientSearch, selectVille, sel
 
     const headTable = ["Raison sociale", "Activité", "Email", "Code Postal", "Ville" , "Acquis/Prospect" ];
 
-    console.log(clients)
-
     if (loading) {
         return <Spinner />
     }

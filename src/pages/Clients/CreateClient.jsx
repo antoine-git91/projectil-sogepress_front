@@ -410,7 +410,7 @@ const CreateClient = () => {
 
 
     /* Étape 2: POST HISTORIQUE */
-    const [ loadingHistorique, setLoadingHistorique ] = useState(true )
+    const [ loadingHistorique, setLoadingHistorique ] = useState(true );
     useEffect(() => {
         if( fullContactSelected && fullContactSelected.id && inputState.commentaire !== "" && selectContact.value !== "" && selectContactType.value !== "" ){
             fetch('https://localhost:8000/api/historique_clients', {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import {InputStyle} from "../../utils/styles/InputStyle";
 import PropTypes from "prop-types";
@@ -27,7 +27,7 @@ async function loginUser(credentials) {
             data.json()
         )
 }
-const Login = ({setToken, setCurrentUser, setLoading}) => {
+const Login = ({setToken}) => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 

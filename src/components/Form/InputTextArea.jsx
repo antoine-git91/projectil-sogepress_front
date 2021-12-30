@@ -10,11 +10,11 @@ const TextAreaStyle = styled.label`
   }
 `
 
-const InputTextArea = ({label,commentaireId, name,commentaireRows,commentaireCols,onChange}) => {
+const InputTextArea = ( { label,commentaireId, name, commentaireRows, commentaireCols, onChange, placeholder } ) => {
 
     return (
         <TextAreaStyle>{label}
-        <textarea id={commentaireId} name={name} rows={commentaireRows} cols={commentaireCols} onChange={onChange} />
+        <textarea id={commentaireId} name={name} rows={commentaireRows} cols={commentaireCols} onChange={onChange} placeholder={placeholder} />
         </TextAreaStyle>
     )
 

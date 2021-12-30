@@ -8,10 +8,15 @@ const PaginateContent = styled.div`
   margin-top: 30px;
 
    p {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
+     color: black;
+     float: left;
+     padding: 8px 16px;
+     text-decoration: none;
+     cursor: pointer;
+     
+     &:hover{
+       color: orangered;
+     }
   }
 `
 

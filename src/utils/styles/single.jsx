@@ -29,10 +29,6 @@ justify-content: space-between;
   margin-bottom: 20px;
 `
 
-export const ChiffreDateContainer = styled.div`
-display: flex;
-`
-
 export const ChiffreResultContainer = styled.div`
 display: flex;
 flex-direction: column

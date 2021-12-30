@@ -17,7 +17,7 @@ const TableCommandeStyle = styled.table`
 const TableCommandeSingle = ({ commandes }) => {
 
     const {idClient} = useParams();
-    const headTable = ["Type", "Magasine", "Prix", "Status", ""];
+    const headTable = ["Type", "Magasine", "Montant", "Status", ""];
     const {items: clients, loading, load} = useFetchGet(`https://127.0.0.1:8000/api/clients/${idClient}`);
     const [totalCommandesPrice, setTotalCommandesPrice] = useState(0);
 
@@ -47,8 +47,8 @@ const TableCommandeSingle = ({ commandes }) => {
                                 <tr key={key}>
                                     <td><Link to={{pathname: `/commande/${commande.id}`}}>Type de produit</Link></td>
                                     <td><Link to={{pathname: `/commande/${commande.id}`}}>{commande.fin}</Link></td>
-                                    <td><Link to={{pathname: `/commande/${commande.id}`}}>Champ manquant</Link></td>
                                     <td><Link to={{pathname: `/commande/${commande.id}`}}>{commande.facturation}</Link></td>
+                                    <td><Link to={{pathname: `/commande/${commande.id}`}}>Champ manquant</Link></td>
                                 </tr>
                             ))}
                         </tbody>

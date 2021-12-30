@@ -3,6 +3,7 @@ import MainContainer from "../../templates/Container";
 import {ButtonPrimaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
 import TableCommandesIndex from "../../components/table/TableCommandesIndex";
+import Pagination from "../../components/Pagination";
 
 const Commandes = () => {
 
@@ -16,6 +17,7 @@ const Commandes = () => {
                 </DivButtonAction>
                 <h1>Commandes page</h1>
                 <TableCommandesIndex />
+                <Pagination/>
             </MainContainer>
         </>
     )
