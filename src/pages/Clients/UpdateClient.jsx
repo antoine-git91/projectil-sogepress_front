@@ -147,7 +147,7 @@ const UpdateClient = () => {
             client_name: client.raisonSociale,
             client_ape: client.nafSousClasse && code,
             client_activite: activiteClient && activiteClient.libelle,
-            client_phone: "",
+            client_phone: client.telephone && client.telephone,
             client_mail: client.email,
             client_street_number: client.adresse && client.adresse[ 0 ].numero,
             client_street_wayType: client.adresse && client.adresse[ 0 ].typeVoie,
@@ -430,6 +430,7 @@ const UpdateClient = () => {
         {
             "raisonSociale": inputState.client_name,
             "statut": clientStatut === "client_validated" ? true : false,
+            "telephone": inputState.client_phone,
             "email": inputState.client_mail,
             "siteInternet": inputState.client_website,
             "typeFacturation": billType === "mail" ? false : true,
@@ -601,7 +602,6 @@ const UpdateClient = () => {
                             <InputStyle
                                 type="number"
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                //onBlur={ ( e ) => getVilles( e, setVilles, setDisabledSelectVilles, loadVilles ) }
                                 onWheel={ ( e ) => e.target.blur() }
                                 value={ inputState.client_street_codePostal }
                                 name="client_street_codePostal"
@@ -748,7 +748,7 @@ const UpdateClient = () => {
                         </Flexbox>
                         {dataPotentiality.length > 0 ? (
                             <TablePotentiality
-                                headTable={ [ "Type", "Magazine" ] }
+                                headTable={ [ "Type", "Magazines" ] }
                                 dataPotentiality={ dataPotentiality }
                                 removePotentiality={ ( e, index ) => removePotentiality( e, index ) }
                             />

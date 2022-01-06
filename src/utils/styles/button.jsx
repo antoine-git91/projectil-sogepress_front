@@ -71,9 +71,12 @@ export const ButtonReturn = styled(Link)`
 export const ButtonSecondary = styled.button`
   margin: ${({ margin }) => margin ?? 0};
   font-weight: bold;
+  font-size: 16px;
   color: #FF6700;
   display: block;
   transition: .3s;
+  border: transparent;
+  background-color: transparent;
   
   &:hover{
     color: #000;

@@ -51,17 +51,9 @@ const CreateCommande = () => {
         {
             // print
             number_prints: 0,
-            print_delivery_date: null,
-
-            // website creation
-            website_delivery_date: null,
 
             // website maintenance
             website_adresse: "",
-            maintenance_delivery_date: null,
-
-            // website hébergement
-            hebergement_end_date: null,
 
             //Contenu
             number_feuillets: 0,
@@ -73,10 +65,12 @@ const CreateCommande = () => {
             magazine_extension: "",
             magazine_number_pages: 0,
             magazine_number_items: 0,
-            magazine_delivery_date: null,
 
             // commantaire
             commentaire_commande: "",
+
+            // echance
+            delivery_date: null,
 
             // facturation
             reduction_bill: null,
@@ -94,6 +88,7 @@ const CreateCommande = () => {
     const [ contactClient, setContactClient ] = useState( { value: "", valueDisplay: "" } );
     const [ disabledContactClient, setDisabledContactClient ] = useState( true );
 
+    const [ magazineNameEditionMagazine, setMagazineNameEditionMagazine ] = useState(true );
     const [ selectMagazineTypeCommunication, setSelectMagazineTypeCommunication ] = useState( { value: "", valueDisplay: "" } );
     const [ selectMagazineTypeRegie, setSelectMagazineTypeRegie ] = useState( { value: "", valueDisplay: "" } );
     const [ selectEditionMagazine, setSelectEditionMagazine ] = useState( { value: "", valueDisplay: "" } );
@@ -112,6 +107,7 @@ const CreateCommande = () => {
     const { items: clients, load: loadClients, loading: loadingClients } = useFetchGet("https://localhost:8000/api/clients");
     const { items: contactClients, load: loadContactsClients, loading: loadingContactsClients } = useFetchGet("https://localhost:8000/api/contactsByClient/" + selectClient.value);
     const { items: magazines, load: loadMagazines, loading: loadingMagazines } = useFetchGet("https://localhost:8000/api/magazines");
+    const { items: magazinesByClient, load: loadMagazinesByClient, loading: loadingMagazinesByClient } = useFetchGet("https://localhost:8000/api/magazinesByClient/" + selectClient.value);
     const { items: editionsMagazine, load: loadEditionsMagazine, loading: loadingEditionsMagazine } = useFetchGet("https://localhost:8000/api/editionsByMagazine/" + selectMagazineTypeRegie.value);
 
 
@@ -124,6 +120,9 @@ const CreateCommande = () => {
     useEffect( () => {
         if( selectClient.value !== "" ){
             loadContactsClients();
+            if( magazinesByClient.length > 0 ){
+                setMagazineNameEditionMagazine(false );
+            }
             if( contactClients.length > 0 ){
                 setDisabledContactClient(false );
             } else {
@@ -131,15 +130,24 @@ const CreateCommande = () => {
             }
         } else {
             setDisabledContactClient(true );
+            setMagazineNameEditionMagazine(true );
         }
     }, [ selectClient , contactClients.length ] );
 
     // on lance la requete pour récuperer le nom des magazines existant en base suivant le type de support ou le type de produit
     useEffect( () => {
-        if(typeSupport.value === "magasine" || typeProduit.value === "regie"){
+        if(typeProduit.value === "regie"){
             loadMagazines();
         }
-    }, [ typeSupport.value, typeProduit.value ] );
+    }, [ typeProduit.value ] );
+
+    // on lance la requete pour récuperer les magazines existant en base suivant le client
+    useEffect( () => {
+        if( typeSupport.value === "magasine" && selectClient.value !== "" ){
+            loadMagazinesByClient();
+            console.log("coucou")
+        }
+    }, [ typeSupport.value, selectClient.value ] );
 
     // on met à jour les editions lié au magazine choisi en rendant accessible ou non le select des editions
     useEffect( () => {
@@ -173,14 +181,14 @@ const CreateCommande = () => {
         }
     }, [ selectEditionMagazine, editionFound  ] );
 
-    console.log(inputState.commentaire_commande)
+
     // ##### Requête de création de formulaire ####
     // Print
-    const { post: postSupportPrint } = useFetchPost("https://localhost:8000/api/postCommandeSupportPrint",
+    const { success: successPrint, post: postSupportPrint } = useFetchPost("https://localhost:8000/api/postCommandeSupportPrint",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin": new Date(inputState.delivery_date).toISOString(),
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -201,12 +209,13 @@ const CreateCommande = () => {
             "statut": "api/commande_statuses/" + 1
         });
 
+    console.log(inputState.delivery_date)
     // Website
-    const { post: postSupportWeb  } = useFetchPost("https://localhost:8000/api/postCommandeSupportWeb",
+    const { success: successWeb, post: postSupportWeb  } = useFetchPost("https://localhost:8000/api/postCommandeSupportWeb",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin":new Date(inputState.delivery_date).toISOString() ,
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -217,15 +226,23 @@ const CreateCommande = () => {
                 "typePrestation": "api/type_prestation_webs/" + typeWeb.id,
                 "typeSite": "api/type_site_webs/" + 1
             },
+            "historiqueClients": [
+                {
+                    "commentaire": inputState.commentaire_commande,
+                    "client": "api/clients/" + selectClient.value,
+                    "contact": "api/contacts/" + contactClient.value,
+                    "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id
+                }
+            ],
             "statut": "api/commande_statuses/" + 1
         })
 
     // Contenu
-    const { post: postContenu } = useFetchPost("https://localhost:8000/api/postCommandeContenu",
+    const { success: successContenu, post: postContenu } = useFetchPost("https://localhost:8000/api/postCommandeContenu",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin":new Date(inputState.delivery_date).toISOString() ,
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -235,15 +252,23 @@ const CreateCommande = () => {
                 "feuillets": parseInt(inputState.number_feuillets),
                 "typeContenu": "api/type_contenus/" + typeContenu.id
             },
+            "historiqueClients": [
+                {
+                    "commentaire": inputState.commentaire_commande,
+                    "client": "api/clients/" + selectClient.value,
+                    "contact": "api/contacts/" + contactClient.value,
+                    "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id
+                }
+            ],
             "statut": "api/commande_statuses/" + 1
         });
 
     // Community management
-    const { post: postCommunity } = useFetchPost("https://localhost:8000/api/postCommandeCommunity",
+    const {success: successCommunity, post: postCommunity } = useFetchPost("https://localhost:8000/api/postCommandeCommunity",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin":new Date(inputState.delivery_date).toISOString() ,
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -252,15 +277,23 @@ const CreateCommande = () => {
             "communityManagement": {
                 "postMensuel": parseInt(inputState.number_posts)
             },
+            "historiqueClients": [
+                {
+                    "commentaire": inputState.commentaire_commande,
+                    "client": "api/clients/" + selectClient.value,
+                    "contact": "api/contacts/" + contactClient.value,
+                    "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id
+                }
+            ],
             "statut": "api/commande_statuses/" + 1
         });
 
     // Support magazine
-    const { post: postSupportMagazine } = useFetchPost("https://localhost:8000/api/postCommandeSupportMagazine",
+    const { success: successMagazine, post: postSupportMagazine } = useFetchPost("https://localhost:8000/api/postCommandeSupportMagazine",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin": new Date(inputState.delivery_date).toISOString() ,
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -269,20 +302,26 @@ const CreateCommande = () => {
             "supportMagazine": {
                 "pages": parseInt(inputState.magazine_number_pages),
                 "quantite": parseInt(inputState.magazine_number_items),
-                "edition": {
-                    "name": inputState.magazine_extension,
-                    "magazine": "api/magazines/" + selectMagazineTypeCommunication.value
-                }
+                "nom": inputState.magazine_extension,
+                "magazine": "api/magazines/" + selectMagazineTypeCommunication.value
             },
+            "historiqueClients": [
+                {
+                    "commentaire": inputState.commentaire_commande,
+                    "client": "api/clients/" + selectClient.value,
+                    "contact": "api/contacts/" + contactClient.value,
+                    "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id
+                }
+            ],
             "statut": "api/commande_statuses/" + 1
         });
 
     // Encart
-    const { post: postEncart } = useFetchPost("https://localhost:8000/api/postCommandeEncart",
+    const { success: successEncart, post: postEncart } = useFetchPost("https://localhost:8000/api/postCommandeEncart",
         {
             "facturation": parseInt(inputState.bill) ,
             "reduction": parseInt(inputState.reduction_bill),
-            "fin":new Date(inputState.website_delivery_date).toISOString() ,
+            "fin": new Date(inputState.delivery_date).toISOString() ,
             "client": "api/clients/" + selectClient.value,
             "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
             "contact": [
@@ -293,10 +332,28 @@ const CreateCommande = () => {
                 "format": "api/format_encarts/" + formatEncart.id,
                 "editionMagazine": "api/edition_magazines/" + selectEditionMagazine.value
             },
+            "historiqueClients": [
+                {
+                    "commentaire": inputState.commentaire_commande,
+                    "client": "api/clients/" + selectClient.value,
+                    "contact": "api/contacts/" + contactClient.value,
+                    "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id
+                }
+            ],
             "statut": "api/commande_statuses/" + 1
         });
 
-    console.log(selectEditionMagazine)
+    // Si commentaire
+    const {post: postHistoriqueCommande} = useFetchPost(
+        "https://localhost:8000/api/historique_clients",
+        {
+            "commentaire": inputState.commentaire_commande,
+            "client": "api/clients/" + selectClient.value,
+            "contact": "api/contacts/" + contactClient.value,
+            "user": "api/users/" + JSON.parse(localStorage.getItem("meUser")).id,
+            "commande": "api/commandes/" + successWeb.id
+        }
+    )
 
 
     const handleSubmit = ( e ) => {
@@ -304,24 +361,18 @@ const CreateCommande = () => {
         if( typeProduit.value === "communication" ){
             if( typeSupport.value === "print" ){
                 postSupportPrint();
-                console.log("type: print")
             } else if( typeSupport.value === "web" ){
                 postSupportWeb();
-                console.log("type: web")
             } else if( typeSupport.value === "contenu" ){
                 postContenu();
-                console.log("type: contenu")
             } else if( typeSupport.value === "social" ){
                 postCommunity();
-                console.log("type: community")
             } else if( typeSupport.value === "magasine" ){
                 postSupportMagazine();
-                console.log("type: magasine")
             }
         }
          else if( typeProduit.value === "regie" ){
             postEncart();
-            console.log("type: encart")
         }
     }
 
@@ -363,11 +414,11 @@ const CreateCommande = () => {
                         required={ "required" }
                     />
                     { contactClients && loadingContactsClients === false && contactClients.length === 0 && selectClient.value !== "" && ( <Information>Aucun contact n'est disponible pour ce client</Information> ) }
-                    <TitreForm titre="Type de produit" />
+                    <TitreForm titre={ "Type de produit" } />
                     <InputGroupRadio
                         setRadioChecked={ setTypeProduit }
                         selected={ typeProduit }
-                        name="type_produit"
+                        name={ "type_produit" }
                         data={ [
                             { "id": "1", "label": "Support de communication", "value": "communication" },
                             { "id": "2", "label": "Régie", "value": "regie" }
@@ -386,7 +437,7 @@ const CreateCommande = () => {
                                      { "id": "id2", "label": "Site internet", "value": "web" },
                                      { "id": "id3", "label": "Contenu", "value": "contenu" },
                                      { "id": "id4", "label": "Community Management", "value": "social" },
-                                     { "id": "id5", "label": "Magasine", "value": "magasine" }
+                                     { "id": "id5", "label": "Edition de magasine", "value": "magasine" }
                                 ] }
                                 required
                             />
@@ -474,12 +525,13 @@ const CreateCommande = () => {
                                     <InputSelect
                                         label={ "Nom du magasine" }
                                         name={ "magazine_communication" }
-                                        data={ magazines && magazines.map( ( magazine, key ) => ( { id: key, value: magazine.id, valueDisplay: magazine.nom } ) ) }
+                                        data={ magazinesByClient && magazinesByClient.map( ( magazine, key ) => ( { id: key, value: magazine.id, valueDisplay: magazine.nom } ) ) }
                                         selectValue={ selectMagazineTypeCommunication }
                                         setSelectValue={ setSelectMagazineTypeCommunication }
-                                        option={ "Magazine" }
+                                        option={ "Magazines" }
                                         optionValue={ "" }
                                         required
+                                        disabled={magazineNameEditionMagazine}
                                     />
                                     <InputText
                                         label={ "Extension du magasine" }

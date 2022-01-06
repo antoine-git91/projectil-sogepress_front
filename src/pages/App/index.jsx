@@ -14,6 +14,9 @@ import Account from "../Account";
 import UpdateAccount from "../Account/UpdateAccount";
 import UpdatePassword from "../Account/UpdatePassword";
 import UpdateClient from "../Clients/UpdateClient";
+import Magazines from "../Magazines";
+import Magazine from "../Magazines/Magazine";
+import CreateMagazine from "../Magazines/CreateMagazine";
 
 
 const App = () => {
@@ -36,12 +39,6 @@ const App = () => {
                 <Route path="/clients">
                     <Clients />
                 </Route>
-                <Route path="/commandes">
-                    <Commandes />
-                </Route>
-                <Route path="/commande/:id">
-                    <Commande />
-                </Route>
                 <Route path="/profile/:idClient">
                     <Profile />
                 </Route>
@@ -51,8 +48,23 @@ const App = () => {
                 <Route path="/update_client/:id">
                     <UpdateClient />
                 </Route>
+                <Route path="/commandes">
+                    <Commandes />
+                </Route>
+                <Route path="/commande/:id">
+                    <Commande />
+                </Route>
                 <Route path="/creation_commande">
                     <CreateCommande />
+                </Route>
+                <Route path="/magazines">
+                    <Magazines />
+                </Route>
+                <Route path="/magazine/:idMagazine">
+                    <Magazine />
+                </Route>
+                <Route path="/creation_magazine">
+                    <CreateMagazine />
                 </Route>
                 <Route path="/my_account">
                     <Account />

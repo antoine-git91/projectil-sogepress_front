@@ -17,13 +17,12 @@ const Label = styled.label`
   }
 `
 
-const InputText = ({label, onChange, value, name, type, required, placeholder}) => {
+const InputText = ({label, onChange, value, name, type, required, placeholder, readOnly}) => {
 
     return (
-        <>
-            <Label className={required && "required"}>{label}</Label>
-            <InputStyle type={{type} ? type :"text"} onChange={onChange} value={value} name={name} required={required} placeholder={placeholder} />
-        </>
+        <Label className={required && "required"}>{label}
+        <InputStyle type={{type} ? type :"text"} onChange={onChange} value={value} name={name} required={required} placeholder={placeholder} readOnly={readOnly} />
+        </Label>
     )
 }
 export default InputText;

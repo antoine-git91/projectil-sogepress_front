@@ -5,7 +5,7 @@ import MainContainer from "../../templates/Container";
 import ContactBlock from "../../components/Clients/ContactBlock";
 import InputSelect from "../../components/Form/InputSelect";
 import BtnAjout from "../../components/btn_ajout";
-import {ButtonPrimary, ButtonPrimaryLink, ButtonSecondaryLink} from "../../utils/styles/button";
+import {ButtonPrimary, ButtonPrimaryLink, ButtonSecondary, ButtonSecondaryLink} from "../../utils/styles/button";
 import styled from "styled-components";
 import {handleChangeInput} from "../../utils/misc/inputChange";
 import {InputStyle} from "../../utils/styles/InputStyle";
@@ -18,6 +18,7 @@ import Modal from "../../components/Modal/Modal";
 import ModalHeader from "../../components/Modal/ModalHeader";
 import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
+import InputText from "../../components/Form/InputText";
 
 const GroupList = styled.ul`
   margin-left: 0;
@@ -38,11 +39,10 @@ const CreateClient = () => {
 
     /* On initialise les input text simple */
     const [ inputState, setInputState ] = useReducer(
-        ( state, newState ) => ( {...state, ...newState} ),
+        ( state, newState ) => ( { ...state, ...newState } ),
         {
             client_name: "",
             client_ape: "",
-            client_activite: "",
             client_phone: "",
             client_mail: "",
             client_street_number: "",
@@ -72,7 +72,7 @@ const CreateClient = () => {
     const[ villes, setVilles ] = useState([] );
     const {items: villesClient, load: loadVilles } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
     /* On récupère la donnée voulue du select villes */
-    const [ selectVilles, setSelectVilles ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectVilles, setSelectVilles ] = useState({ value: "", valueDisplay: "" } );
     /* Select villes suivant le code postal */
     const [ disabledSelectVilles, setDisabledSelectVilles ] = useState(true );
 
@@ -81,9 +81,9 @@ const CreateClient = () => {
     const[ villesDelivery, setVillesDelivery ] = useState([] );
     const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
     /* On récupère la donnée voulue du select villes */
-    const [ selectVillesDelivery, setSelectVillesDelivery ] = useState({"value": "", "valueDisplay": ""});
+    const [ selectVillesDelivery, setSelectVillesDelivery ] = useState({ value: "", valueDisplay: "" } );
     /* Si adresse de livraison : Select villes suivant le code postal */
-    const [ disabledSelectVillesDelivery, setDisabledSelectVillesDelivery ] = useState(true);
+    const [ disabledSelectVillesDelivery, setDisabledSelectVillesDelivery ] = useState(true );
 
     const [ arrayAdressesClient, setArrayAdressesClient ] = useState([
         {
@@ -102,23 +102,22 @@ const CreateClient = () => {
 
     /* --- Contact historique --- */
     /* On récupère la donnée voulue du select contact historique */
-    const [ selectContact, setSelectContact ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectContact, setSelectContact ] = useState({ "value": "", "valueDisplay": "" } );
     /* Pour gérer l'acces au select de contact historique */
     const [ disabledSelectContact, setDisabledSelectContact ] = useState(true );
 
 
     /* Input type Radio */
-    const [ billType, setBillType ] = useState("mail" );
-    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState("no" );
-    const [ clientStatut, setClientStatut ] = useState("prospect" );
+    const [ billType, setBillType ] = useState({ "value": "mail", "id": 1 } );
+    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState(  { "value": "no", "id": 1 } );
+    const [ clientStatut, setClientStatut ] = useState(  { "value":"prospect", "id": 1 } );
 
     /* Modal */
-    const [ showModalConfirm, setShowModalConfirm ] = useState(false);
+    const [ showModalConfirm, setShowModalConfirm ] = useState(false );
 
 
     /* Récupère le libelle du code NAF */
     useEffect(() => {
-
         const valueLength = inputState.client_ape.length;
         if( valueLength === 6 ){
             loadActivite();
@@ -126,11 +125,16 @@ const CreateClient = () => {
         else if( valueLength < 6 ){
             setActivite( "" );
         }
-
     }, [ inputState.client_ape ]);
 
+    /* Inscription de l'activité dans le champ activité */
     useEffect(() => {
-        arrayAdressesClient[0] = {
+        setActivite( activiteClient.libelle );
+    }, [ activiteClient ] );
+
+    //Adresse client
+    useEffect(() => {
+        arrayAdressesClient[ 0 ] = {
             "numero" : inputState.client_street_number,
             "typeVoie" : inputState.client_street_wayType,
             "nomVoie" : inputState.client_street_name,
@@ -139,9 +143,10 @@ const CreateClient = () => {
         }
     }, [ arrayAdressesClient, inputState.client_street_number, inputState.client_street_wayType, inputState.client_street_name, selectVilles.value ]);
 
-
+    // Si adresse de livraison : on enrichi le tableau "arrayAdressesClient" d'un nouvel objet
+    // Sinon : on supprime l'objet créé
     useEffect(() => {
-        if( hasDeliveryAddress === "yes" ){
+        if( hasDeliveryAddress.value === "yes" ){
             setArrayAdressesClient( arrayAdressesClient.concat(
                 {
                     "numero": "",
@@ -152,8 +157,8 @@ const CreateClient = () => {
                 }
             ) )
 
-        } else if( hasDeliveryAddress === "no" ){
-            if( arrayAdressesClient[1] ) {
+        } else if( hasDeliveryAddress.value === "no" ){
+            if( arrayAdressesClient[ 1 ] ) {
                 setInputState({
                     client_street_number_delivery: "",
                     client_street_wayType_delivery: "",
@@ -166,11 +171,12 @@ const CreateClient = () => {
                 setArrayAdressesClient( arrayAdressesClient );
             }
         }
-    }, [ hasDeliveryAddress, arrayAdressesClient ] );
+    }, [ hasDeliveryAddress.value, arrayAdressesClient ] );
 
+    // Si adresse de livraison on stocke les valeurs
     useEffect(() => {
-        if(arrayAdressesClient[1]) {
-            arrayAdressesClient[1] = {
+        if(arrayAdressesClient[ 1 ]) {
+            arrayAdressesClient[ 1 ] = {
                 "numero" : inputState.client_street_number_delivery,
                 "typeVoie" : inputState.client_street_wayType_delivery,
                 "nomVoie" : inputState.client_street_name_delivery,
@@ -182,24 +188,19 @@ const CreateClient = () => {
     }, [ arrayAdressesClient, inputState.client_street_number_delivery, inputState.client_street_wayType_delivery, inputState.client_street_name_delivery, selectVillesDelivery.value ] );
 
 
-    /* Mise à jour du state */
-    useEffect(() => {
-        setActivite( activiteClient.libelle );
-    }, [ activiteClient ] );
-
-
     /* Function onBlur sur input code postal */
     const getVilles = ( e, setState, setDisabledSelect, request ) => {
         e.preventDefault();
 
         const valueLength = e.target.value.length;
+        console.log(valueLength)
 
-        if( valueLength < 6 ){
+        if( valueLength === 5 ){
             setTimeout(() => {
                 request();
                 setDisabledSelect( false );
 
-            }, 1000 );
+            }, 300 );
         }
         if( valueLength === 0 ){
             setState( [] );
@@ -224,7 +225,7 @@ const CreateClient = () => {
     const addContact = ( e ) => {
         e.preventDefault();
         setArrayContact(
-            arrayContact.concat( {"nom": "","prenom": "", "fonction": "", "tel": "", "email": ""} )
+            arrayContact.concat( { "nom": "","prenom": "", "fonction": "", "tel": "", "email": "" } )
         );
         setDisabledSelectContact(true );
     };
@@ -232,7 +233,7 @@ const CreateClient = () => {
     /* On supprime un contactBlock à chaque clique de buttonRemove */
     const removeContact = ( e, index ) => {
         e.preventDefault();
-        setArrayContact([...arrayContact.slice( 0, index ), ...arrayContact.slice( index + 1 ) ] );
+        setArrayContact([ ...arrayContact.slice( 0, index ), ...arrayContact.slice( index + 1 ) ] );
     };
 
     /* On insert les données pour chaque contactBlock */
@@ -254,7 +255,7 @@ const CreateClient = () => {
     const { items: typeHistorique, load: loadTypeHistorique, loading: loadingTypeHistorique } = useFetchGet('https://localhost:8000/api/type_historiques' );
 
     /* On récupère le type d'historique choisi dans le select */
-    const [ selectContactType, setSelectContactType ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectContactType, setSelectContactType ] = useState({ "value": "", "valueDisplay": "" } );
 
     useEffect(() => {
         loadTypeHistorique()
@@ -273,7 +274,7 @@ const CreateClient = () => {
         arrayContact.forEach( el => {
             let count = 0;
             for( let items in el ){
-                if(el[ items ].length > 2){
+                if( el[ items ].length > 2 ){
                     count++
                     if( count === 5 ){
                         setDisabledSelectContact(false );
@@ -282,7 +283,7 @@ const CreateClient = () => {
                     setDisabledSelectContact(true )
                 }
             }
-        })
+        } )
     }
 
     /* On check si l'un des champ et saisi
@@ -292,16 +293,16 @@ const CreateClient = () => {
     const inputHistoriqueCommentaire = document.getElementsByName("commentaire" );
 
     useEffect(() => {
-        if( (inputHistoriqueName[0].value !== "" || inputHistoriqueName[0].getAttribute("disabled" ) === false ) || inputHistoriqueType[0].value !== "" || inputHistoriqueCommentaire[0].value !== "" ){
-            inputHistoriqueName[0].removeAttribute("disabled" );
-            inputHistoriqueName[0].setAttribute("required", true );
-            inputHistoriqueType[0].setAttribute("required", true );
-            inputHistoriqueCommentaire[0].setAttribute("required", true );
+        if( (inputHistoriqueName[ 0 ].value !== "" || inputHistoriqueName[0].getAttribute("disabled" ) === false ) || inputHistoriqueType[0].value !== "" || inputHistoriqueCommentaire[0].value !== "" ){
+            inputHistoriqueName[ 0 ].removeAttribute("disabled" );
+            inputHistoriqueName[ 0 ].setAttribute("required", true );
+            inputHistoriqueType[ 0 ].setAttribute("required", true );
+            inputHistoriqueCommentaire[ 0 ].setAttribute("required", true );
         } else{
-            inputHistoriqueName[0].setAttribute("disabled", true );
-            inputHistoriqueName[0].removeAttribute("required" );
-            inputHistoriqueType[0].removeAttribute("required" );
-            inputHistoriqueCommentaire[0].removeAttribute("required" );
+            inputHistoriqueName[ 0 ].setAttribute("disabled", true );
+            inputHistoriqueName[ 0 ].removeAttribute("required" );
+            inputHistoriqueType[ 0 ].removeAttribute("required" );
+            inputHistoriqueCommentaire[ 0 ].removeAttribute("required" );
         }
     }, [ selectContactType, selectContact, inputState.commentaire ] );
 
@@ -321,14 +322,14 @@ const CreateClient = () => {
     }, [ loadPotentialities ] );
 
     /* Pour récupérer l'option sélectionnée */
-    const [ selectPotentialityType, setSelectPotentiaityType ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectPotentialityType, setSelectPotentiaityType ] = useState({ "value": "", "valueDisplay": "" } );
 
 
     /* 2 - Magazines */
 
     /* On lance une requête pour récupérer les magazines si potentialitiesType === Régie */
     const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('https://localhost:8000/api/magazines' );
-    const [ selectMagazine, setSelectMagazine ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectMagazine, setSelectMagazine ] = useState({ "value": "", "valueDisplay": "" } );
     const [ disabledSelectMagazine, setDisabledSelectMagazine ] = useState(true );
 
     /* Si le type de potentialités est de type Régie */
@@ -340,7 +341,7 @@ const CreateClient = () => {
             setDisabledSelectMagazine(true );
             setSelectMagazine({ "value": "", "valueDisplay": "" } );
         }
-    }, [ selectPotentialityType, loadMagazines ]);
+    }, [ selectPotentialityType, loadMagazines ] );
 
     /* Affichage des potentialité en Front */
     const [ dataPotentiality, setDataPotentiality ] = useState([] );
@@ -372,9 +373,9 @@ const CreateClient = () => {
         }
     };
 
-    const removePotentiality = (e, index) => {
+    const removePotentiality = ( e, index ) => {
         e.preventDefault();
-        setDataPotentiality([...dataPotentiality.slice( 0, index ), ...dataPotentiality.slice( index + 1 )] );
+        setDataPotentiality([ ...dataPotentiality.slice( 0, index ), ...dataPotentiality.slice( index + 1 ) ] );
     }
     /* ################# */
     /* ################# */
@@ -390,7 +391,8 @@ const CreateClient = () => {
         'https://localhost:8000/api/clients',
         {
             "raisonSociale": inputState.client_name,
-            "statut": clientStatut === "client_validated" ,
+            "statut": clientStatut === "client_validated",
+            "telephone": inputState.client_phone,
             "email": inputState.client_mail,
             "siteInternet": inputState.client_website,
             "typeFacturation": billType === "post",
@@ -417,11 +419,11 @@ const CreateClient = () => {
                 method: "POST",
                 headers: {
                     'Content-type': 'application/json',
-                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token' )
                 },
                 body: JSON.stringify({
                     "commentaire": inputState.commentaire,
-                    "user": "/api/users/" + JSON.parse(localStorage.getItem('meUser')).id,
+                    "user": "/api/users/" + JSON.parse( localStorage.getItem('meUser' ) ).id,
                     "client": "/api/clients/" + postClientSuccess.id,
                     "typeHistorique": "/api/type_historiques/" + selectContactType.value,
                     "contact":  "/api/contacts/" + fullContactSelected.id
@@ -440,164 +442,152 @@ const CreateClient = () => {
 
     /* Modal */
 
-    const [fieldsRequired, setFieldsRequired] = useState()
+    const [ fieldsRequired, setFieldsRequired ] = useState()
     /* On met à jour les éléments Required à chaque changement des dépendances */
     useEffect(() => {
-        setFieldsRequired(document.querySelectorAll('[required]'));
-    }, [selectContact, selectContactType, hasDeliveryAddress, arrayContact])
+        setFieldsRequired( document.querySelectorAll('[ required ]' ) );
+    }, [ selectContact, selectContactType, hasDeliveryAddress, arrayContact ] )
 
 
-    const [loading, setLoading] = useState(false);
-    const [postSuccess, setPostSuccess] = useState(false);
-    const [postError, setPostError] = useState(false);
+    const [loading, setLoading] = useState(false );
+    const [postSuccess, setPostSuccess] = useState(false );
+    const [postError, setPostError] = useState(false );
 
     const handleSubmit = ( e ) => {
         e.preventDefault();
-        setLoading(true);
+        setLoading(true );
         postClient();
     };
 
     /* On check la réponse de la requete POST pour afficher différentes modales  */
     useEffect(() => {
-        if( loadingPostClient === false && responseStatut === 201){
+        if( loadingPostClient === false && responseStatut === 201 ){
             setTimeout(() => {
-                setLoading(false)
-                setPostSuccess(true)
-                console.log(responseStatut)
+                setLoading(false )
+                setPostSuccess(true )
             },1000)
-        } else if( loadingPostClient === false && responseStatut !== 201)  {
+        } else if( loadingPostClient === false && responseStatut !== 201 )  {
             setTimeout(() => {
-                setLoading(false)
-                setPostError(true)
-                console.log('error')
-            },1000)
+                setLoading(false )
+                setPostError(true )
+            },1000 )
         }
-    }, [responseStatut, loadingPostClient])
+    }, [ responseStatut, loadingPostClient ] )
 
 
     /* Si on clique sur le bouton "Créer un autre client
-*  -> On efface les données de l'ancien formulaire
-*  */
+    *  -> On efface les données de l'ancien formulaire
+    *  */
     const otherCreateNewClient = ( e ) => {
         e.preventDefault();
         window.location.reload();
-        window.scrollTo(0,0)
+        window.scrollTo(0,0 )
     }
 
     /* Si la modal est fermée on réinitialise l'affichage des autres contenus de la modales */
     useEffect(() => {
-        if(showModalConfirm === false){
-            setLoading(false);
-            setPostError(false);
-            setPostSuccess(false);
+        if(showModalConfirm === false ){
+            setLoading(false );
+            setPostError(false );
+            setPostSuccess(false );
         }
-        console.log(loading, postSuccess, postError)
-    }, [showModalConfirm])
+    }, [ showModalConfirm ] )
 
-
+    /* Lorsque l'on clique sur fermer ou la croix :
+    * - Si c'est la modale récapitulative on ferme simplement la modal
+    * - Si la modale est après la soumission des données on ferme la modale est recharge la page pour mettre à jour les informations
+    *  */
+    const closeModal = (e) => {
+        e.preventDefault();
+        setShowModalConfirm(false)
+        if( postSuccess === true || postError === true){
+            window.location.reload();
+        }
+    }
 
     return(
         <Fragment>
             <MainContainer>
                 <h1>Créer un client</h1>
-                <form onSubmit={ (e) => { e.preventDefault(); }}>
+                <form onSubmit={ ( e) => { e.preventDefault(); }}>
                     <Flexbox>
                         <InputGroupRadio
-                            label={"Statut du client"}
-                            setRadioChecked={setClientStatut}
-                            selected={clientStatut}
+                            label={ "Statut du client" }
+                            setRadioChecked={ setClientStatut }
+                            selected={ clientStatut }
                             name="client_statut"
-                            data={ [{"id": "id1", "label": "Prospect", "value": "prospect"}, {"id": "id2", "label": "Acquis", "value": "client_validated"}] }
+                            data={ [ { "id": 1, "label": "Prospect", "value": "prospect" }, { "id": 2, "label": "Acquis", "value": "client_validated" } ] }
                         />
                     </Flexbox>
                     <Flexbox>
-                        <label htmlFor={"client_name"}>Nom du client
-                            <InputStyle
-                                type="text"
+                            <InputText
+                                label={ "Nom du client" }
+                                type={ "text" }
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                value={ inputState.client_name }
-                                name="client_name"
+                                name={ "client_name" }
                                 required
                             />
-                        </label>
-                        <label htmlFor={"client_ape"}>Code APE
-                            <InputStyle
-                                type="text"
-                                onChange={ ( e ) => handleChangeInput(e, setInputState) }
-                                value={ inputState.client_ape }
-                                name="client_ape"
+                            <InputText
+                                label={ "Code APE" }
+                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                                name={ "client_ape" }
                                 required
                             />
-                        </label>
-                        <label htmlFor={"client_activite"}>Activité
-                            <InputStyle
-                                type="text"
+                            <InputText
+                                label={ "Activité" }
+                                name={ "client_activite" }
                                 value={ activite }
-                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                name="client_activite"
                                 readOnly
-                                disabled
                             />
-                        </label>
                     </Flexbox>
                     <h2>Coordonnées</h2>
                     <Flexbox>
-                        <label htmlFor={"client_telephone"}>Téléphone
-                            <InputStyle
-                                type="text"
-                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                value={ inputState.client_phone }
-                                name="client_phone"
-                            />
-                        </label>
-                        <label htmlFor={"client_mail"}>Email de l'entreprise
-                            <InputStyle
-                                type="text"
-                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                value={ inputState.client_mail }
-                                name="client_mail"
-                                required
-                            />
-                        </label>
-                    </Flexbox>
-                    <Flexbox>
-                    <label htmlFor={"client_street_number"}>Numéro
-                        <InputStyle
-                            type="text"
+                        <InputText
+                            label={ "Telephone" }
+                            type={ "text" }
                             onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                            value={ inputState.client_street_number }
-                            name="client_street_number"
+                            name={ "client_phone" }
+                        />
+                        <InputText
+                            label={ "Email de l'entreprise" }
+                            type={ "text" }
+                            onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                            name={ "client_mail" }
                             required
                         />
-                    </label>
-                    <label htmlFor={"client_street_wayType"}>Type de voie
-                        <InputStyle
-                            type="text"
-                            onChange={( e ) => handleChangeInput( e, setInputState ) }
-                            value={ inputState.client_street_wayType }
-                            name="client_street_wayType"
-                            required
-                        />
-                    </label>
-                    <label htmlFor={"client_street_name"}>Nom de la voie
-                        <InputStyle
-                            type="text"
-                            onChange={( e ) => handleChangeInput( e, setInputState ) }
-                            value={ inputState.client_street_name }
-                            name="client_street_name"
-                            required
-                        />
-                    </label>
                     </Flexbox>
                     <Flexbox>
-                        <label htmlFor={"client_street_codePostal"}>Code postal
+                        <InputText
+                            label={ "Numéro" }
+                            type={ "text" }
+                            onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                            name={ "client_street_number" }
+                            required
+                        />
+                        <InputText
+                            label={ "Type de voie" }
+                            type={ "text" }
+                            onChange={( e ) => handleChangeInput( e, setInputState ) }
+                            name={"client_street_wayType"}
+                            required
+                        />
+                        <InputText
+                            label={ "Nom de la voie" }
+                            type={ "text" }
+                            onChange={( e ) => handleChangeInput( e, setInputState ) }
+                            name={ "client_street_name" }
+                            required
+                        />
+                    </Flexbox>
+                    <Flexbox>
+                        <label htmlFor={ "client_street_codePostal" }>Code postal
                             <InputStyle
-                                type="number"
+                                type={ "number" }
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                                 onBlur={ ( e ) => getVilles( e, setVilles, setDisabledSelectVilles, loadVilles ) }
                                 onWheel={ ( e ) => e.target.blur() }
+                                name={ "client_street_codePostal" }
                                 value={ inputState.client_street_codePostal }
-                                name="client_street_codePostal"
                                 required
                             />
                         </label>
@@ -613,15 +603,12 @@ const CreateClient = () => {
                             required={"required"}
                         />
                     </Flexbox>
-
-                    <label htmlFor={"client_website"}>Site internet
-                        <InputStyle
-                            type="text"
-                            onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                            value={ inputState.client_website }
-                            name="client_website"
-                        />
-                    </label>
+                    <InputText
+                        label={ "Site internet" }
+                        type="text"
+                        onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                        name="client_website"
+                    />
                     <h2>Adresse de livraison</h2>
                     <Flexbox>
                         <InputGroupRadio
@@ -629,47 +616,42 @@ const CreateClient = () => {
                             setRadioChecked={ setHasDeliveryAddress }
                             selected={ hasDeliveryAddress }
                             name="isHasAddressDelivery"
-                            data={ [ {"id": "id1", "label": "Non", "value": "no"}, {"id": "id2", "label": "Oui", "value": "yes"} ] }
+                            data={ [ { "id": 1, "label": "Non", "value": "no" }, { "id": 2, "label": "Oui", "value": "yes" } ] }
                         />
                     </Flexbox>
-                    {hasDeliveryAddress === "yes" &&
+                    {hasDeliveryAddress.value === "yes" &&
                         (<>
                             <Flexbox>
-                                <label htmlFor={"client_street_number_delivery"}>Numéro
-                                    <InputStyle
-                                        type="number"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                        value={ inputState.client_street_number_delivery }
-                                        name="client_street_number_delivery"
-                                        required />
-                                </label>
-                                <label htmlFor={"client_street_wayType_delivery"}>Type de voie
-                                    <InputStyle
-                                        type="text"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState) }
-                                        value={ inputState.client_street_wayType_delivery }
-                                        name="client_street_wayType_delivery"
-                                        required
-                                    />
-                                </label>
-                                <label htmlFor={"client_street_name_delivery"}>Rue
-                                    <InputStyle
-                                        type="text"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState) }
-                                        value={ inputState.client_street_name_delivery }
-                                        name="client_street_name_delivery"
-                                        required
-                                    />
-                                </label>
+                                <InputText
+                                    label={ "Numéro" }
+                                    type="number"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                                    name="client_street_number_delivery"
+                                    required />
+                                <InputText
+                                    label={ "Type de voie" }
+                                    type="text"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState) }
+                                    name="client_street_wayType_delivery"
+                                    required
+                                />
+                                <InputText
+                                    label={ "Nom de la voie" }
+                                    type="text"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState) }
+                                    name="client_street_name_delivery"
+                                    required
+                                />
                             </Flexbox>
                             <Flexbox>
-                                <label htmlFor={"client_street_codePostal_delivery"}>Code postal
+                                <label htmlFor={ "client_street_codePostal_delivery" }>Code postal
                                     <InputStyle
-                                        type="number"
+                                        type={ "number" }
                                         onChange={ ( e ) => handleChangeInput( e, setInputState) }
                                         onBlur={ ( e ) => getVilles( e, setVillesDelivery, setDisabledSelectVillesDelivery, loadVillesDelivery ) }
-                                        onWheel={ ( e ) => e.target.blur() } value={ inputState.client_street_codePostal_delivery }
-                                        name="client_street_codePostal_delivery"
+                                        onWheel={ ( e ) => e.target.blur() }
+                                        value={ inputState.client_street_codePostal_delivery }
+                                        name={ "client_street_codePostal_delivery" }
                                         required
                                     />
                                 </label>
@@ -693,7 +675,7 @@ const CreateClient = () => {
                         setRadioChecked={ setBillType }
                         selected={ billType }
                         name="typeBill"
-                        data={ [ {"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "post"} ] } />
+                        data={ [ {"id": 1, "label": "Mail", "value": "mail"}, {"id": 2, "label": "Courrier", "value": "post"} ] } />
                     <h2>Contact</h2>
                     <GroupList>
                         { arrayContact.map(
@@ -716,7 +698,7 @@ const CreateClient = () => {
                         { ( arrayContact.length > 0 ) && (
                             <>
                             <span>ou</span>
-                            <ButtonSecondaryLink margin={ "0 0 0 15px" } onClick={ (e ) => valideContact( e ) }>Valider les contact</ButtonSecondaryLink>
+                            <ButtonSecondary margin={ "0 0 0 15px" } onClick={ (e ) => valideContact( e ) }>Valider les contact</ButtonSecondary>
                             </>
                             )
                         }
@@ -751,8 +733,7 @@ const CreateClient = () => {
                                     label={ "Saisir votre comentaire:" }
                                     commentaireRows={ 10 }
                                     onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                    value={ inputState.commentaire }
-                                    name="commentaire"
+                                    name={ "commentaire" }
                                 />
                             </div>
                         </CommentaireBox>
@@ -773,7 +754,7 @@ const CreateClient = () => {
                             <InputSelect
                                 name={ "select_magazines" }
                                 label={ "Nom du magazine si type encard" }
-                                data={ magazines.map( ( el, key ) => ( { id : key, value : el.id, valueDisplay: el.nom } ) ) }
+                                data={ magazines.map( ( magazine, key ) => ( { id : key, value : magazine.id, valueDisplay: magazine.nom } ) ) }
                                 option={ "Saisir le type de contact" }
                                 optionValue={ "" }
                                 selectValue={ selectMagazine }
@@ -783,7 +764,7 @@ const CreateClient = () => {
                             <BtnAjout text={ "Ajouter la potentialité" } margin={ "0 0 0 15px" } add={ addPotentiality } />
                         </Flexbox>
                         <TablePotentiality
-                            headTable={ [ "Type", "Magazine" ] }
+                            headTable={ [ "Type", "Magazines" ] }
                             dataPotentiality={ dataPotentiality }
                             removePotentiality={ ( e, index ) => removePotentiality( e, index ) }
                         />
@@ -795,7 +776,7 @@ const CreateClient = () => {
                         }
                     } }>Créer le client</ButtonPrimary>
                     {showModalConfirm &&
-                        <Modal>
+                        <Modal closeButton={ closeModal }>
                             {
                                 (!loading && !postError && !postSuccess && <ModalConfirm
                                     setShowModal={setShowModalConfirm}
@@ -814,7 +795,6 @@ const CreateClient = () => {
                                 (loading && (<Spinner />)) ||
                                 (postSuccess && (<ModalSuccess message={"Le client a bien été créé"} idClient={postClientSuccess.id} otherCreateNewClient={otherCreateNewClient} />)) ||
                                 (postError && <ModalError message={"Une erreur s'est produite"} setShowModal={setShowModalConfirm}/>)
-
                             }
                         </Modal>
                     }
@@ -825,9 +805,14 @@ const CreateClient = () => {
 }
 export default CreateClient;
 
-
+export  const closeModal = ( e, setStateModal ) => {
+    e.preventDefault();
+    setStateModal( false );
+}
 
 const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, villeDelivery, deliveryAddress, billType, contacts, contactCommentaire, typeContact, potentialities }) => {
+
+
     return (
     <Fragment>
         <ModalHeader>
@@ -835,7 +820,7 @@ const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, v
             <p>Vérifier les informations saisies avant de confirmer</p>
         </ModalHeader>
         <ModalBody>
-            <p>Statut du client: <span>{ clientStatut === "false" ? "Prospect" : "Acquis" }</span></p>
+            <p>Statut du client: <span>{ clientStatut.value === "prospect" ? "Prospect" : "Acquis" }</span></p>
             <p>Nom: <span>{ field.client_name ? field.client_name : "Non communiqué" }</span></p>
             <p>Activité: <span>{  field.client_ape ? field.client_ape + " - " + document.querySelector('input[name="client_activite"]').value : "Non communiqué" }</span></p>
 
@@ -845,11 +830,11 @@ const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, v
             <p>Adresse: <span>{ field.client_street_number && field.client_street_wayType && field.client_street_name && field.client_street_codePostal && ville ? field.client_street_number + " " + field.client_street_wayType + " " + field.client_street_name + " " + field.client_street_codePostal + " " + ville.valueDisplay : "Non communiqué" }</span></p>
             <p>Site internet: <span>{ field.client_website ? field.client_website : "Non communiqué" }</span></p>
             <h2>Adresse de livraison</h2>
-            <p>Adresse de Livraison: <span>{ deliveryAddress === "true" && field.client_street_number_delivery && field.client_street_wayType_delivery && field.client_street_name_delivery && field.client_street_codePostal_delivery && villeDelivery.valueDisplay ? field.client_street_number_delivery + " " + field.client_street_wayType_delivery + " " + field.client_street_name_delivery + " " + field.client_street_codePostal_delivery + " " + villeDelivery.valueDisplay : "Identique à l'adresse de facturation" }</span></p>
+            <p>Adresse de Livraison: <span>{ deliveryAddress.value === "true" && field.client_street_number_delivery && field.client_street_wayType_delivery && field.client_street_name_delivery && field.client_street_codePostal_delivery && villeDelivery.valueDisplay ? field.client_street_number_delivery + " " + field.client_street_wayType_delivery + " " + field.client_street_name_delivery + " " + field.client_street_codePostal_delivery + " " + villeDelivery.valueDisplay : "Identique à l'adresse de facturation" }</span></p>
 
             <h2>Choix de la facturation</h2>
 
-            <p>type de facturation: <span>{ billType === "true" ? "Mail" : "Courrier" }</span></p>
+            <p>type de facturation: <span>{ billType.value === "mail" ? "Mail" : "Courrier" }</span></p>
             <h2>Contacts</h2>
             {
                 contacts.length > 0 ? contacts.map((contact, index) =>{
@@ -884,10 +869,7 @@ const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, v
         </ModalBody>
         <ModalFooter>
             <Flexbox justify={ "center" }>
-                <ButtonSecondaryLink onClick={(e) => {
-                    e.preventDefault();
-                    setShowModal( false );
-                }}>Annuler</ButtonSecondaryLink>
+                <ButtonSecondaryLink onClick={ ( e ) => closeModal( e, setShowModal ) }>Annuler</ButtonSecondaryLink>
                 <ButtonPrimary margin={"0 0 0 20px"} type="submit" onClick={postRequest}>Oui, je souhaite créer ce client</ButtonPrimary>
             </Flexbox>
         </ModalFooter>

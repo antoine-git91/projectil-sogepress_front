@@ -14,30 +14,8 @@ import DivButtonAction from "../../utils/styles/DivButton";
 import Spinner from "../../components/Spinner";
 import Flexbox from "../../templates/Flexbox";
 import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {BtnTabs} from "../../utils/styles/tab";
 
-const BtnTabs = styled.button`
-  background-color: transparent;
-  color: black;
-  padding: 10px 20px;
-  font-size: 20px;
-  font-weight: 300;
-  border: transparent;
-  transition: .3s;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  margin-bottom: 30px;
-
-  &:hover {
-    color: #FF6700;
-  }
-
-  ${({active}) =>
-  active && `
-    color:#FF6700;
-    border-bottom: 3px solid #FF6700;
-    opacity: 1;
-  `}
-`
 
 const BoxAnneeCaStyle = styled.div`
     display: flex;
@@ -94,13 +72,15 @@ const ResultCa = styled.p`
 
 const Profile = () => {
 
-    const {idClient} = useParams();
+    const { idClient } = useParams();
+
     const tabs = [
         "contacts",
         "commandes",
         "historiques",
         "chiffres d'affaires"
     ]
+
     const [ tabActive, setTabActive ] = useState( tabs[ 0 ] );
     const [ startDate, setStartDate ] = useState("" );
     const [ endDate, setEndDate ] = useState("" );
@@ -126,11 +106,11 @@ const Profile = () => {
         load()
     }, [ load ]);
 
+    console.log(items)
 
     const mounthSorted = (a,b) => {
         return a[ 0 ] - b[ 0 ]
     };
-
 
     // On initialise l'objet CAObject avec tous les mois et les valeurs de chaque mois
     useEffect(() => {
@@ -262,7 +242,7 @@ const Profile = () => {
                         <InfoViewContainer>
                             <h2>Coordonnées</h2>
                             <InfoContainer>
-                                <BoxInfos titre="Téléphone" information="" />
+                                <BoxInfos titre="Téléphone" information={ items.telephone ? items.telephone : "Aucun numéro de téléphone" } />
                                 <BoxInfos titre="Email" information={ items.email } />
                                 { items.adresse &&
                                 <BoxInfos titre="Adresse" information={ items.adresse[ 0 ].numero + ' ' + items.adresse[ 0 ].typeVoie + ' ' + items.adresse[ 0 ].nomVoie + ' ' + items.adresse[ 0 ].ville.nom + ' ' + items.adresse[ 0 ].ville.codePostal } /> }

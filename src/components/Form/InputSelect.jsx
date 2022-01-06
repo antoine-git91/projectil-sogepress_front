@@ -39,13 +39,12 @@ const InputSelect = ( { name, data, label, option, selectValue, setSelectValue, 
     }, [disabled])
 
   return (
-      <>
-        <Label className={required && "required"}>{label}</Label>
-        <SelectStyle name={name} id={selectValue} onChange={(e) => handleChange(e)} disabled={disabled} required={required}>
-            <option value={optionValue}>{option}</option>
-            {data ? data.map((select, key) => <option key={key} value={select.value} >{select.valueDisplay}</option>) : ''}
-        </SelectStyle>
-      </>
+    <Label className={required && "required"}>{label}
+    <SelectStyle name={name} id={selectValue} onChange={(e) => handleChange(e)} disabled={disabled} required={required}>
+        <option value={optionValue}>{option}</option>
+        {data ? data.map((select, key) => <option key={key} value={select.value} >{select.valueDisplay}</option>) : ''}
+    </SelectStyle>
+    </Label>
   );
 
 }

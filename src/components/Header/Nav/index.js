@@ -33,8 +33,8 @@ const Nav = () => {
             <NavItem exact to="/">Accueil</NavItem>
             <NavItem to="/clients">Clients</NavItem>
             <NavItem to="/commandes">Commandes</NavItem>
-            {/*<NavItem to="/magazines">Magazines</NavItem>
-            <NavItem to="/actions">Actions</NavItem>
+            <NavItem to="/magazines">Magazines</NavItem>
+            {/*<NavItem to="/actions">Actions</NavItem>
             <NavItem to="/ventes">Ventes</NavItem>*/}
             <NavItem to="/my_account">Profil</NavItem>
         </NavStyle>
