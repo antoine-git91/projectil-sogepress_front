@@ -37,7 +37,6 @@ const UpdateClient = () => {
     /* On initialise les input text simple */
     const [ inputState, setInputState ] = useReducer(
         ( state, newState ) => ({ ...state, ...newState }),
-        loadingClient === false && client &&
         {
             client_name: "",
             client_ape: "",

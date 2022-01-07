@@ -17,6 +17,9 @@ import UpdateClient from "../Clients/UpdateClient";
 import Magazines from "../Magazines";
 import Magazine from "../Magazines/Magazine";
 import CreateMagazine from "../Magazines/CreateMagazine";
+import Users from "../Users";
+import User from "../Users/User";
+import UpdateUser from "../Users/UpdateUser";
 
 
 const App = () => {
@@ -74,6 +77,15 @@ const App = () => {
                 </Route>
                 <Route path="/password_update">
                     <UpdatePassword />
+                </Route>
+                <Route path="/users">
+                    <Users />
+                </Route>
+                <Route path="/user/:id_user">
+                    <User />
+                </Route>
+                <Route path="/update_user/:id_user">
+                    <UpdateUser />
                 </Route>
             </Switch>
         </Router>

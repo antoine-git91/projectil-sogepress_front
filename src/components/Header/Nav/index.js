@@ -14,6 +14,18 @@ const NavItem = styled(NavLink)`
   text-transform: uppercase;
   font-weight: bold;
   color: #fff;
+
+  &:first-child{
+    border-bottom: 1px solid #fff;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+  
+  &:last-child{
+    border-top: 1px solid #fff;
+    margin-top: 20px;
+    padding-top: 20px;
+  }
   
   &:hover{
     background-color: #fff;
@@ -34,9 +46,10 @@ const Nav = () => {
             <NavItem to="/clients">Clients</NavItem>
             <NavItem to="/commandes">Commandes</NavItem>
             <NavItem to="/magazines">Magazines</NavItem>
-            {/*<NavItem to="/actions">Actions</NavItem>
-            <NavItem to="/ventes">Ventes</NavItem>*/}
-            <NavItem to="/my_account">Profil</NavItem>
+            { JSON.parse( localStorage.getItem('meUser' ) ).role === "ROLE_ADMIN" &&
+                <NavItem to="/users">Commerciaux</NavItem>
+            }
+            <NavItem to="/my_account">Mon Profil</NavItem>
         </NavStyle>
     )
 }

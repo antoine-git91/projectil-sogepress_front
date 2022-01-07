@@ -32,7 +32,7 @@ const TableCommandeSingle = ({ commandes }) => {
     useEffect(() => load(), [load])
 
     return(
-        <div>
+        <>
             {/*{!loading && 'Chargement...'}*/}
             { commandes && commandes.length > 0
             ?  <React.Fragment>
@@ -56,7 +56,7 @@ const TableCommandeSingle = ({ commandes }) => {
                     <TotalCa>Total de CA : {totalCommandesPrice}€</TotalCa>
                 </React.Fragment>
             : "Aucune commandes" }
-        </div>
+        </>
     )
 }
 export default TableCommandeSingle;

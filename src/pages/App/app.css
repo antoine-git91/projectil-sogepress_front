@@ -9,6 +9,7 @@ table {
 th{
     text-align: left;
     padding: 10px;
+    white-space: nowrap;
 }
 
 tr:hover td {

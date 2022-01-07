@@ -23,27 +23,25 @@ const TableCommandesIndex = () => {
     }
 
     return(
-        <div>
-            <TableStyle>
-                <thead>
-                    <tr>
-                        {headTable.map((item, key) => <th key={key}>{item}</th>)}
+        <TableStyle>
+            <thead>
+                <tr>
+                    {headTable.map((item, key) => <th key={key}>{item}</th>)}
+                </tr>
+            </thead>
+            <tbody>
+            {
+                commandes.map((dataCommande, key) => (
+                    <tr key={key}>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>A faire</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raisonSociale}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.facturation}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.fin}</Link></td>
+                        <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.statut.libelle}</Link></td>
                     </tr>
-                </thead>
-                <tbody>
-                {
-                    commandes.map((dataCommande, key) => (
-                        <tr key={key}>
-                            <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>A faire</Link></td>
-                            <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.client.raisonSociale}</Link></td>
-                            <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.facturation}</Link></td>
-                            <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.fin}</Link></td>
-                            <td><Link to={{pathname: `/commande/${dataCommande.id}`}}>{dataCommande.statut.libelle}</Link></td>
-                        </tr>
-                    )) }
-                </tbody>
-            </TableStyle>
-        </div>
+                )) }
+            </tbody>
+        </TableStyle>
     )
 }
 export default TableCommandesIndex;

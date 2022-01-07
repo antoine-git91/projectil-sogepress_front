@@ -186,6 +186,7 @@ const Profile = () => {
     }, [ commandeCA, commandeCALoading ] );
 
     console.log(startDaySelected)
+
     const commandeDateValidate = ( e ) => {
         e.preventDefault();
 
@@ -225,7 +226,7 @@ const Profile = () => {
                 <BoxTitle>
                     <h1>{ items.raisonSociale } / { items.nafSousClasse ? items.nafSousClasse.libelle : "loading" }</h1>
                 </BoxTitle>
-                <div>
+                <>
                     { tabs.map( tab => (
                         <BtnTabs
                             key={ tab }
@@ -236,7 +237,7 @@ const Profile = () => {
                             }}
                         >{ tab }</BtnTabs>
                     ) ) }
-                </div>
+                </>
                 { ( tabActive === "contacts" &&
                     <Flexbox>
                         <InfoViewContainer>
