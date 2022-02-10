@@ -7,6 +7,7 @@ const InputStyle = styled.input`
   margin-top: 10px;
   margin-right: 10px;
   padding: 10px;
+  border-radius: 5px;
 `
 const Label = styled.label`
   font-size: 16px;
@@ -17,11 +18,11 @@ const Label = styled.label`
   }
 `
 
-const InputText = ({label, onChange, value, name, type, required, placeholder, readOnly}) => {
+const InputText = ({label, onChange, value, name, type, required, placeholder, readOnly, onBlur}) => {
 
     return (
         <Label className={required && "required"}>{label}
-        <InputStyle type={{type} ? type :"text"} onChange={onChange} value={value} name={name} required={required} placeholder={placeholder} readOnly={readOnly} />
+        <InputStyle type={{type} ? type :"text"} onChange={onChange} onBlur={onBlur} value={value} name={name} required={required} placeholder={placeholder} readOnly={readOnly} />
         </Label>
     )
 }

@@ -1,25 +1,28 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {BoxTitle} from "../../utils/styles/single";
-import {ButtonPrimary} from "../../utils/styles/button";
+import {ButtonPrimary, ButtonReturn} from "../../utils/styles/button";
 import MainContainer from "../../templates/Container";
 import Flexbox from "../../templates/Flexbox";
 import {useReducer} from "react";
 import {InputStyle} from "../../utils/styles/InputStyle";
 import Spinner from "../../components/Spinner";
-import Success from "../../components/MessageStateAction/Success";
+import {AddressServer, UserContext} from "../App";
+import {handleChangeInput} from "../../utils/misc/input/inputChange";
+import {useFetchPatch} from "../../utils/misc/fetch/useFetchPatch";
+import DivButtonAction from "../../utils/styles/DivButton";
+import Modal from "../../components/Modal/Modal";
+import ModalHeader from "../../components/Modal/parts/ModalHeader";
+import ModalBody from "../../components/Modal/parts/ModalBody";
+import {SuccessResponse} from "../Actions/modals/ModalRelanceAction";
+import {useHistory} from "react-router-dom";
 
 const UpdateAccount = () => {
 
-    const meUser = JSON.parse(localStorage.getItem("meUser"));
-    const [updateSuccess, setUpdateSuccess] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const meUser = useContext(UserContext);
+    const history = useHistory();
 
-    const handleChangeInput = (e, setState) => {
-        const value = e.target.value;
-        const name = e.target.name;
+    const [ showModal, setShowModal] = useState(false);
 
-        setState({[name]: value});
-    };
     /* On initialise les input text simple */
     const [inputState, setInputState] = useReducer(
         (state, newState) => ({...state, ...newState}),
@@ -28,61 +31,42 @@ const UpdateAccount = () => {
             firstname_user: meUser.prenom,
             email_user: meUser.email
         }
-    )
+    );
+
+    const {success, loading, post} = useFetchPatch(
+        useContext(AddressServer) + '/api/users/' + meUser.id,
+        {
+            nom: inputState.lastname_user,
+            prenom: inputState.firstname_user,
+            email: inputState.email_user
+        }
+    );
+
+    const closeModal = () => {
+        setShowModal(false);
+        if(success.id){
+           window.location.reload();
+        }
+    };
+
+    const faireRedirection= () => {
+        let url = "/my_account";
+        history.push(url);
+        window.location.reload();
+    }
+
 
     const handleUpdateAccount = (e) => {
         e.preventDefault();
-
-        const requestOptions = {
-            method: 'PUT',
-            headers: {
-                'Content-Type' : 'application/json',
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            },
-            body: JSON.stringify({
-                nom: inputState.lastname_user,
-                prenom: inputState.firstname_user,
-                email: inputState.email_user
-            })
-        };
-        fetch('https://127.0.0.1:8000/api/users/' + meUser.id, requestOptions)
-        .then(response => {
-            setLoading(true)
-            if(response.ok){
-                response.json()
-                .then(update => {
-                    console.log(update);
-                    const updateData = {
-                        "nom": update.nom,
-                        "prenom": update.prenom,
-                        "email": update.email,
-                        "role": update.roles[0],
-                        "id" : update.id
-                    }
-                    localStorage.setItem('meUser', JSON.stringify(updateData));
-                })
-                setTimeout(() => {
-                    setUpdateSuccess(true)
-                    setLoading(false)
-                }, 2000)
-            }
-            else if (response.status === 401){
-
-            }
-        })
-    }
-
-    if(loading){
-        return (
-            <MainContainer>
-                <Spinner />
-            </MainContainer>
-        )
-    }
+        post();
+    };
 
     return (
         <>
             <MainContainer>
+                <DivButtonAction justify={"flex-start"}>
+                    <ButtonReturn onClick={history.goBack} margin={"10px 0 0 0"}>Retour à mon profil</ButtonReturn>
+                </DivButtonAction>
                 <BoxTitle>
                     <h1>Modifier mon profil</h1>
                 </BoxTitle>
@@ -98,11 +82,26 @@ const UpdateAccount = () => {
                     <label>Email
                         <InputStyle type="text" onChange={(e) => handleChangeInput(e, setInputState)} value={inputState.email_user} name="email_user" />
                     </label>
-                    <ButtonPrimary>Je modifie mon profil</ButtonPrimary>
+                    <ButtonPrimary type={"submit"} onClick={() => setShowModal(true)}>Je modifie mon profil</ButtonPrimary>
                 </form>
-                {updateSuccess && <Success messageTitle={"Demande Validée"} messageText={"Votre profil a bien été mis à jour"} />}
-
             </MainContainer>
+            {loading && showModal && (
+                <Modal closeModal={closeModal} justify={"center"} align={"center"}>
+                    <Spinner />
+                </Modal>
+            )}
+            { success.id && showModal && (
+                <Modal closeModal={closeModal} justify={"center"} align={"center"}>
+                    <ModalHeader>
+                        <h1>Modification de mon profil.</h1>
+                    </ModalHeader>
+                    <ModalBody justify={"center"} align={"center"}>
+                        <SuccessResponse>Votre profil a bien été modifié</SuccessResponse>
+                        <p>Un rechargement de la page sera effectué pour finaliser la mise à jour de votre profil.</p>
+                        <ButtonPrimary onClick={faireRedirection}>Retour à mon profil</ButtonPrimary>
+                    </ModalBody>
+                </Modal>
+            )}
         </>
     )
 

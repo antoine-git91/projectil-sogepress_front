@@ -8,7 +8,7 @@ const BtnAjoutStyle = styled.button`
   align-items: center;
   padding: 1rem 1rem;
   border: none;
-  background-color: white;
+  background-color: transparent;
   cursor: pointer;
 
   &:after {
@@ -19,10 +19,7 @@ const BtnAjoutStyle = styled.button`
 const BtnAjout = ({text, add}) => {
 
     return (
-        <BtnAjoutStyle onClick={(e) => {
-            e.preventDefault();
-            add(e);
-        }}>{text}</BtnAjoutStyle>
+        <BtnAjoutStyle onClick={(e) => add(e)}>{text}</BtnAjoutStyle>
     )
 }
 

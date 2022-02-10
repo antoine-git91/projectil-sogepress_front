@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import Flexbox from "../../../templates/Flexbox";
 
 const BoxInfosStyle = styled.div`
-  max-width: 200px;
+  
+  padding-right: 30px;
+  padding-bottom: 20px;
   
   p{
     font-size: 18px;
@@ -11,34 +12,37 @@ const BoxInfosStyle = styled.div`
     font-weight: 400;
   }
   
+  a{
+    color: orangered;
+    text-decoration: underline;
+    
+    &:hover{
+      color: #3b3b3b;
+    }
+  }
+  
   .title{
     font-size: 16px;
     font-weight: 700;
+    margin-top: 0;
   }
 `
-const Tag = styled.p`
-  display: block;
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #dedede;
-  margin-right: 10px;
-  margin-top: 5px;
-`
 
-const BoxInfos = ({titre, information, tags}) => {
+const BoxInfos = ({titre, information, link}) => {
 
     return (
         <BoxInfosStyle>
             <p className="title">{titre}</p>
-            {information && <p>{information}</p>}
-            {tags &&
+            {information && (
+                link ? <a href={information}>{information}</a>
+                    : <p>{information}</p>
+            )}
+            {/*{tags &&
                 <Flexbox>
-                    {tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
+                    {tags.map( ( tag, i ) => <Tag key={ tag + i }>{tag}</Tag>)}
                 </Flexbox>
-            }
+            }*/}
         </BoxInfosStyle>
-
     )
 }
-
 export default BoxInfos;

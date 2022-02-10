@@ -1,6 +1,13 @@
 import React from 'react'
 import styled from "styled-components";
 
+const SpinnerParent = styled.div`
+  height: ${({height}) => height ?? "100%"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const SpinnerStyle = styled.div`
 
   display: flex;
@@ -25,6 +32,19 @@ const SpinnerStyle = styled.div`
     border-color: #ff7547 transparent transparent transparent;
   }
 
+  &.little{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 0px;
+    
+    div{
+      width: 18px;
+      height: 18px;
+      border: 3px solid #f5b9a0;
+      border-color: #ff7547 transparent transparent transparent;
+    }
+  }
+
   div:nth-child(1) {
     animation-delay: -0.45s;
   }
@@ -47,15 +67,17 @@ const SpinnerStyle = styled.div`
   }
 `
 
-const Spinner = () => {
+const Spinner = (props) => {
 
     return (
-        <SpinnerStyle>
-            <div> </div>
-            <div> </div>
-            <div> </div>
-            <div> </div>
-        </SpinnerStyle>
+        <SpinnerParent height={props.height}>
+            <SpinnerStyle className={props.className}>
+                <div> </div>
+                <div> </div>
+                <div> </div>
+                <div> </div>
+            </SpinnerStyle>
+        </SpinnerParent>
     )
 }
 export default Spinner;

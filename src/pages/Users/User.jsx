@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
 import MainContainer from "../../templates/Container";
 import {ButtonPrimaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
-import Flexbox from "../../templates/Flexbox";
 import {BoxTitle, InfoContainer, InfoViewContainer} from "../../utils/styles/single";
 import BoxInfos from "../../components/Single/BoxInfos";
-import {u} from "react-select/dist/index-4bd03571.esm";
 import {BtnTabs} from "../../utils/styles/tab";
-import TableCommandeSingle, {TotalCa} from "../../components/table/TableCommandeSingle";
 import Spinner from "../../components/Spinner";
+import {AddressServer} from "../App";
 
 const User = () => {
 
@@ -19,8 +17,8 @@ const User = () => {
     const [ tabActive, setTabActive ] = useState( tabs[ 0 ] );
     const headTable = [ "Entreprise", "Type de support" , "Echéance" , "Facturation", "Status", "Date de création" ]
 
-    const { items: user, load: loadUser, loading: loadingUser } = useFetchGet("https://localhost:8000/api/users/" + id_user);
-    const { items: commandesUser, load: loadCommandesUser, loading: loadingCommandesUser } = useFetchGet("https://localhost:8000/api/getCommandesByUser/" + id_user);
+    const { items: user, load: loadUser, loading: loadingUser } = useFetchGet(useContext(AddressServer) + "/api/users/" + id_user);
+    const { items: commandesUser, load: loadCommandesUser, loading: loadingCommandesUser } = useFetchGet(useContext(AddressServer) + "/api/getCommandesByUser/" + id_user);
 
     useEffect( () => {
         loadUser()
@@ -29,8 +27,6 @@ const User = () => {
     useEffect( () => {
         loadCommandesUser()
     }, [ loadCommandesUser ] );
-
-    console.log(user)
 
     // On check le type du support pour retourner une valeur
     const getTypeSupport = ( objectKey ) => {
@@ -64,7 +60,7 @@ const User = () => {
         <MainContainer>
             <DivButtonAction>
                 <ButtonPrimaryLink to={{ pathname:"/update_user/" + user.id }}>Modifier l'utilisateur</ButtonPrimaryLink>
-                <ButtonPrimaryLink to="/creation_user">Nouvel utilisateur</ButtonPrimaryLink>
+                <ButtonPrimaryLink to="/create_user">Nouvel utilisateur</ButtonPrimaryLink>
             </DivButtonAction>
             { loadingUser ? <Spinner />
                 : <>

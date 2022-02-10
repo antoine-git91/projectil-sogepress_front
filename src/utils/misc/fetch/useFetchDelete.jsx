@@ -1,27 +1,23 @@
 import {useState, useCallback} from 'react';
 
-export const useFetchGet = ( url ) => {
+export const useFetchDelete = ( url ) => {
     const [loading, setLoading] = useState(false);
-    const [items, setItems] = useState([]);
+    const [response, setResponse] = useState(false);
 
     const load = useCallback(
 
         async () => {
             setLoading(true);
         const response = await fetch(url, {
+            method: "DELETE",
             headers: {
                 'Accept' : 'application/ld+json',
                 'Authorization' : 'Bearer ' + localStorage.getItem('token')
             }
         });
 
-        const responseData = await response.json();
-        if (response.ok) {
-            if (responseData.hasOwnProperty("hydra:member")) {
-                setItems(responseData['hydra:member']);
-            } else {
-                setItems(responseData);
-            }
+        if (response.status === 204) {
+            setResponse(response.status);
             setLoading(false);
         } else if (response.status === 401){
             setLoading(true)
@@ -45,21 +41,17 @@ export const useFetchGet = ( url ) => {
                         localStorage.setItem('refreshToken', data['refreshToken']);
 
                         fetch(url, {
-                            method: 'GET',
+                            method: 'DELETE',
                             headers: {
                                 'Content-Type' : 'application/json',
                                 'Authorization' : 'Bearer ' + localStorage.getItem("token")
                             }
                         })
                         .then(response => {
-                            if(response.ok){
+                            if(response.status === 204){
                                 response.json()
                                     .then(data => {
-                                        if(data.hasOwnProperty("hydra:member")){
-                                            setItems(data["hydra:member"]);
-                                        } else {
-                                            setItems(data);
-                                        }
+                                        console.log(data)
                                     }
                                 )
                                 setLoading(false);
@@ -78,8 +70,8 @@ export const useFetchGet = ( url ) => {
     }, [url]);
 
     return {
-        items,
         load,
-        loading
+        loading,
+        response
     }
 }

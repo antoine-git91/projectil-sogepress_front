@@ -1,6 +1,12 @@
 import styled from "styled-components";
 import {Link} from "react-router-dom";
 import arrow from '../../assets/images/arrowreturn.svg';
+import deleteIcon from "../../assets/images/delete.png";
+import deletehoverIcon from "../../assets/images/deletehover.png";
+import checkedIcon from "../../assets/images/checked.png";
+import checkedhoverIcon from "../../assets/images/checkedhover.png";
+import returnIcon from "../../assets/images/return.png"
+import returnIconHover from "../../assets/images/return_hover.png"
 
 export const ButtonPrimary = styled.button`
   background-color: #FF6700;
@@ -19,7 +25,8 @@ export const ButtonPrimary = styled.button`
 `
 
 export const ButtonPrimaryLink = styled(Link) `
-        font-size: 14px;
+  display: inline-block;
+  font-size: 14px;
   background-color: #FF6700;
   color: #fff;
   border: none;
@@ -48,10 +55,13 @@ export const ButtonSecondaryLink = styled(Link)`
   }
 `
 
-export const ButtonReturn = styled(Link)`
+export const ButtonReturn = styled.button`
+  background-color: transparent;
+  border: 0px solid transparent;
   margin: ${({margin}) => margin ?? 0};
   padding: 15px 0;
   font-weight: 400;
+  font-size: 16px;
   color: #FF6700;
   display: block;
   transition: .3s;
@@ -93,4 +103,40 @@ export const DeleteButton = styled.button`
     &:hover{
     text-decoration: underline;
     }
+`
+
+export const ButtonAction = styled.button`
+  
+  border: transparent;
+  background-color: transparent;
+
+  & i.deleted{
+    &:before{
+      content: url(${deleteIcon});
+    }
+    
+    &:hover:before{
+      content: url(${deletehoverIcon});
+    }
+  }
+
+  & i.checked{
+    &:before{
+      content: url(${checkedIcon});
+    }
+
+    &:hover:before{
+      content: url(${checkedhoverIcon});
+    }
+  }
+
+  & i.return {
+    &:before {
+      content: url(${returnIcon});
+    }
+
+    &:hover:before {
+      content: url(${returnIconHover});
+    }
+  }
 `

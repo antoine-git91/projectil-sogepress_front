@@ -3,9 +3,13 @@ import styled from "styled-components";
 
 const ModalContentBody = styled.div`
   width: 100%;
-  height: 70%;
+  height: 100%;
   padding: 20px 0;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: ${({justify}) => justify ?? "flex-start"};
+  align-items: ${({align}) => align ?? "flex-start"};
+  overflow-y: ${({ overflowScrollY }) => overflowScrollY ? overflowScrollY : "hidden"};
 
   p{
     margin-bottom: 8px;
@@ -19,7 +23,7 @@ const ModalContentBody = styled.div`
 const ModalBody = (props) => {
 
     return (
-        <ModalContentBody>
+        <ModalContentBody overflowScrollY={props.overflowScrollY} justify={props.justify} align={props.align}>
             {props.children}
         </ModalContentBody>
     )

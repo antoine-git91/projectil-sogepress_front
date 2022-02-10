@@ -1,28 +1,19 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from 'styled-components';
+import ToolBarProfile from "./ToolBarProfile";
+import {UserContext} from "../../../pages/App";
 
 const ToolNav = styled.nav`
   display: flex;
+  align-items: center;
   position: fixed;
   top: 0;
-  width: calc(100vw - 240px);
+  width: calc(100vw - 300px);
   left: 200px;
-  padding: 20px;
+  padding: 12px 50px;
   background-color: #ffffff;
   border-bottom: 1px solid #FF935B;
   z-index: 9999;
-`
-
-const LogoutButton = styled.button`
-  background-color: transparent;
-  border: none;
-  display: block;
-  margin-left: auto;
-  transition: .2s;
-
-  &:hover {
-    color: #d01c1c;
-  }
 `
 
 const Welcome = styled.p`
@@ -35,19 +26,13 @@ const Welcome = styled.p`
 
 const ToolsBar = () => {
 
-    const logout = (e) => {
-        e.preventDefault();
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        window.location.href = '/';
-    }
-
-    const meUser = JSON.parse(localStorage.getItem('meUser'));
+    const meUser = useContext(UserContext);
+    console.log(meUser)
 
     return(
         <ToolNav>
-            <Welcome>Bonjour <span>{meUser ? meUser.nom + " " + meUser.prenom : ""}</span></Welcome>
-            <LogoutButton onClick={logout}>Déconnexion</LogoutButton>
+            <Welcome>Bonjour <span>{ meUser && (meUser.nom + " " + meUser.prenom) }</span></Welcome>
+            <ToolBarProfile />
         </ToolNav>
     )
 }

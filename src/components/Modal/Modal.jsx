@@ -12,8 +12,13 @@ const ModalOverlay = styled.div`
 `
 
 const ModalContainer = styled.div`
-  width: 70vw;
-  height: 70vh;
+  justify-content: ${({ justify }) => justify ?? "flex-start"};
+  align-items: ${({ align }) => align ?? "baseline"};
+  max-width: 70vw;
+  width: max-content;
+  min-width: 50vw;
+  min-height: 50vh;
+  max-height: 70vh;
   background-color: #fdfdfd;
   opacity: 1;
   position: fixed;
@@ -24,6 +29,7 @@ const ModalContainer = styled.div`
   padding: 50px;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
 `
 
 const ModalCross = styled.button`
@@ -40,9 +46,9 @@ const Modal = (props) => {
 
     return (
         <ModalOverlay>
-            <ModalContainer>
+            <ModalContainer justify={props.justify} align={props.align}>
                 {props.children}
-                <ModalCross onClick={props.closeButton}>X</ModalCross>
+                <ModalCross onClick={props.closeModal}>X</ModalCross>
             </ModalContainer>
         </ModalOverlay>
     )

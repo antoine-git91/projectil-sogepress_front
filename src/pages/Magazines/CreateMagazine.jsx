@@ -1,34 +1,33 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import MainContainer from "../../templates/Container";
 import InputText from "../../components/Form/InputText";
 import InputSelect from "../../components/Form/InputSelect";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
 import {ButtonPrimary} from "../../utils/styles/button";
-import {useFetchPost} from "../../utils/misc/useFetchPost";
+import {useFetchPost} from "../../utils/misc/fetch/useFetchPost";
+import {AddressServer} from "../App";
 
 const CreateMagazine = () => {
 
     const [ clientSelected, setClientSelected ] = useState({  } );
     const [ magazineName, setMagazineName ] = useState("" );
 
-    const {items: clients, load: loadClients, loading: loadingClient} = useFetchGet("https://localhost:8000/api/clients");
+    const {items: clients, load: loadClients, loading: loadingClient} = useFetchGet(useContext(AddressServer) + "/api/clients");
     const { success, error, loading, post: postMagazines } = useFetchPost(
-        "https://localhost:8000/api/magazines",
+        useContext(AddressServer) + "/api/magazines",
         {
             "nom": magazineName,
             "client": "/api/clients/" + clientSelected.value
-        } )
+        } );
 
     useEffect( () => {
         loadClients()
-    }, [ loadClients ] )
-
-    console.log(clients)
+    }, [ loadClients ] );
 
     const createMagazine = (e) => {
         e.preventDefault();
         postMagazines();
-    }
+    };
 
     return(
         <MainContainer>

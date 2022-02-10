@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from "react";
 import Flexbox from "../../templates/Flexbox";
 import styled from "styled-components";
-import {InputStyle} from "../../utils/styles/InputStyle";
 import {DeleteButton} from "../../utils/styles/button";
+import InputText from "../Form/InputText";
 
 
 const ListStyle = styled.li`
-      list-style: none;
-      margin-left: 0;
-      padding-left: 0;
+  list-style: none;
+  width: max-content;
+  margin-left: 0;
+  background-color: #ffece0;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
 `
 const TitleContact = styled.span`
       font-weight: bold;
@@ -43,52 +47,48 @@ const ContactBlock = ({ firstname,lastname, job, phone, mail, onChange, numberCo
                 <DeleteButton onClick={removeContact}>Supprimer X</DeleteButton>
             </Flexbox>
             <Flexbox>
-                <label>Nom
-                    <InputStyle
-                        type="text"
-                        onChange={(e) => {setLastnameState(e.target.value);}}
-                        value={lastnameState}
-                        name="client_contact_lastname"
-                        required
-                    />
-                </label>
-                <label>Prénom
-                    <InputStyle
-                        type="text"
-                        onChange={(e) => {setFirstnameState(e.target.value)}}
-                        value={firstnameState}
-                        name="client_contact_firstname"
-                        required
-                    />
-                </label>
-                <label>Fonction
-                    <InputStyle
-                        type="text" onChange={(e) => {setJobState(e.target.value)}}
-                        value={jobState}
-                        name="client_contact_job"
-                        required
-                    />
-                </label>
+                <InputText
+                    label={"Nom"}
+                    type="text"
+                    onChange={(e) => {setLastnameState(e.target.value);}}
+                    value={lastnameState}
+                    name="client_contact_lastname"
+                    required
+                />
+                <InputText
+                    label={"Prénom"}
+                    type="text"
+                    onChange={(e) => {setFirstnameState(e.target.value)}}
+                    value={firstnameState}
+                    name="client_contact_firstname"
+                    required
+                />
+                <InputText
+                    label={"Fonction"}
+                    type="text" onChange={(e) => {setJobState(e.target.value)}}
+                    value={jobState}
+                    name="client_contact_job"
+                    required
+                />
             </Flexbox>
             <Flexbox>
-                <label>Téléphone
-                    <InputStyle
-                        type="tel"
-                        onChange={(e) => {setPhoneState(e.target.value)}}
-                        value={phoneState}
-                        name="client_contact_phone"
-                        pattern="[0-9]{10}"
-                        required
+                <InputText
+                    label={"Téléphone"}
+                    type="tel"
+                    onChange={(e) => {setPhoneState(e.target.value)}}
+                    value={phoneState}
+                    name="client_contact_phone"
+                    pattern="[0-9]{10}"
+                    required
                     />
-                </label>
-                <label>Mail
-                    <InputStyle
-                        type="email"
-                        onChange={(e) => {setMailState(e.target.value)}}
-                        value={mailState}
-                        name="client_contact_mail"
-                        required/>
-                </label>
+               <InputText
+                   label={"Email"}
+                    type="email"
+                    onChange={(e) => {setMailState(e.target.value)}}
+                    value={mailState}
+                    name="client_contact_mail"
+                    required
+               />
             </Flexbox>
         </ListStyle>
     )

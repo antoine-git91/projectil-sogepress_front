@@ -1,66 +1,33 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import MainContainer from "../../templates/Container";
 import {ButtonPrimaryLink} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
-import TableClientsIndex from "../../components/table/TableClientsIndex";
 import Pagination from "../../components/Pagination";
 import * as PropTypes from "prop-types";
 import Spinner from "../../components/Spinner";
 import {Link} from "react-router-dom";
 import styled from "styled-components";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
+import {S} from "react-select/dist/Select-dbb12e54.esm";
+import {AddressServer} from "../App";
 
 const TableStyle = styled.table`
   width: 100%;
 `
 
-function TableMagazinesIndex({magazines, loading}) {
-    const headTable = ["Nom", "Client" ];
-
-    if (loading) {
-        return <Spinner />
-    }
-
-    return(
-        <div>
-            <TableStyle>
-                <thead>
-                <tr>
-                    { headTable.map( ( item, key) => <th key={key}>{item}</th> ) }
-                </tr>
-                </thead>
-                <tbody>
-                {magazines &&
-                    magazines.map( ( dataMagazine, key ) => (
-                        <tr key={key}>
-                            <td><Link to={{pathname: `/magazine/${dataMagazine.id}`}}>{dataMagazine.nom}</Link></td>
-                            <td><Link to={{pathname: `/magazine/${dataMagazine.id}`}}>{ dataMagazine.client.raisonSociale}</Link></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </TableStyle>
-        </div>
-    )
-}
-
-TableMagazinesIndex.propTypes = {
-    selectCodePostal: PropTypes.any,
-    loading: PropTypes.any,
-    setArrayClient: PropTypes.any,
-    clients: PropTypes.any,
-    selectActivite: PropTypes.any,
-    selectVille: PropTypes.any,
-    getStatus: PropTypes.any
-};
 const Magazines = () => {
 
-    const { items: magazines, loading: loadingMagazine, load: loadMagazine } = useFetchGet( "https://localhost:8000/api/magazines" );
+    let offset = 20;
+    const headTable = ["Nom", "Client" ];
+    const [ numberPage, setNumberPage ] = useState({value:1, valueDisplay:1} );
+
+    const { items: magazines, loading: loadingMagazine, totalItems, load: loadMagazine } = useFetchGet( useContext(AddressServer) + "/api/magazines" );
+    const numberOfPages = Math.ceil(totalItems/offset);
 
     useEffect( () => {
         loadMagazine()
     }, [ loadMagazine ] )
 
-    console.log(magazines)
 
     return (
         <MainContainer>
@@ -71,10 +38,34 @@ const Magazines = () => {
                 <ButtonPrimaryLink to="/creation_relance">Créer une relance</ButtonPrimaryLink>
             </DivButtonAction>
             <h1>Magazines</h1>
-            <TableMagazinesIndex magazines={magazines}
-                               loading={loadingMagazine}
+            { loadingMagazine
+                ? <Spinner />
+                : (
+                    <>
+                        <TableStyle>
+                            <thead>
+                            <tr>
+                                { headTable.map( ( item, key) => <th key={key}>{item}</th> ) }
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {magazines &&
+                            magazines.map( ( dataMagazine, key ) => (
+                                <tr key={key}>
+                                    <td><Link to={{pathname: `/magazine/${dataMagazine.id}`}}>{dataMagazine.nom}</Link></td>
+                                    <td><Link to={{pathname: `/magazine/${dataMagazine.id}`}}>{ dataMagazine.client.raisonSociale}</Link></td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </TableStyle>
+                    </>
+                )
+            }
+            <Pagination
+                numberOfPages={ numberOfPages }
+                setNumberPage={ setNumberPage }
+                numberPage={ numberPage.value }
             />
-            <Pagination />
         </MainContainer>
     )
 }

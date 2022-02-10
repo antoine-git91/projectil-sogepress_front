@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import MainContainer from "../../templates/Container";
-import {useParams} from "react-router-dom";
-import {ButtonPrimaryLink} from "../../utils/styles/button";
+import {useHistory, useParams} from "react-router-dom";
+import {ButtonPrimaryLink, ButtonReturn} from "../../utils/styles/button";
 import DivButtonAction from "../../utils/styles/DivButton";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
 import {BoxTitle, InfoContainer, InfoViewContainer} from "../../utils/styles/single";
 import {BtnTabs} from "../../utils/styles/tab";
 import BoxInfos from "../../components/Single/BoxInfos";
 import Flexbox from "../../templates/Flexbox";
 import styled from "styled-components";
+import {AddressServer} from "../App";
 
 const TableEditions = styled.table`
   td{
@@ -19,13 +20,14 @@ const TableEditions = styled.table`
 const Magazine = () => {
 
     const { idMagazine } = useParams();
+    const history = useHistory();
 
     const tabs = [ "client", "edition" ];
     const [ tabActive, setTabActive ] = useState( tabs[ 0 ] );
 
-    const { items: magazine, loading: loadingMagazine, load: loadMagazine } = useFetchGet( "https://localhost:8000/api/magazines/" + idMagazine );
-    const { items: client, loading: loadingClient, load: loadClient } = useFetchGet( "https://localhost:8000/api/clients/" +  (Object.keys(magazine).length > 0 && magazine.client.id) );
-    const { items: editions, loading: loadingEdition, load: loadEdition } = useFetchGet( "https://localhost:8000/api/editionsByMagazine/" + idMagazine );
+    const { items: magazine, loading: loadingMagazine, load: loadMagazine } = useFetchGet( useContext(AddressServer) + "/api/magazines/" + idMagazine );
+    const { items: client, loading: loadingClient, load: loadClient } = useFetchGet( useContext(AddressServer) + "/api/clients/" +  (Object.keys(magazine).length > 0 && magazine.client.id) );
+    const { items: editions, loading: loadingEdition, load: loadEdition } = useFetchGet( useContext(AddressServer) + "/api/editionsByMagazine/" + idMagazine );
 
 
     useEffect( () => {
@@ -42,8 +44,6 @@ const Magazine = () => {
             loadEdition()
     }, [ loadEdition, tabActive ] );
 
-    console.log(editions)
-
     return(
         <MainContainer>
             <DivButtonAction>
@@ -51,6 +51,9 @@ const Magazine = () => {
                 <ButtonPrimaryLink to="/creation_magazine">Nouveau magazine</ButtonPrimaryLink>
                 <ButtonPrimaryLink to="/creation_commande">Nouvelle commande</ButtonPrimaryLink>
                 <ButtonPrimaryLink to="/creation_client">Nouvelle relance</ButtonPrimaryLink>
+            </DivButtonAction>
+            <DivButtonAction justify={"flex-start"}>
+                <ButtonReturn onClick={history.goBack} margin={"10px 0 0 0"}>Retour</ButtonReturn>
             </DivButtonAction>
             <BoxTitle>
                 <h1>{ magazine.nom }</h1>

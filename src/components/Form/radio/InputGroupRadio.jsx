@@ -1,8 +1,6 @@
 import React from "react";
-import InputRadio from "../radio/InputRadio";
 import Flexbox from "../../../templates/Flexbox";
 import styled from "styled-components";
-import {f} from "react-select/dist/index-4bd03571.esm";
 
 const GroupRadioStyle = styled.div`
   margin-bottom: 20px;
@@ -26,8 +24,7 @@ const Label = styled.p`
 const InputGroupRadio = ( { data, name, selected, setRadioChecked, label, required } ) => {
 
     const getValue = (e) => {
-        setRadioChecked({"value": e.target.value, "id": e.target.id})
-        console.log(e.target.name)
+        setRadioChecked({"value": e.target.value, "id": e.target.id, label: label})
     };
 
     return (

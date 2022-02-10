@@ -1,14 +1,15 @@
-import React, {useEffect, useReducer} from "react";
+import React, {useContext, useEffect, useReducer} from "react";
 import MainContainer from "../../templates/Container";
 import {BoxTitle} from "../../utils/styles/single";
 import {useParams} from "react-router-dom";
-import {useFetchPatch} from "../../utils/misc/useFetchPatch";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {useFetchPatch} from "../../utils/misc/fetch/useFetchPatch";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
 import Spinner from "../../components/Spinner";
 import InputText from "../../components/Form/InputText";
-import {handleChangeInput} from "../../utils/misc/inputChange";
+import {handleChangeInput} from "../../utils/misc/input/inputChange";
 import {ButtonPrimary} from "../../utils/styles/button";
 import Flexbox from "../../templates/Flexbox";
+import {AddressServer} from "../App";
 
 const UpdateUser = ( ) => {
 
@@ -25,8 +26,8 @@ const UpdateUser = ( ) => {
         }
     );
 
-    const { items: user , load: loadUser, loading: loadingUser } = useFetchGet( "https://localhost:8000/api/users/" + id_user );
-    const { success, error, loading, post: postUser } = useFetchPatch( "https://localhost:8000/api/users/" + id_user,
+    const { items: user , load: loadUser, loading: loadingUser } = useFetchGet( useContext(AddressServer) + "/api/users/" + id_user );
+    const { success, error, loading, post: postUser } = useFetchPatch( useContext(AddressServer) + "/api/users/" + id_user,
         {
             "email": inputState.user_email,
             "nom": inputState.user_firstname,
