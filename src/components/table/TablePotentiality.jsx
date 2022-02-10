@@ -13,25 +13,26 @@ const AutoWidth = styled.td`
 const TablePotentiality = ({headTable, dataPotentiality, removePotentiality}) => {
 
     return(
-        <Fragment>
-            {/*{!loading && 'Chargement...'}*/}
+        <>
+        { dataPotentiality && dataPotentiality.length > 0 &&
             <TableStyle>
                 <thead>
-                    <tr>
-                        {headTable.map((item, key) => <th key={key}>{item}</th>)}
-                    </tr>
+                <tr>
+                    {headTable.map((item, key) => <th key={key}>{item}</th>)}
+                </tr>
                 </thead>
                 <tbody>
-                    {dataPotentiality && dataPotentiality.length > 0 ? dataPotentiality.map((potentiality, key) => (
-                        <tr key={key+potentiality.type.value} id={key}>
-                            <AutoWidth>{potentiality ? potentiality.type.valueDisplay : ""}</AutoWidth>
-                            <AutoWidth>{potentiality ? potentiality.magazine.valueDisplay : "n"}</AutoWidth>
-                            {removePotentiality && <AutoWidth><DeleteButton onClick={(e) => removePotentiality(e, key)}>Supprimer X</DeleteButton></AutoWidth>}
-                        </tr>
-                    )): ""}
+                { dataPotentiality.map((potentiality, key) => (
+                    <tr key={key+potentiality.type.value} id={key}>
+                        <AutoWidth>{potentiality ? potentiality.type.valueDisplay : ""}</AutoWidth>
+                        <AutoWidth>{potentiality ? potentiality.magazine.valueDisplay : "n"}</AutoWidth>
+                        {removePotentiality && <AutoWidth><DeleteButton onClick={(e) => removePotentiality(e, key)}>Supprimer X</DeleteButton></AutoWidth>}
+                    </tr>
+                ) ) }
                 </tbody>
             </TableStyle>
-        </Fragment>
+        }
+        </>
     )
 }
 export default TablePotentiality;

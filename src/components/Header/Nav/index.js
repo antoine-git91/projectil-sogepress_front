@@ -1,11 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import {NavLink} from "react-router-dom";
+import {UserContext} from "../../../pages/App";
 
 const NavStyle = styled.nav`
-      display: flex;
-      flex-direction: column;
-    `
+  display: flex;
+  flex-direction: column;
+`
 
 const NavItem = styled(NavLink)`
   padding: 10px;
@@ -28,15 +29,18 @@ const NavItem = styled(NavLink)`
 
 const Nav = () => {
 
+    const user = useContext(UserContext)
+
     return(
         <NavStyle>
             <NavItem exact to="/">Accueil</NavItem>
             <NavItem to="/clients">Clients</NavItem>
             <NavItem to="/commandes">Commandes</NavItem>
-            {/*<NavItem to="/magazines">Magazines</NavItem>
-            <NavItem to="/actions">Actions</NavItem>
-            <NavItem to="/ventes">Ventes</NavItem>*/}
-            <NavItem to="/my_account">Profil</NavItem>
+            <NavItem to="/magazines">Magazines</NavItem>
+            <NavItem to="/actions">Mes actions</NavItem>
+            { user.roles && user.roles[0] === "ROLE_ADMIN" &&
+                <NavItem to="/users">Commerciaux</NavItem>
+            }
         </NavStyle>
     )
 }

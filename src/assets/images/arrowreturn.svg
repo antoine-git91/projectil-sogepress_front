@@ -1,0 +1,10 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<title>arrowreturn</title>
+	<defs>
+		<image  width="24" height="22" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAWCAMAAADto6y6AAAAAXNSR0IB2cksfwAAAJxQTFRFAAAA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cA/2cAYu7LogAAADR0Uk5TAChDBwFA+P+vTPPxU+v9iZYChwmVA4FS566jOujmTumzpkh9CAA895NP/JKDkYTw9rQmRCBDvD0AAACOSURBVHicldLJDoIwAIThcR0VRdxRXFFQcdf3fzcriQfp9OAc+ydfmqbAd6VyBWLVWp0NFZot0hPn7Q7pd6VDP+hJh/2Bdoaj/5yx7UyMw3Ba2CzCnHILhK6wXH2odWGbCIg9U7Y7+zWSdG+ue7CvCxyNlp1UybWzS8suTu0qQq7dVEjSOx8qAM/Xz2d4A//GDkCHs9AWAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+	</style>
+	<use id="Background" href="#img1" x="0" y="1" />
+</svg>

@@ -1,28 +1,26 @@
 import {useState, useCallback} from 'react';
 
-export const useFetchGet = ( url ) => {
-    const [loading, setLoading] = useState(true);
-    const [items, setItems] = useState([]);
+export const useFetchDelete = ( url ) => {
+    const [loading, setLoading] = useState(false);
+    const [response, setResponse] = useState(false);
 
     const load = useCallback(
 
         async () => {
+            setLoading(true);
         const response = await fetch(url, {
+            method: "DELETE",
             headers: {
                 'Accept' : 'application/ld+json',
                 'Authorization' : 'Bearer ' + localStorage.getItem('token')
             }
         });
 
-        const responseData = await response.json();
-        if (response.ok) {
-            if (responseData.hasOwnProperty("hydra:member")) {
-                setItems(responseData['hydra:member']);
-            } else {
-                setItems(responseData);
-            }
+        if (response.status === 204) {
+            setResponse(response.status);
             setLoading(false);
         } else if (response.status === 401){
+            setLoading(true)
             /* On rafraichit le token avec le refresh token
             * On fait donc une requête pour le refresh token
             * */
@@ -36,7 +34,6 @@ export const useFetchGet = ( url ) => {
             .then(response => {
                 /* Si la réponse est ok on relance la requête initiale */
                 if(response.ok){
-
                     response.json()
                     .then(data => {
                         console.log(data)
@@ -44,22 +41,17 @@ export const useFetchGet = ( url ) => {
                         localStorage.setItem('refreshToken', data['refreshToken']);
 
                         fetch(url, {
-                            method: 'GET',
+                            method: 'DELETE',
                             headers: {
                                 'Content-Type' : 'application/json',
                                 'Authorization' : 'Bearer ' + localStorage.getItem("token")
                             }
                         })
                         .then(response => {
-                            if(response.ok){
-
+                            if(response.status === 204){
                                 response.json()
                                     .then(data => {
-                                        if(data.hasOwnProperty("hydra:member")){
-                                            setItems(data["hydra:member"]);
-                                        } else {
-                                            setItems(data);
-                                        }
+                                        console.log(data)
                                     }
                                 )
                                 setLoading(false);
@@ -78,8 +70,8 @@ export const useFetchGet = ( url ) => {
     }, [url]);
 
     return {
-        items,
         load,
-        loading
+        loading,
+        response
     }
 }

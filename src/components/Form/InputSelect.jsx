@@ -2,15 +2,30 @@ import React, {useEffect} from 'react';
 import styled from "styled-components";
 
 const SelectStyle = styled.select`
-      display: block;
-      padding: 10px 20px;
-      margin-top: 10px;
-      margin-right: 10px;
-      margin-bottom: 20px;
-      max-width: 185px;
-    `
+  display: block;
+  max-width: 185px;
+  border-radius: 5px;
+  padding: ${({padding}) => padding ?? "10px 20px"};
+  margin: ${({margin}) => margin ?? "10px 10px 20px 0"};
 
-const InputSelect = ({name, data, label, option, selectValue, setSelectValue, optionValue, disabled, required}) => {
+  & option {
+    &:first-child {
+      background-color: #ffeee5;
+    }
+  }
+`
+
+const Label = styled.label`
+  font-size: 16px;
+  display: block;
+  
+  &.required:before{
+    content: "* ";
+    color: orangered;
+  }
+`
+
+const InputSelect = ( { name, data, label, option, selectValue, setSelectValue, optionValue, disabled, required, padding, margin } ) => {
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -29,12 +44,12 @@ const InputSelect = ({name, data, label, option, selectValue, setSelectValue, op
     }, [disabled])
 
   return (
-        <label>{label}
-        <SelectStyle name={name} id={selectValue} onChange={(e) => handleChange(e)} disabled={disabled} required={required}>
-            <option value={optionValue}>{option}</option>
-            {data ? data.map((select, key) => <option key={key} value={select.value}>{select.valueDisplay}</option>) : ''}
-        </SelectStyle>
-        </label>
+    <Label className={required && "required"}>{label}
+    <SelectStyle name={name} id={selectValue} onChange={(e) => handleChange(e)} disabled={disabled} required={required} margin={margin} padding={padding}>
+        <option value={optionValue}>{option}</option>
+        {data ? data.map((select, key) => <option key={key} value={select.value} >{select.valueDisplay}</option>) : ''}
+    </SelectStyle>
+    </Label>
   );
 
 }

@@ -3,9 +3,8 @@ import styled from "styled-components";
 
 const Footer = styled.footer`
   display: flex;
+  padding-top: 30px;
   justify-content: center;
-  flex-grow: 2;
-  align-items: flex-end;
 `
 
 const ModalFooter = (props) => {

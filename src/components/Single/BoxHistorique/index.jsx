@@ -1,10 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
-import Spinner from "../../Spinner";
-import {useFetchGet} from "../../../utils/misc/useFetchGet";
+import {dateIsoFormated} from "../../../utils/misc/Function";
+import {ButtonAction} from "../../../utils/styles/button";
 
 const BoxHistoriqueStyle = styled.div`
-  border: 1px solid black;
+  border: 3px solid #fd6e3a;
+  border-radius: 10px;
   margin-bottom: 30px;
   max-width: 60%;
 `
@@ -12,38 +13,38 @@ const BoxHistoriqueStyle = styled.div`
 export const HeadBoxHistorique = styled.div`
 display : flex;
 justify-content: space-between;
-padding: 10px; 20px;
+padding: 10px 20px;
 `
 
 export const ContentBoxHistorique = styled.div`
-    display : flex;
-    border-top: 1px solid black;
-    padding: 20px;
+  display: flex;
+  border-top: 2px solid #fd6e3a;
+  padding: 20px;
 `
 
-const BoxHistorique = ({dataHistorique}) => {
-
-    const {items, load, loading} = useFetchGet(`https://127.0.0.1:8000/api/historique_clients/${dataHistorique.id}`)
-    useEffect(() => {
-        load()
-    }, [load])
-
-
-    if(loading){
-        return <Spinner />
-    }
+const BoxHistorique = ({dataHistorique, setIdHistorique, setShowModalDeleteHistorique}) => {
 
     return (
-        <BoxHistoriqueStyle>
-            <HeadBoxHistorique>
-                <p>Date : <span>{items.createdAt}</span></p>
-                <p>Contact : <span>{items.nom + " " + items.prenom}</span> <span>(Physique)</span></p>
-                <p>Projet : <span>Projet n°</span></p>
-            </HeadBoxHistorique>
-            <ContentBoxHistorique>
-                <p>{items.commentaire}</p>
-            </ContentBoxHistorique>
-        </BoxHistoriqueStyle>
+        <>
+            <BoxHistoriqueStyle>
+                <HeadBoxHistorique>
+                    <p>Date : <span>{dateIsoFormated( dataHistorique.createdAt )}</span></p>
+                    <p>Contact : <span>{dataHistorique.contact && dataHistorique.contact.fullname}</span> <span>(Physique)</span></p>
+                    <p>Projet : <span>Projet n°</span></p>
+                    <ButtonAction
+                        onClick={ () => (
+                            setShowModalDeleteHistorique( true ),
+                                setIdHistorique(dataHistorique)
+                        ) }>
+                        <span className="screen-reader-text">Valider la relance</span>
+                        <i className={ "deleted" }/>
+                    </ButtonAction>
+                </HeadBoxHistorique>
+                <ContentBoxHistorique>
+                    <p>{dataHistorique.commentaire}</p>
+                </ContentBoxHistorique>
+            </BoxHistoriqueStyle>
+        </>
     )
 }
 

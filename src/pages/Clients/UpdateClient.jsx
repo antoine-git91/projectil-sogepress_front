@@ -1,33 +1,39 @@
-import React, {useEffect, useReducer, useState, Fragment} from "react";
+import React, {useEffect, useReducer, useState, Fragment, useContext} from "react";
 import Flexbox from "../../templates/Flexbox";
 import InputGroupRadio from "../../components/Form/radio/InputGroupRadio";
 import MainContainer from "../../templates/Container";
 import ContactBlock from "../../components/Clients/ContactBlock";
 import InputSelect from "../../components/Form/InputSelect";
 import BtnAjout from "../../components/btn_ajout";
-import {ButtonPrimary, ButtonPrimaryLink, ButtonSecondaryLink} from "../../utils/styles/button";
+import {ButtonPrimary, ButtonReturn} from "../../utils/styles/button";
 import styled from "styled-components";
-import {handleChangeInput} from "../../utils/misc/inputChange";
-import {InputStyle} from "../../utils/styles/InputStyle";
-import {useFetchGet} from "../../utils/misc/useFetchGet";
+import {handleChangeInput} from "../../utils/misc/input/inputChange";
+import {useFetchGet} from "../../utils/misc/fetch/useFetchGet";
 import TablePotentiality from "../../components/table/TablePotentiality";
 import Spinner from "../../components/Spinner";
 import Modal from "../../components/Modal/Modal";
-import ModalHeader from "../../components/Modal/ModalHeader";
-import ModalBody from "../../components/Modal/ModalBody";
-import ModalFooter from "../../components/Modal/ModalFooter";
-import {useParams} from "react-router-dom";
-import {useFetchPatch} from "../../utils/misc/useFetchPatch";
+import {useHistory, useParams} from "react-router-dom";
+import {useFetchPatch} from "../../utils/misc/fetch/useFetchPatch";
+import DivButtonAction from "../../utils/styles/DivButton";
+import {addPotentiality, removePotentiality} from "../../utils/misc/Potentialities/fonctions";
+import {addContact, insertDataFromChild, removeContact} from "../../utils/misc/ContactBlock/functions";
+import ModalConfirmClient from "./Modal/ModalConfirmClient";
+import ModalResponse from "../../components/Modal/ModalResponse";
+import InputText from "../../components/Form/InputText";
+import {AddressServer} from "../App";
+
 
 const GroupList = styled.ul`
   margin-left: 0;
   padding-left: 0;
 `
 
+
 const UpdateClient = () => {
 
-    const {id} = useParams()
-    const {items:client, load:loadClient, loading:loadingClient} = useFetchGet(`https://127.0.0.1:8000/api/clients/${id}`);
+    const {id} = useParams();
+    const history = useHistory();
+    const {items:client, load:loadClient, loading:loadingClient} = useFetchGet(useContext(AddressServer) + `api/clients/${id}`);
 
     useEffect(() => {
         loadClient();
@@ -36,7 +42,6 @@ const UpdateClient = () => {
     /* On initialise les input text simple */
     const [ inputState, setInputState ] = useReducer(
         ( state, newState ) => ({ ...state, ...newState }),
-        loadingClient === false && client &&
         {
             client_name: "",
             client_ape: "",
@@ -57,10 +62,9 @@ const UpdateClient = () => {
 
 
     /* --- Villes --- */
-    /* a - villes client */
+    /* a - villes principales client */
         /* Requête pour avoir les villes par rapport au code postal */
     const[ villes, setVilles ] = useState([] );
-    const {items: villesClient, load: loadVilles, loadingVilles } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal );
     /* On récupère la donnée voulue du select villes */
     const [ selectVilles, setSelectVilles ] = useState({"value": "", "valueDisplay": ""} );
     /* Select villes suivant le code postal */
@@ -69,7 +73,6 @@ const UpdateClient = () => {
     /* b - villes de livraison client */
         /* Requête pour avoir les villes par rapport au code postal */
     const[ villesDelivery, setVillesDelivery ] = useState([] );
-    const { items: villesClientDelivery, load: loadVillesDelivery } = useFetchGet('https://localhost:8000/api/villesByCp/' + inputState.client_street_codePostal_delivery );
     /* On récupère la donnée voulue du select villes */
     const [ selectVillesDelivery, setSelectVillesDelivery ] = useState({"value": "", "valueDisplay": ""});
     /* Si adresse de livraison : Select villes suivant le code postal */
@@ -89,23 +92,55 @@ const UpdateClient = () => {
     /* tableau des contacts du clients*/
     const [ arrayContact, setArrayContact ] = useState([] );
 
-
-    /* Input type Radio */
-    const [ billType, setBillType ] = useState("mail" );
-    const [ clientStatut, setClientStatut ] = useState("prospect" );
-    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState("no" );
+    const [ billType, setBillType ] = useState({ "value": "mail", "id": 1 } );
+    /* --- Statut Client --- */
+    const [ clientStatut, setClientStatut ] = useState(  { "value":"prospect", "id": 1 } );
+    const [ hasDeliveryAddress, setHasDeliveryAddress ] = useState(  { "value": "no", "id": 1 } );
 
     /* Modal */
-    const [ showModalConfirm, setShowModalConfirm ] = useState(false );
-
+    const [ showModal, setShowModal ] = useState(false );
+    const [fieldsRequired, setFieldsRequired] = useState([]);
 
     /* --- Activites --- */
     /* Input Activite libelle */
     const[ activite, setActivite ] = useState("" );
-
     /* On remplace le point du code APE pour être conforme */
     const codeApe = inputState.client_ape && inputState.client_ape.replace(".", "" );
-    const { items : activiteClient, load: loadActivite, loading: loadingActivite } = useFetchGet('https://localhost:8000/api/naf_sous_classes/' + codeApe );
+
+    /* Pour récupérer l'option sélectionnée */
+    const [ selectPotentialityType, setSelectPotentiaityType ] = useState({"value": "", "valueDisplay": ""} );
+    const [ selectMagazine, setSelectMagazine ] = useState({"value": "", "valueDisplay": ""} );
+    const [ disabledSelectMagazine, setDisabledSelectMagazine ] = useState(true );
+
+    /* Potentialités */
+    /* Affichage des potentialité en Front */
+    const [ dataPotentiality, setDataPotentiality ] = useState([] );
+    /* Données des potentialités pour persister en BDD */
+    const [ potentialitePost, setPotentialitePost ] = useState([] );
+
+    /* Request */
+    const {items: villesClient, load: loadVilles, loading:loadingVilles } = useFetchGet(useContext(AddressServer) + '/api/villesByCp/' + inputState.client_street_codePostal );
+    const { items: villesClientDelivery, load: loadVillesDelivery, loading:loadingVillesDelivery } = useFetchGet(useContext(AddressServer) + '/api/villesByCp/' + inputState.client_street_codePostal_delivery );
+    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet(useContext(AddressServer) + '/api/magazines' );
+    const { items : activiteClient, load: loadActivite, loading: loadingActivite } = useFetchGet(useContext(AddressServer) + '/api/naf_sous_classes/' + codeApe );
+    /* On lance une requête pour récupérer les types de potentialités */
+    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet(useContext(AddressServer) + '/api/type_potentialites' );
+    /* Etape 1: POST CLIENT */
+    const { success: successPostClient, error: postClientError, post: postClient , loading: loadingPostClient, responseStatut } = useFetchPatch(
+        useContext(AddressServer) + '/api/clients/' + client.id,
+        {
+            "raisonSociale": inputState.client_name,
+            "statut": clientStatut === "client_validated" ? true : false,
+            "telephone": inputState.client_phone,
+            "email": inputState.client_mail,
+            "siteInternet": inputState.client_website,
+            "typeFacturation": billType === "mail" ? false : true,
+            "nafSousClasse": "/api/naf_sous_classes/" + codeApe,
+            "adresse": arrayAdressesClient,
+            "contacts": arrayContact,
+            "potentialites": potentialitePost
+        }
+    );
 
 
     /* Mise à jour du status du client */
@@ -123,10 +158,14 @@ const UpdateClient = () => {
             }
             else if( valueLength < 6 ){
                 setActivite( "" );
-                console.log("game over")
             }
         }
     }, [ inputState.client_ape ]);
+
+    /* POTENTIALITÉS */
+    useEffect(() => {
+        loadPotentialities();
+    }, [ loadPotentialities ] );
 
     /* Mise à jour du libellé de l'activité */
     useEffect(() => {
@@ -146,7 +185,7 @@ const UpdateClient = () => {
             client_name: client.raisonSociale,
             client_ape: client.nafSousClasse && code,
             client_activite: activiteClient && activiteClient.libelle,
-            client_phone: "",
+            client_phone: client.telephone && client.telephone,
             client_mail: client.email,
             client_street_number: client.adresse && client.adresse[ 0 ].numero,
             client_street_wayType: client.adresse && client.adresse[ 0 ].typeVoie,
@@ -159,7 +198,7 @@ const UpdateClient = () => {
     // Adresse de livraison si différente
     useEffect(() => {
         if( client.adresse && client.adresse.length === 2 ){
-            setHasDeliveryAddress("yes");
+            setHasDeliveryAddress({ "value": "yes", "id": 2 });
             setInputState({
                 client_street_number_delivery: client.adresse && client.adresse[ 1 ].numero,
                 client_street_wayType_delivery: client.adresse && client.adresse[ 1 ].typeVoie,
@@ -168,8 +207,6 @@ const UpdateClient = () => {
             })
         }
     }, [ client.adresse ]);
-
-    console.log(client)
 
     /* On mets à jour le tableau des adresses via les données du client */
     // Adresse principale
@@ -227,7 +264,7 @@ const UpdateClient = () => {
 
     /* Function onBlur sur input code postal : Adresse principale */
     useEffect(() => {
-        const selectAddress = document.querySelector('select[name="select_villes_client"]')
+        const selectAddress = document.querySelector('select[name="select_villes_client"]');
         const valueLength = inputState.client_street_codePostal && inputState.client_street_codePostal.length;
         const villeClient = client.adresse && client.adresse[ 0 ].ville.id;
 
@@ -280,67 +317,17 @@ const UpdateClient = () => {
 
     // Mise à jour choix de la facturation
     useEffect(() => {
-        client.typeFacturation === true && setBillType("post");
+        client.typeFacturation === true && setBillType({ "value": "post", "id": 2 });
     }, [ client.typeFacturation ]);
 
 
     /* CONTACTBLOCK COMPONENT */
-
     // Mise à jour du tableau des contacts du client
     useEffect( () => {
         if(client.contacts && client.contacts.length > 0){
             setArrayContact(arrayContact.concat(client.contacts))
         }
-    }, [client.contacts])
-
-    /* On Créé un contactBlock à chaque clique de buttonAjout */
-    const addContact = ( e ) => {
-        e.preventDefault();
-        setArrayContact(
-            arrayContact.concat( {"nom": "","prenom": "", "fonction": "", "tel": "", "email": ""} )
-        );
-    };
-
-    /* On supprime un contactBlock à chaque clique de buttonRemove */
-    const removeContact = ( e, index ) => {
-        e.preventDefault();
-        setArrayContact([...arrayContact.slice( 0, index ), ...arrayContact.slice( index + 1 ) ] );
-    };
-
-    /* On insert les données pour chaque contactBlock */
-    const insertDataFromChild = ( newContact, index ) => {
-        arrayContact[ index ].nom = newContact.nom;
-        arrayContact[ index ].prenom = newContact.prenom;
-        arrayContact[ index ].fonction = newContact.fonction;
-        arrayContact[ index ].tel = newContact.tel;
-        arrayContact[ index ].email = newContact.email;
-        setArrayContact( arrayContact );
-    };
-    /* ################# */
-    /* ################# */
-
-
-    /* POTENTIALITÉS */
-
-    /* 1 - Potentialités types */
-
-    /* On lance une requête pour récupérer les types de potentialités */
-    const{ items: potentialitiesTypes, loading: loadingPotentialities, load: loadPotentialities } = useFetchGet('https://localhost:8000/api/type_potentialites' );
-
-    useEffect(() => {
-        loadPotentialities();
-    }, [ loadPotentialities ] );
-
-    /* Pour récupérer l'option sélectionnée */
-    const [ selectPotentialityType, setSelectPotentiaityType ] = useState({"value": "", "valueDisplay": ""} );
-
-
-    /* 2 - Magazines */
-
-    /* On lance une requête pour récupérer les magazines si potentialitiesType === Régie */
-    const { items: magazines, load: loadMagazines, loading: loadingMagazines }=  useFetchGet('https://localhost:8000/api/magazines' );
-    const [ selectMagazine, setSelectMagazine ] = useState({"value": "", "valueDisplay": ""} );
-    const [ disabledSelectMagazine, setDisabledSelectMagazine ] = useState(true );
+    }, [ client.contacts ]);
 
     /* Si le type de potentialités est de type Régie */
     useEffect(() => {
@@ -352,11 +339,6 @@ const UpdateClient = () => {
             setSelectMagazine({ "value": "", "valueDisplay": "" } );
         }
     }, [ selectPotentialityType, loadMagazines ]);
-
-    /* Affichage des potentialité en Front */
-    const [ dataPotentiality, setDataPotentiality ] = useState([] );
-    /* Données des potentialités pour persister en BDD */
-    const [ potentialitePost, setPotentialitePost ] = useState([] );
 
     useEffect( () => {
         if( client.potentialites && client.potentialites.length > 0 ){
@@ -378,118 +360,37 @@ const UpdateClient = () => {
                 }
             ))
         }
+    }, [ client.potentialites ]);
 
-
-    }, [ client.potentialites ])
-
-    console.log(dataPotentiality)
-    console.log(potentialitePost)
-
-    const addPotentiality = ( e ) => {
-        e.preventDefault();
-        if( selectPotentialityType.value !== "" ){
-            setDataPotentiality(
-                dataPotentiality.concat(
-                    {
-                        "type": {
-                            "value": selectPotentialityType.value, "valueDisplay" : selectPotentialityType.valueDisplay
-                        },
-                        "magazine": {
-                            "value": selectMagazine.value, "valueDisplay" : selectMagazine.valueDisplay
-                        }
-                    }
-                )
-            )
-
-            setPotentialitePost( potentialitePost.concat(
-                {
-                    "magazine": selectMagazine.value !== "" ? "/api/magazines/" + selectMagazine.value : null ,
-                    "typePotentialite": "/api/type_potentialites/" + selectPotentialityType.value
-                }
-            ) )
-        }
-    };
-
-    const removePotentiality = (e, index) => {
-        e.preventDefault();
-        setDataPotentiality([...dataPotentiality.slice( 0, index ), ...dataPotentiality.slice( index + 1 )] );
-        setPotentialitePost([...potentialitePost.slice( 0, index ), ...potentialitePost.slice( index + 1 )] );
-    }
-    /* ################# */
-    /* ################# */
-
-
-    /* --- POST CREATION CLIENT ---
-    * 1 - POST CLIENT: on envoie les données pour créer le client en premier
-    *  */
-
-    /* Etape 1: POST CLIENT */
-    const { success: postClientSuccess, error: postClientError, post: postClient , loading: loadingPostClient, responseStatut } = useFetchPatch(
-        'https://localhost:8000/api/clients/' + client.id,
-        {
-            "raisonSociale": inputState.client_name,
-            "statut": clientStatut === "client_validated" ? true : false,
-            "email": inputState.client_mail,
-            "siteInternet": inputState.client_website,
-            "typeFacturation": billType === "mail" ? false : true,
-            "nafSousClasse": "/api/naf_sous_classes/" + codeApe,
-            "adresse": arrayAdressesClient,
-            "contacts": arrayContact,
-            "potentialites": potentialitePost
-        }
-    )
-
-
-    /* Modal */
-    const [fieldsRequired, setFieldsRequired] = useState()
     /* On met à jour les éléments Required à chaque changement des dépendances */
     useEffect(() => {
         setFieldsRequired(document.querySelectorAll('[required]'));
-    }, [ hasDeliveryAddress, arrayContact ])
+    }, [ hasDeliveryAddress, arrayContact ]);
 
-
-    const [loading, setLoading] = useState(false);
-    const [postSuccess, setPostSuccess] = useState(false);
-    const [postError, setPostError] = useState(false);
 
     const handleSubmit = ( e ) => {
         e.preventDefault();
-        setLoading(true);
         postClient();
     };
 
-    /* On check la réponse de la requete PATCH pour afficher différentes modales  */
-    useEffect(() => {
+    const closeModal = () => {
+        setShowModal(false)
+    };
 
-        if( loadingPostClient === false && responseStatut === 200){
-            setTimeout(() => {
-                setLoading(false)
-                setPostSuccess(true)
-            },1000)
-            console.log(responseStatut)
-        } else if( loadingPostClient === false && responseStatut !== 200)  {
-            setTimeout(() => {
-                setLoading(false)
-                setPostError(true)
-            },1000)
-        }
-    }, [responseStatut, loadingPostClient, postClientSuccess])
-
-
-    /* Si la modal est fermée on réinitialise l'affichage des autres contenus de la modales */
-    useEffect(() => {
-        if(showModalConfirm === false){
-            setLoading(false);
-            setPostError(false);
-            setPostSuccess(false);
-        }
-    }, [showModalConfirm])
-
-
+    if(loadingClient && loadingActivite && loadingPotentialities && loadingVilles && loadingVillesDelivery){
+        return (
+            <MainContainer>
+                <Spinner />
+            </MainContainer>
+        )
+    }
 
     return(
         <Fragment>
             <MainContainer>
+                <DivButtonAction justify={"flex-start"}>
+                    <ButtonReturn onClick={history.goBack} margin={"10px 0 0 0"}>Retour à la fiche client</ButtonReturn>
+                </DivButtonAction>
                 <h1>Modifier le client : {inputState.client_name}</h1>
                 <form onSubmit={ (e) => { e.preventDefault(); }}>
                     <Flexbox>
@@ -502,26 +403,25 @@ const UpdateClient = () => {
                         />
                     </Flexbox>
                     <Flexbox>
-                        <label htmlFor={"client_name"}>Nom du client
-                            <InputStyle
-                                type="text"
-                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                value={ inputState.client_name }
-                                name="client_name"
-                                required
-                            />
-                        </label>
-                        <label htmlFor={"client_ape"}>Code APE
-                            <InputStyle
+                        <InputText
+                            label={"Nom du client"}
+                            type="text"
+                            onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                            value={ inputState.client_name }
+                            name="client_name"
+                            required
+                        />
+                        <InputText
+                                label={"Code APE"}
                                 type="text"
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                                 value={ inputState.client_ape }
                                 name="client_ape"
                                 required
                             />
-                        </label>
-                        <label htmlFor={"client_activite"}>Activité
-                            <InputStyle
+
+                            <InputText
+                                label={"Activité"}
                                 type="text"
                                 value={ activite }
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
@@ -529,69 +429,63 @@ const UpdateClient = () => {
                                 readOnly
                                 disabled
                             />
-                        </label>
                     </Flexbox>
                     <h2>Coordonnées</h2>
                     <Flexbox>
-                        <label htmlFor={"client_telephone"}>Téléphone
-                            <InputStyle
+                            <InputText
+                                label={"Téléphone"}
                                 type="text"
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                                 value={ inputState.client_phone }
                                 name="client_phone"
                             />
-                        </label>
-                        <label htmlFor={"client_mail"}>Email de l'entreprise
-                            <InputStyle
+                            <InputText
+                                label={"Email de l'entreprise"}
                                 type="text"
                                 onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                                 value={ inputState.client_mail }
                                 name="client_mail"
                                 required
                             />
-                        </label>
                     </Flexbox>
                     <Flexbox>
-                    <label htmlFor={"client_street_number"}>Numéro
-                        <InputStyle
+
+                        <InputText
+                            label={"Numéro"}
                             type="text"
                             onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                             value={ inputState.client_street_number }
                             name="client_street_number"
                             required
                         />
-                    </label>
-                    <label htmlFor={"client_street_wayType"}>Type de voie
-                        <InputStyle
+
+                        <InputText
+                            label={"Type de voie"}
                             type="text"
                             onChange={( e ) => handleChangeInput( e, setInputState ) }
                             value={ inputState.client_street_wayType }
                             name="client_street_wayType"
                             required
                         />
-                    </label>
-                    <label htmlFor={"client_street_name"}>Nom de la voie
-                        <InputStyle
+                        <InputText
+                            label={"Nom de la voie"}
                             type="text"
                             onChange={( e ) => handleChangeInput( e, setInputState ) }
                             value={ inputState.client_street_name }
                             name="client_street_name"
                             required
                         />
-                    </label>
                     </Flexbox>
                     <Flexbox>
-                        <label htmlFor={"client_street_codePostal"}>Code postal
-                            <InputStyle
-                                type="number"
-                                onChange={ ( e ) => handleChangeInput( e, setInputState ) }
-                                //onBlur={ ( e ) => getVilles( e, setVilles, setDisabledSelectVilles, loadVilles ) }
-                                onWheel={ ( e ) => e.target.blur() }
-                                value={ inputState.client_street_codePostal }
-                                name="client_street_codePostal"
-                                required
-                            />
-                        </label>
+                        <InputText
+                            label={"Code postal"}
+                            type="number"
+                            onChange={ ( e ) => handleChangeInput( e, setInputState ) }
+                            onWheel={ ( e ) => e.target.blur() }
+                            value={ inputState.client_street_codePostal }
+                            name="client_street_codePostal"
+                            required
+                        />
                         <InputSelect
                             name={ "select_villes_client" }
                             label={ "Villes" }
@@ -605,14 +499,14 @@ const UpdateClient = () => {
                         />
                     </Flexbox>
 
-                    <label htmlFor={"client_website"}>Site internet
-                        <InputStyle
+
+                        <InputText
+                            label={"Site internet"}
                             type="text"
                             onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                             value={ inputState.client_website }
                             name="client_website"
                         />
-                    </label>
                     <h2>Adresse de livraison</h2>
                     <Flexbox>
                         <InputGroupRadio
@@ -623,47 +517,44 @@ const UpdateClient = () => {
                             data={[ { "id": "id1", "label": "Non", "value": "no" }, { "id": "id2", "label": "Oui", "value": "yes" } ]}
                         />
                     </Flexbox>
-                    {hasDeliveryAddress === "yes" &&
+                    {hasDeliveryAddress.value === "yes" &&
                         (<React.Fragment>
                             <Flexbox>
-                                <label htmlFor={"client_street_number_delivery"}>Numéro
-                                    <InputStyle
+                                <InputText
+                                    label={"Numéro"}
                                         type="number"
                                         onChange={ ( e ) => handleChangeInput( e, setInputState ) }
                                         value={ inputState.client_street_number_delivery }
                                         name="client_street_number_delivery"
-                                        required />
-                                </label>
-                                <label htmlFor={"client_street_wayType_delivery"}>Type de voie
-                                    <InputStyle
-                                        type="text"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState) }
-                                        value={ inputState.client_street_wayType_delivery }
-                                        name="client_street_wayType_delivery"
                                         required
-                                    />
-                                </label>
-                                <label htmlFor={"client_street_name_delivery"}>Rue
-                                    <InputStyle
-                                        type="text"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState) }
-                                        value={ inputState.client_street_name_delivery }
-                                        name="client_street_name_delivery"
-                                        required
-                                    />
-                                </label>
+                                />
+                                <InputText
+                                    label={"Type de voie"}
+                                    type="text"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState) }
+                                    value={ inputState.client_street_wayType_delivery }
+                                    name="client_street_wayType_delivery"
+                                    required
+                                />
+                                <InputText
+                                    label={"Rue"}
+                                    type="text"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState) }
+                                    value={ inputState.client_street_name_delivery }
+                                    name="client_street_name_delivery"
+                                    required
+                                />
                             </Flexbox>
                             <Flexbox>
-                                <label htmlFor={"client_street_codePostal_delivery"}>Code postal
-                                    <InputStyle
-                                        type="number"
-                                        onChange={ ( e ) => handleChangeInput( e, setInputState) }
-                                        onWheel={ ( e ) => e.target.blur() }
-                                        value={ inputState.client_street_codePostal_delivery }
-                                        name="client_street_codePostal_delivery"
-                                        required
-                                    />
-                                </label>
+                                <InputText
+                                    label={"CodePostal"}
+                                    type="number"
+                                    onChange={ ( e ) => handleChangeInput( e, setInputState) }
+                                    onWheel={ ( e ) => e.target.blur() }
+                                    value={ inputState.client_street_codePostal_delivery }
+                                    name="client_street_codePostal_delivery"
+                                    required
+                                />
                                 <InputSelect
                                     name={ "select_villes_delivery" }
                                     label={ "Villes" }
@@ -684,7 +575,7 @@ const UpdateClient = () => {
                         setRadioChecked={ setBillType }
                         selected={ billType }
                         name="typeBill"
-                        data={ [ {"id": "id1", "label": "Mail", "value": "mail"}, {"id": "id2", "label": "Courrier", "value": "post"} ] } />
+                        data={ [ {"id": 1, "label": "Mail", "value": "mail"}, {"id": 2, "label": "Courrier", "value": "post"} ] } />
                     <h2>Contacts</h2>
                     <GroupList>
                         { arrayContact.map(
@@ -697,8 +588,8 @@ const UpdateClient = () => {
                                     job={ contact.fonction }
                                     phone={ contact.tel }
                                     mail={ contact.email }
-                                    onChange={ ( newContact ) => insertDataFromChild( newContact, index ) }
-                                    removeContact={ ( e ) => removeContact( e, index ) }
+                                    onChange={ ( newContact ) => insertDataFromChild( arrayContact, setArrayContact, newContact, index ) }
+                                    removeContact={ () => removeContact( index, setArrayContact, arrayContact ) }
                                 />
                         )}
                     </GroupList>
@@ -728,46 +619,60 @@ const UpdateClient = () => {
                                 setSelectValue={ setSelectMagazine }
                                 disabled={ disabledSelectMagazine }
                             />
-                            <BtnAjout text={ "Ajouter la potentialité" } margin={ "0 0 0 15px" } add={ addPotentiality } />
+                            <BtnAjout
+                                text={ "Ajouter la potentialité" }
+                                margin={ "0 0 0 15px" }
+                                add={ ( e ) => (
+                                    addPotentiality(e, selectPotentialityType,
+                                        setDataPotentiality,
+                                        dataPotentiality,
+                                        selectMagazine,
+                                        setPotentialitePost,
+                                        potentialitePost)
+                                )
+                                }/>
                         </Flexbox>
                         {dataPotentiality.length > 0 ? (
                             <TablePotentiality
-                                headTable={ [ "Type", "Magazine" ] }
+                                headTable={ [ "Type", "Magazines" ] }
                                 dataPotentiality={ dataPotentiality }
-                                removePotentiality={ ( e, index ) => removePotentiality( e, index ) }
+                                removePotentiality={ ( e, index ) => removePotentiality( e, index, setDataPotentiality, dataPotentiality ) }
                             />
                         ) : "Aucune potentialité"}
                     </div>
                     <ButtonPrimary margin={ "50px 0 0 0" } onClick={ () => {
                         const isValid = Object.values(fieldsRequired).every( item => (item && item.value !== "") || (item[0] && item[0].value !== "") )
-                        if(isValid){
-                            setShowModalConfirm(true)
-                        }
-                    } }>Créer le client</ButtonPrimary>
-                    {showModalConfirm &&
-                        <Modal>
-                            {
-                                (!loading && !postError && !postSuccess && <ModalConfirm
-                                    setShowModal={setShowModalConfirm}
-                                    postRequest={handleSubmit}
-                                    field={inputState}
-                                    clientStatut={clientStatut}
-                                    ville={selectVilles}
-                                    villeDelivery={selectVillesDelivery}
-                                    deliveryAddress={hasDeliveryAddress}
-                                    billType={billType}
-                                    contacts={arrayContact}
-                                    potentialities={dataPotentiality}
-                                />) ||
-                                (loading && (<Spinner />)) ||
-                                (postSuccess && (<ModalSuccess message={"Le client a bien été créé"} idClient={postClientSuccess.id} />)) ||
-                                (postError && <ModalError message={"Une erreur s'est produite"} setShowModal={setShowModalConfirm}/>)
-
-                            }
-                        </Modal>
-                    }
-                </form>
+                        if(isValid){ setShowModal(true) } } }>Modifier le client</ButtonPrimary>
+                   </form>
             </MainContainer>
+            { showModal && !loadingPostClient && !successPostClient.id &&
+                <ModalConfirmClient
+                    postRequest={handleSubmit}
+                    field={inputState}
+                    clientStatut={clientStatut}
+                    ville={selectVilles}
+                    villeDelivery={selectVillesDelivery}
+                    deliveryAddress={hasDeliveryAddress}
+                    billType={billType}
+                    contacts={arrayContact}
+                    potentialities={dataPotentiality}
+                    closeModal={closeModal}
+                    loading={loadingPostClient}
+                />
+            }
+            { ( loadingPostClient ) && (
+                <Modal closeModal={closeModal} justify={"center"} align={"center"}>
+                    <Spinner />
+                </Modal>
+            )}
+            {successPostClient.id &&
+                <ModalResponse
+                    type={"client"}
+                    idType={successPostClient.id}
+                    response={responseStatut}
+                    closeModal={closeModal}
+                />
+            }
         </Fragment>
     )
 }
@@ -775,101 +680,4 @@ export default UpdateClient;
 
 
 
-const ModalConfirm = ({ postRequest, setShowModal, field, clientStatut, ville, villeDelivery, deliveryAddress, billType, contacts, contactCommentaire, typeContact, potentialities }) => {
-    return (
-    <Fragment>
-        <ModalHeader>
-            <h1>Souhaitez-vous créer ce client ?</h1>
-            <p>Vérifier les informations saisies avant de confirmer</p>
-        </ModalHeader>
-        <ModalBody>
-            <p>Statut du client: <span>{ clientStatut === "false" ? "Prospect" : "Acquis" }</span></p>
-            <p>Nom: <span>{ field.client_name ? field.client_name : "Non communiqué" }</span></p>
-            <p>Activité: <span>{  field.client_ape ? field.client_ape + " - " + document.querySelector('input[name="client_activite"]').value : "Non communiqué" }</span></p>
-
-            <h2>Coordonnées</h2>
-            <p>Mail: <span>{ field.client_mail ? field.client_mail : "Non communiqué" }</span></p>
-            <p>Téléphone: <span>{ field.client_phone ? field.client_phone : "Non communiqué" }</span></p>
-            <p>Adresse: <span>{ field.client_street_number && field.client_street_wayType && field.client_street_name && field.client_street_codePostal && ville ? field.client_street_number + " " + field.client_street_wayType + " " + field.client_street_name + " " + field.client_street_codePostal + " " + ville.valueDisplay : "Non communiqué" }</span></p>
-            <p>Site internet: <span>{ field.client_website ? field.client_website : "Non communiqué" }</span></p>
-            <h2>Adresse de livraison</h2>
-            <p>Adresse de Livraison: <span>{ deliveryAddress === "true" && field.client_street_number_delivery && field.client_street_wayType_delivery && field.client_street_name_delivery && field.client_street_codePostal_delivery && villeDelivery.valueDisplay ? field.client_street_number_delivery + " " + field.client_street_wayType_delivery + " " + field.client_street_name_delivery + " " + field.client_street_codePostal_delivery + " " + villeDelivery.valueDisplay : "Identique à l'adresse de facturation" }</span></p>
-
-            <h2>Choix de la facturation</h2>
-
-            <p>type de facturation: <span>{ billType === "true" ? "Mail" : "Courrier" }</span></p>
-            <h2>Contacts</h2>
-            {
-                contacts.length > 0 ? contacts.map((contact, index) =>{
-                        return (
-                            <Fragment key={index}>
-                                <h3>Contact { index + 1 }</h3>
-                                <p>Nom et Prénom: <span>{ contact.nom + " " + contact.prenom }</span></p>
-                                <p>Fonction: <span>{contact.fonction }</span></p>
-                                <p>Email: <span>{ contact.mail }</span></p>
-                                <p>Téléphone: <span>{ contact.tel }</span></p>
-                            </Fragment>
-                        )
-                    }
-                ) : "Aucun contact"
-            }
-
-            <h2>Indice de Potentialité</h2>
-            {
-                potentialities.length > 0 ? potentialities.map(( potentiality, index ) => {
-                    return (
-                        <Fragment key={index}>
-                            <p>{ index + 1 }: <span>{ potentiality.type.valueDisplay + " " + potentiality.magazine.valueDisplay }</span></p>
-                        </Fragment>
-                    )
-                }) : "Aucune potentialité"
-            }
-        </ModalBody>
-        <ModalFooter>
-            <Flexbox justify={ "center" }>
-                <ButtonSecondaryLink onClick={(e) => {
-                    e.preventDefault();
-                    setShowModal( false );
-                }}>Annuler</ButtonSecondaryLink>
-                <ButtonPrimary margin={"0 0 0 20px"} type="submit" onClick={postRequest}>Oui, je souhaite créer ce client</ButtonPrimary>
-            </Flexbox>
-        </ModalFooter>
-    </Fragment>
-    )
-}
-
-const ModalError = ({ message, setShowModal }) => {
-    return (
-        <Fragment>
-            <ModalHeader>
-                <h1>Oupss..</h1>
-            </ModalHeader>
-            <ModalBody>
-                <p>{message}</p>
-            </ModalBody>
-            <ModalFooter>
-                <ButtonPrimary onClick={ ( e ) => { e.preventDefault(); setShowModal(false) } }>Fermer</ButtonPrimary>
-            </ModalFooter>
-        </Fragment>
-    )
-}
-
-const ModalSuccess = ({ message, idClient }) => {
-    return (
-        <Fragment>
-            <ModalHeader>
-                <h1>Réussi !</h1>
-            </ModalHeader>
-            <ModalBody>
-                <p>{message}</p>
-            </ModalBody>
-            <ModalFooter>
-                <Flexbox>
-                    <ButtonPrimaryLink to={ "/profile/" + idClient } margin={"0 10px"}>Voir la fiche client</ButtonPrimaryLink>
-                    <ButtonPrimaryLink to={ "/" }>Retour à l'accueil</ButtonPrimaryLink>
-                </Flexbox>
-            </ModalFooter>
-        </Fragment>
-    )
-}
 

@@ -1,13 +1,14 @@
 import {useState, useCallback} from 'react';
 
 export const useFetchPatch = ( url, body ) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState({});
     const [error, setError] = useState('');
     const [responseStatut, setResponseStatut] = useState(0);
 
     const post = useCallback(
         async () => {
+            setLoading(true);
 
             const response = await fetch(url, {
                 method: "PATCH",
@@ -20,7 +21,7 @@ export const useFetchPatch = ( url, body ) => {
 
             const responseData = await response.json();
 
-            if (response.status === 200) {
+            if (response.ok) {
                 setResponseStatut(response.status);
                 setSuccess(responseData);
                 setLoading(false);
